@@ -10,6 +10,7 @@ import {
 } from '../lib/ai-config';
 import { getAuth } from '../lib/auth.server';
 import { getDbReady } from '../lib/db/index';
+import { assertNvidiaModelHosted } from '../lib/llm/nvidia-nim-catalog';
 import { getUserAiPreferences, setUserAiPreferences } from './ai-preferences.server';
 
 export type AiConfigResponse = AiConfig & {
@@ -49,11 +50,16 @@ export const updateAiConfigFn = createServerFn({ method: 'POST' })
     const apiKeyError = getProviderApiKeyError(providerId);
     if (apiKeyError) throw new Error(apiKeyError);
 
+    const defaults = listProviderOptions().find((provider) => provider.id === providerId);
+    const model = data.model?.trim() || defaults?.defaultModel;
+    if (!model) throw new Error('Model is required.');
+    if (providerId === 'nvidia-nim') assertNvidiaModelHosted(model);
+
     const userId = await requireUserId();
     const db = await getDbReady();
     await setUserAiPreferences(db, userId, {
       providerId,
-      model: data.model ?? null,
+      model,
     });
 
     const preferences = await getUserAiPreferences(db, userId);

@@ -50,6 +50,7 @@
     "retrying": "Retrying...",
     "retryHint": "Your selected settings will be saved before generating.",
     "highDemand": "The model may be under high demand. Switch models or try again shortly.",
+    "modelNotFound": "This model is not available on the hosted NVIDIA NIM API. Choose another model from the list.",
     "changeSettings": "Adjust provider and model"
   },
   "errors": {

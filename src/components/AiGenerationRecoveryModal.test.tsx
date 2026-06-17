@@ -71,7 +71,7 @@ describe('AiGenerationRecoveryModal', () => {
     getAiConfigFnMock.mockResolvedValue({
       providerId: 'nvidia-nim',
       provider: 'NVIDIA NIM',
-      model: 'qwen/qwen2.5-72b-instruct',
+      model: 'meta/llama-3.3-70b-instruct',
       capabilities: { structuredJson: true, webGrounding: false },
       providers: [
         {
@@ -85,7 +85,7 @@ describe('AiGenerationRecoveryModal', () => {
         {
           id: 'nvidia-nim',
           displayName: 'NVIDIA NIM',
-          defaultModel: 'qwen/qwen2.5-72b-instruct',
+          defaultModel: 'meta/llama-3.3-70b-instruct',
           models: PROVIDER_MODELS['nvidia-nim'],
           capabilities: { structuredJson: true, webGrounding: false },
           configured: true,
@@ -97,6 +97,23 @@ describe('AiGenerationRecoveryModal', () => {
       provider: 'Google Gemini',
       model: 'gemini-3.5-flash',
       capabilities: { structuredJson: true, webGrounding: true },
+    });
+  });
+
+  it('shows model-not-found guidance for nvidia 404 errors', async () => {
+    render(
+      <AiGenerationRecoveryModal
+        open
+        errorText="NVIDIA NIM request failed (404): 404 page not found"
+        onClose={vi.fn()}
+        onRetry={onRetryMock}
+      />,
+    );
+
+    await waitFor(() => {
+      expect(
+        screen.getByText('Este modelo não está disponível na API NVIDIA NIM. Escolha outro modelo da lista.'),
+      ).toBeInTheDocument();
     });
   });
 

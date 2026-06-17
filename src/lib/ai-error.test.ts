@@ -21,4 +21,12 @@ describe('parseAiGenerationError', () => {
       isRetryable: false,
     });
   });
+
+  it('marks nvidia 404 model errors as retryable', () => {
+    expect(parseAiGenerationError('NVIDIA NIM request failed (404): 404 page not found')).toEqual({
+      message: 'NVIDIA NIM request failed (404): 404 page not found',
+      statusCode: 404,
+      isRetryable: true,
+    });
+  });
 });

@@ -18,6 +18,17 @@ function extractJsonMessage(payload: unknown): string | null {
   return null;
 }
 
+function isModelUnavailableMessage(message: string, statusCode?: number): boolean {
+  return (
+    statusCode === 404 ||
+    /404 page not found|not available on the hosted api|function '.*' not found|not found/i.test(message)
+  );
+}
+
+function isTransientMessage(message: string, statusCode?: number): boolean {
+  return statusCode === 503 || statusCode === 429 || /high demand|try again|unavailable|rate limit/i.test(message);
+}
+
 export function parseAiGenerationError(raw: string): ParsedAiError {
   const statusMatch = raw.match(/\((\d{3})\)/);
   const statusCode = statusMatch ? Number(statusMatch[1]) : undefined;
@@ -36,19 +47,19 @@ export function parseAiGenerationError(raw: string): ParsedAiError {
         message,
         statusCode,
         isRetryable:
-          statusCode === 503 ||
-          statusCode === 429 ||
-          nestedStatus === 'UNAVAILABLE' ||
-          /high demand|try again|unavailable|rate limit/i.test(message),
+          isModelUnavailableMessage(message, statusCode) ||
+          isTransientMessage(message, statusCode) ||
+          nestedStatus === 'UNAVAILABLE',
       };
     } catch {
       // fall through to plain-text parsing
     }
   }
 
+  const message = raw;
   return {
-    message: raw,
+    message,
     statusCode,
-    isRetryable: statusCode === 503 || statusCode === 429 || /high demand|try again|unavailable|rate limit/i.test(raw),
+    isRetryable: isModelUnavailableMessage(message, statusCode) || isTransientMessage(message, statusCode),
   };
 }

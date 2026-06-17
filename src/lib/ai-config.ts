@@ -1,4 +1,5 @@
 import type { LlmCapabilities, LlmProviderId } from './llm/types';
+import { filterHostedNvidiaModels, isNvidiaModelHosted } from './llm/nvidia-nim-catalog';
 
 export class InvalidAiProviderError extends Error {
   constructor(provider: string) {
@@ -19,7 +20,7 @@ export const PROVIDER_MODELS: Record<LlmProviderId, ModelOption[]> = {
     { id: 'gemini-2.5-pro', label: 'Gemini 2.5 Pro' },
     { id: 'gemini-2.0-flash', label: 'Gemini 2.0 Flash' },
   ],
-  'nvidia-nim': [
+  'nvidia-nim': filterHostedNvidiaModels([
     { id: 'qwen/qwen2.5-72b-instruct', label: 'Qwen 2.5 72B Instruct' },
     { id: 'meta/llama-3.3-70b-instruct', label: 'Llama 3.3 70B Instruct' },
     { id: 'mistralai/mistral-large', label: 'Mistral Large' },
@@ -36,7 +37,7 @@ export const PROVIDER_MODELS: Record<LlmProviderId, ModelOption[]> = {
     { id: 'microsoft/phi-3-mini-128k-instruct', label: 'Phi-3 Mini 128K' },
     { id: 'mistralai/mistral-7b-instruct-v0.3', label: 'Mistral 7B Instruct' },
     { id: 'nvidia/nemotron-mini-4b-instruct', label: 'Nemotron Mini 4B Instruct' },
-  ],
+  ]),
 };
 
 export const PROVIDER_DEFAULTS: Record<
@@ -94,9 +95,14 @@ export type AiConfig = {
 export function getModelsForProvider(providerId: LlmProviderId, currentModel?: string | null): ModelOption[] {
   const models = PROVIDER_MODELS[providerId];
   const trimmed = currentModel?.trim();
-  if (trimmed && !models.some((model) => model.id === trimmed)) {
+  if (!trimmed) return models;
+
+  const isKnown = models.some((model) => model.id === trimmed);
+  const isLegacyNvidia = providerId === 'nvidia-nim' && !isNvidiaModelHosted(trimmed);
+  if (!isKnown && !isLegacyNvidia) {
     return [{ id: trimmed, label: trimmed }, ...models];
   }
+
   return models;
 }
 
@@ -121,7 +127,9 @@ export function resolveAiConfig(preferences: UserAiPreferences | null | undefine
 
   const providerId = preferences.providerId;
   const defaults = PROVIDER_DEFAULTS[providerId];
-  const model = preferences.model?.trim() || defaults.model;
+  const savedModel = preferences.model?.trim();
+  const model =
+    savedModel && (providerId !== 'nvidia-nim' || isNvidiaModelHosted(savedModel)) ? savedModel : defaults.model;
   return buildAiConfig(providerId, model);
 }
 
