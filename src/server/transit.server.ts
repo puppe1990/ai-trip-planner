@@ -1,6 +1,5 @@
-import type { GoogleGenAI } from '@google/genai';
-import { getAiConfig } from '../lib/ai-config';
 import { getGeminiLanguage } from '../i18n/index';
+import type { LlmProvider } from '../lib/llm/types';
 
 export type { TransitSection } from '../lib/transit-parse';
 
@@ -9,29 +8,12 @@ export interface TransitSearchResult {
   sources: Array<{ title: string; url: string }>;
 }
 
-export function extractGroundingSources(response: {
-  candidates?: Array<{ groundingMetadata?: { groundingChunks?: Array<{ web?: { uri?: string; title?: string } }> } }>;
-}): Array<{ title: string; url: string }> {
-  const rawChunks = response.candidates?.[0]?.groundingMetadata?.groundingChunks || [];
-  const sources: Array<{ title: string; url: string }> = [];
-  const seenUrls = new Set<string>();
-
-  for (const c of rawChunks) {
-    if (c.web?.uri && !seenUrls.has(c.web.uri)) {
-      seenUrls.add(c.web.uri);
-      sources.push({ title: c.web.title || 'Search Source', url: c.web.uri });
-    }
-  }
-
-  return sources;
-}
-
 export function buildTransitPrompt(destination: string, locale = 'pt-BR'): string {
   const lang = getGeminiLanguage(locale);
   const langInstruction =
     lang === 'en'
       ? 'Structure your response EXCLUSIVELY in English.'
-      : 'Estruture sua resposta EXCLUSIVAMENTE em Português do Brasil (pt-BR).';
+      : 'Estruture sua resposta EXCLUSIVELY em Português do Brasil (pt-BR).';
 
   return `You are a global urban mobility expert. Search in real time with Google Search for updated transport options in "${destination}".
 ${langInstruction}
@@ -48,7 +30,7 @@ Be direct and friendly. No generic introductions.`;
 }
 
 export async function searchTransit(
-  client: GoogleGenAI,
+  provider: LlmProvider,
   destination: string,
   locale = 'pt-BR',
 ): Promise<TransitSearchResult> {
@@ -56,20 +38,24 @@ export async function searchTransit(
     throw new Error('Destination is required for transit search.');
   }
 
-  const response = await client.models.generateContent({
-    model: getAiConfig().model,
-    contents: buildTransitPrompt(destination, locale),
-    config: {
-      tools: [{ googleSearch: {} }],
-      temperature: 0.5,
-    },
+  const prompt = buildTransitPrompt(destination, locale);
+
+  if (provider.generateGroundedText) {
+    const grounded = await provider.generateGroundedText({ prompt, temperature: 0.5 });
+    return {
+      rawText: grounded.text,
+      sources: grounded.sources,
+    };
+  }
+
+  const text = await provider.generateText({
+    system: 'You are a global urban mobility expert.',
+    prompt,
+    temperature: 0.5,
   });
 
-  const responseText = response?.text;
-  if (!responseText) throw new Error('No response from transit search.');
-
   return {
-    rawText: responseText,
-    sources: extractGroundingSources(response),
+    rawText: text,
+    sources: [],
   };
 }

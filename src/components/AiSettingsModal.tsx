@@ -96,6 +96,9 @@ export default function AiSettingsModal() {
                     <p className="text-sm font-semibold text-slate-800">
                       {loading ? t('aiSettings.loading') : (config?.provider ?? '—')}
                     </p>
+                    <p className="text-[11px] text-slate-500 font-mono mt-1">
+                      {loading ? t('aiSettings.loading') : (config?.providerId ?? '—')}
+                    </p>
                   </div>
 
                   <div className="rounded-2xl border border-slate-100 bg-slate-50/70 p-4">
@@ -105,6 +108,34 @@ export default function AiSettingsModal() {
                     <p className="text-sm font-semibold text-slate-800 font-mono">
                       {loading ? t('aiSettings.loading') : (config?.model ?? '—')}
                     </p>
+                  </div>
+
+                  <div className="rounded-2xl border border-slate-100 bg-slate-50/70 p-4">
+                    <p className="text-[10px] font-bold uppercase tracking-wider text-slate-400 mb-2">
+                      {t('aiSettings.capabilities')}
+                    </p>
+                    <div className="flex flex-wrap gap-2">
+                      <span
+                        className={`text-[10px] font-bold px-2 py-1 rounded-full border ${
+                          config?.capabilities?.structuredJson
+                            ? 'bg-emerald-50 text-emerald-700 border-emerald-100'
+                            : 'bg-slate-100 text-slate-500 border-slate-200'
+                        }`}
+                      >
+                        {t('aiSettings.structuredJson')}
+                      </span>
+                      <span
+                        className={`text-[10px] font-bold px-2 py-1 rounded-full border ${
+                          config?.capabilities?.webGrounding
+                            ? 'bg-emerald-50 text-emerald-700 border-emerald-100'
+                            : 'bg-slate-100 text-slate-500 border-slate-200'
+                        }`}
+                      >
+                        {config?.capabilities?.webGrounding
+                          ? t('aiSettings.webGrounding')
+                          : t('aiSettings.webGroundingUnavailable')}
+                      </span>
+                    </div>
                   </div>
                 </div>
 

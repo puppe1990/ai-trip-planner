@@ -28,6 +28,10 @@
     "provider": "Provider",
     "model": "Model",
     "loading": "Loading...",
+    "capabilities": "Capabilities",
+    "structuredJson": "Structured JSON",
+    "webGrounding": "Web search",
+    "webGroundingUnavailable": "Web search unavailable",
     "hint": "These settings are defined on the application server."
   },
   "footer": {

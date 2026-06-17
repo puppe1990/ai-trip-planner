@@ -1,7 +1,6 @@
-import type { GoogleGenAI } from '@google/genai';
-import { getAiConfig } from '../lib/ai-config';
+import { parsePlannerResult } from '../lib/planner-zod-schema';
 import { getGeminiLanguage } from '../i18n/index';
-import { responseSchema } from '../lib/planner-schema';
+import type { LlmProvider } from '../lib/llm/types';
 import type { DayPlan, TripSearchParams } from '../types';
 
 export class ValidationError extends Error {
@@ -54,7 +53,7 @@ export interface PlannerResult {
 }
 
 export async function generateTripPlan(
-  client: GoogleGenAI,
+  provider: LlmProvider,
   params: TripSearchParams,
   locale = 'pt-BR',
 ): Promise<PlannerResult> {
@@ -67,20 +66,15 @@ export async function generateTripPlan(
       : 'Você é um guia turístico profissional. Crie itinerários lógicos e detalhados com experiências locais autênticas. Responda estritamente no schema JSON fornecido e em Português (pt-BR).';
 
   const promptMsg = buildPlannerPrompt(params, locale);
-  let response;
+  let responseText: string | undefined;
   let delay = 1500;
 
   for (let attempt = 1; attempt <= 3; attempt++) {
     try {
-      response = await client.models.generateContent({
-        model: getAiConfig().model,
-        contents: promptMsg,
-        config: {
-          systemInstruction,
-          responseMimeType: 'application/json',
-          responseSchema,
-          temperature: 0.8,
-        },
+      responseText = await provider.generateJson({
+        system: systemInstruction,
+        prompt: promptMsg,
+        temperature: 0.8,
       });
       break;
     } catch (apiError: unknown) {
@@ -90,7 +84,6 @@ export async function generateTripPlan(
     }
   }
 
-  const responseText = response?.text;
   if (!responseText) throw new Error('No content returned by model.');
-  return JSON.parse(responseText.trim()) as PlannerResult;
+  return parsePlannerResult(responseText);
 }

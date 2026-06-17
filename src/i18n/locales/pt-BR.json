@@ -28,6 +28,10 @@
     "provider": "Provider",
     "model": "Modelo",
     "loading": "Carregando...",
+    "capabilities": "Capacidades",
+    "structuredJson": "JSON estruturado",
+    "webGrounding": "Busca web",
+    "webGroundingUnavailable": "Busca web indisponível",
     "hint": "Essas configurações são definidas no servidor da aplicação."
   },
   "footer": {

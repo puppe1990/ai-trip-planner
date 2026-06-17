@@ -1,6 +1,6 @@
 import { createServerFn } from '@tanstack/react-start';
 import { z } from 'zod';
-import { getGeminiClient } from '../lib/gemini';
+import { getLlmProvider } from '../lib/llm/factory';
 import { generateTripPlan, ValidationError } from './planner.server';
 
 const tripSearchParamsSchema = z.object({
@@ -17,8 +17,8 @@ export const generateTripPlanFn = createServerFn({ method: 'POST' })
   .validator(z.object({ params: tripSearchParamsSchema, locale: z.string().optional() }))
   .handler(async ({ data }) => {
     try {
-      const client = getGeminiClient();
-      return await generateTripPlan(client, data.params, data.locale ?? 'pt-BR');
+      const provider = getLlmProvider();
+      return await generateTripPlan(provider, data.params, data.locale ?? 'pt-BR');
     } catch (error) {
       if (error instanceof ValidationError) {
         throw new Error(error.message);
