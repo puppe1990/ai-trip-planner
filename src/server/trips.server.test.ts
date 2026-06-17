@@ -3,7 +3,9 @@ import type { AppDatabase } from '../lib/db/index';
 import { createTestDb, destroyTestDb } from '../test/db';
 import type { Client } from '@libsql/client';
 import { user } from '../lib/db/schema';
-import { listTrips, saveTrip, deleteTrip, DuplicateTripError } from './trips.server';
+import { listTrips, saveTrip, upsertTrip, deleteTrip, DuplicateTripError } from './trips.server';
+import { buildTripPlanFromGeneration } from './planner.server';
+import type { PlannerResult } from './planner.server';
 import type { TripPlan } from '../types';
 
 async function seedUser(db: AppDatabase, id: string, email: string) {
@@ -70,6 +72,74 @@ describe('trips.server', () => {
     await expect(saveTrip(db, userA, samplePlan('trip_2', 'Roma, Itália', 4))).rejects.toBeInstanceOf(
       DuplicateTripError,
     );
+  });
+
+  it('buildTripPlanFromGeneration attaches search preferences and metadata', () => {
+    const generated: PlannerResult = {
+      destination: 'Paris, França',
+      durationDays: 4,
+      tagline: 'City of lights',
+      summary: 'Romantic getaway',
+      budgetEstimate: samplePlan('x', 'Paris').budgetEstimate,
+      packingEssentials: ['Jacket'],
+      weatherExpected: 'Cool',
+      days: [],
+      tips: [],
+    };
+
+    const plan = buildTripPlanFromGeneration(generated, {
+      destination: 'Paris, França',
+      duration: 4,
+      budget: 'Alto',
+      style: 'Romântico',
+      companion: 'Casal',
+      season: 'Outono',
+      extraNotes: 'Museus',
+    });
+
+    expect(plan.destination).toBe('Paris, França');
+    expect(plan.durationDays).toBe(4);
+    expect(plan.budgetPreference).toBe('Alto');
+    expect(plan.stylePreference).toBe('Romântico');
+    expect(plan.companionPreference).toBe('Casal');
+    expect(plan.id).toMatch(/^trip_/);
+    expect(plan.createdAt).toBeTruthy();
+  });
+
+  it('upsertTrip saves a newly generated plan', async () => {
+    const plan = samplePlan('trip_new', 'Barcelona, Espanha', 5);
+    const persisted = await upsertTrip(db, userA, plan, {
+      destination: 'Barcelona, Espanha',
+      duration: 5,
+      budget: 'Médio',
+      style: 'Cultural',
+      companion: 'Amigos',
+      season: 'Verão',
+      extraNotes: '',
+    });
+
+    const trips = await listTrips(db, userA);
+    expect(trips).toHaveLength(1);
+    expect(persisted.id).toBe('trip_new');
+    expect(trips[0].destination).toBe('Barcelona, Espanha');
+  });
+
+  it('upsertTrip replaces an existing plan for the same destination and duration', async () => {
+    await upsertTrip(db, userA, samplePlan('trip_old', 'Roma, Itália', 4));
+
+    const updatedPlan = {
+      ...samplePlan('trip_new', 'Roma, Itália', 4),
+      tagline: 'Nova versão do roteiro',
+      summary: 'Atualizado pela IA',
+    };
+
+    const persisted = await upsertTrip(db, userA, updatedPlan);
+
+    const trips = await listTrips(db, userA);
+    expect(trips).toHaveLength(1);
+    expect(persisted.id).toBe('trip_old');
+    expect(trips[0].tagline).toBe('Nova versão do roteiro');
+    expect(trips[0].summary).toBe('Atualizado pela IA');
   });
 
   it('isolates trips between users', async () => {

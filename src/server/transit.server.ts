@@ -8,23 +8,39 @@ export interface TransitSearchResult {
   sources: Array<{ title: string; url: string }>;
 }
 
+const TRANSIT_SECTION_HEADERS = {
+  en: [
+    '### Ride Apps & Taxis',
+    '### Routes & Local Navigation',
+    '### Metro, Train & Rail',
+    '### Buses & Local Transport',
+    '### Fares & Payment',
+    '### General Mobility Tips',
+  ],
+  'pt-BR': [
+    '### Apps de Corrida e Táxis',
+    '### Rotas e Navegação Local',
+    '### Metrô, Trem e Trens',
+    '### Ônibus e Transporte Local',
+    '### Tarifas e Pagamento',
+    '### Dicas Gerais de Mobilidade',
+  ],
+} as const;
+
 export function buildTransitPrompt(destination: string, locale = 'pt-BR'): string {
   const lang = getGeminiLanguage(locale);
   const langInstruction =
     lang === 'en'
       ? 'Structure your response EXCLUSIVELY in English.'
-      : 'Estruture sua resposta EXCLUSIVELY em Português do Brasil (pt-BR).';
+      : 'Estruture sua resposta EXCLUSIVAMENTE em Português do Brasil (pt-BR).';
+
+  const sectionHeaders = TRANSIT_SECTION_HEADERS[lang].join('\n');
 
   return `You are a global urban mobility expert. Search in real time with Google Search for updated transport options in "${destination}".
 ${langInstruction}
 Return topics exactly in the format below (with titles marked by '###'):
 
-### Ride Apps & Taxis
-### Routes & Local Navigation
-### Metro, Train & Rail
-### Buses & Local Transport
-### Fares & Payment
-### General Mobility Tips
+${sectionHeaders}
 
 Be direct and friendly. No generic introductions.`;
 }

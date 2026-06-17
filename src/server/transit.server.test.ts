@@ -2,7 +2,7 @@ import { describe, expect, it, vi } from 'vitest';
 import { parseTransitSections } from '../lib/transit-parse';
 import { extractGroundingSources } from '../lib/llm/gemini-grounding';
 import type { LlmProvider } from '../lib/llm/types';
-import { searchTransit } from './transit.server';
+import { buildTransitPrompt, searchTransit } from './transit.server';
 
 describe('transit.server', () => {
   it('parses ### sections from raw text', () => {
@@ -17,7 +17,9 @@ Line 1 covers downtown`;
 
     const sections = parseTransitSections(raw);
     expect(sections).toHaveLength(2);
+    expect(sections[0].key).toBe('rideApps');
     expect(sections[0].icon).toBe('Car');
+    expect(sections[1].key).toBe('metro');
     expect(sections[1].icon).toBe('Train');
     expect(sections[0].content).toContain('Uber');
   });
@@ -38,6 +40,21 @@ Line 1 covers downtown`;
     });
     expect(sources).toHaveLength(2);
     expect(sources[0].url).toBe('https://example.com/a');
+  });
+
+  it('builds Portuguese section headers for pt-BR locale', () => {
+    const prompt = buildTransitPrompt('São Paulo, Brasil', 'pt-BR');
+
+    expect(prompt).toContain('### Apps de Corrida e Táxis');
+    expect(prompt).toContain('### Metrô, Trem e Trens');
+    expect(prompt).toContain('EXCLUSIVAMENTE em Português do Brasil');
+  });
+
+  it('builds English section headers for en locale', () => {
+    const prompt = buildTransitPrompt('Paris, France', 'en');
+
+    expect(prompt).toContain('### Ride Apps & Taxis');
+    expect(prompt).toContain('EXCLUSIVELY in English');
   });
 
   it('uses generateGroundedText when provider supports web grounding', async () => {

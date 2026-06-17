@@ -1,13 +1,6 @@
 import { afterEach, describe, expect, it, vi } from 'vitest';
-import {
-  getAiConfig,
-  getModelsForProvider,
-  getProviderId,
-  InvalidAiProviderError,
-  listProviderOptions,
-  PROVIDER_MODELS,
-  resolveAiConfig,
-} from './ai-config';
+import { getModelsForProvider, InvalidAiProviderError, PROVIDER_MODELS } from './ai-config';
+import { getAiConfig, getProviderId, listProviderOptions, resolveAiConfig } from './ai-config.server';
 
 describe('getProviderId', () => {
   afterEach(() => {

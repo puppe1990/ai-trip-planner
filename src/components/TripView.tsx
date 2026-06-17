@@ -46,18 +46,16 @@ import { getDestinationClimate } from '@/src/lib/climate';
 import { calculateGroupBudget } from '@/src/lib/budget';
 import { generateIcsContent } from '@/src/lib/ics-export';
 import { buildShareUrl } from '@/src/lib/share';
-import { parseTransitSections } from '@/src/lib/transit-parse';
+import { parseTransitSections, type TransitSection } from '@/src/lib/transit-parse';
 import { searchTransitFn } from '@/src/server/transit.functions';
 import InteractiveTripMap from './InteractiveTripMap';
 
 interface TripViewProps {
   tripPlan: TripPlan;
   onBack: () => void;
-  onSave: () => void;
-  isSaved: boolean;
 }
 
-export default function TripView({ tripPlan, onBack, onSave, isSaved }: TripViewProps) {
+export default function TripView({ tripPlan, onBack }: TripViewProps) {
   const { t, i18n } = useTranslation();
   const [activeDay, setActiveDay] = useState(1);
   const [checkedPackingItems, setCheckedPackingItems] = useState<Record<string, boolean>>({});
@@ -157,6 +155,11 @@ export default function TripView({ tripPlan, onBack, onSave, isSaved }: TripView
   };
 
   const budget = useMemo(() => calculateGroupBudget(tripPlan, travelersCount), [tripPlan, travelersCount]);
+
+  const getTransitSectionLabel = (section: TransitSection) => {
+    if (section.key === 'other') return section.title;
+    return t(`trip.transitSections.${section.key}`);
+  };
   const localeStr = i18n.language?.startsWith('en') ? 'en-US' : 'pt-BR';
 
   const activeDayPlan = tripPlan.days.find((d) => d.dayNumber === activeDay) || tripPlan.days[0];
@@ -198,18 +201,10 @@ export default function TripView({ tripPlan, onBack, onSave, isSaved }: TripView
             {t('common.calendar')}
           </button>
 
-          <button
-            onClick={onSave}
-            disabled={isSaved}
-            className={`flex items-center gap-2 text-xs font-bold px-5 py-2.5 rounded-xl border transition-all shadow-sm cursor-pointer ${
-              isSaved
-                ? 'bg-slate-100/80 border-slate-200/50 text-slate-500 cursor-not-allowed'
-                : 'bg-indigo-600 border-indigo-600 text-white hover:bg-indigo-700 shadow-indigo-600/10'
-            }`}
-          >
+          <span className="flex items-center gap-2 text-xs font-bold px-5 py-2.5 rounded-xl border bg-slate-100/80 border-slate-200/50 text-slate-500">
             <Save className="w-3.5 h-3.5" />
-            {isSaved ? t('common.saved') : t('common.save')}
-          </button>
+            {t('common.saved')}
+          </span>
         </div>
       </div>
 
@@ -908,14 +903,12 @@ export default function TripView({ tripPlan, onBack, onSave, isSaved }: TripView
                 </div>
                 <div className="space-y-0.5">
                   <h3 className="font-bold text-slate-800 text-sm sm:text-base flex items-center gap-1.5">
-                    Aplicativos & Transporte Local{' '}
+                    {t('trip.transitTitle')}{' '}
                     <span className="text-[10px] font-black tracking-widest text-indigo-650 bg-indigo-50 px-2 py-0.5 rounded uppercase border border-indigo-100">
-                      Live Search
+                      {t('trip.liveSearch')}
                     </span>
                   </h3>
-                  <p className="text-xs text-slate-500">
-                    Consulte aplicativos de corrida ativos, passes de ônibus/metrô e regras de locomoção
-                  </p>
+                  <p className="text-xs text-slate-500">{t('trip.transitSubtitle')}</p>
                 </div>
               </div>
             </div>
@@ -924,11 +917,10 @@ export default function TripView({ tripPlan, onBack, onSave, isSaved }: TripView
               <div className="bg-gradient-to-br from-indigo-50/40 to-slate-50 border border-indigo-100/60 rounded-2xl p-6 text-center space-y-4">
                 <div className="max-w-md mx-auto space-y-2">
                   <span className="text-2xl">🚕</span>
-                  <h4 className="font-bold text-sm text-slate-800">Como se locomover em {tripPlan.destination}?</h4>
-                  <p className="text-xs text-slate-500 leading-relaxed">
-                    Pesquise instantaneamente usando o mecanismo do <strong>Google Search</strong>. Descubra tarifas
-                    reais, aplicativos locais de táxi ou caronas e passes integrados mais vantajosos para sua rota.
-                  </p>
+                  <h4 className="font-bold text-sm text-slate-800">
+                    {t('trip.transitCtaTitle', { destination: tripPlan.destination })}
+                  </h4>
+                  <p className="text-xs text-slate-500 leading-relaxed">{t('trip.transitCtaDesc')}</p>
                 </div>
                 <button
                   type="button"
@@ -936,7 +928,7 @@ export default function TripView({ tripPlan, onBack, onSave, isSaved }: TripView
                   className="inline-flex items-center gap-2 bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-bold px-5 py-2.5 rounded-xl shadow-md transition-all scale-100 active:scale-95 cursor-pointer"
                 >
                   <Search className="w-4 h-4" />
-                  Pesquisar Aplicativos & Tarifas Atuais
+                  {t('trip.transitSearch')}
                 </button>
               </div>
             )}
@@ -945,11 +937,8 @@ export default function TripView({ tripPlan, onBack, onSave, isSaved }: TripView
               <div className="bg-slate-50/70 border border-slate-100 rounded-2xl p-8 flex flex-col items-center justify-center text-center space-y-3">
                 <Loader2 className="w-8 h-8 text-indigo-600 animate-spin" />
                 <div className="space-y-1">
-                  <p className="text-xs font-bold text-slate-755">Utilizando o Google Search...</p>
-                  <p className="text-[11px] text-slate-500 max-w-sm leading-relaxed">
-                    Buscando aplicativos de corrida, sistemas de metrô e tarifas vigentes no destino de forma
-                    fundamentada e atualizada.
-                  </p>
+                  <p className="text-xs font-bold text-slate-755">{t('trip.transitLoading')}</p>
+                  <p className="text-[11px] text-slate-500 max-w-sm leading-relaxed">{t('trip.transitLoadingDesc')}</p>
                 </div>
               </div>
             )}
@@ -1003,7 +992,7 @@ export default function TripView({ tripPlan, onBack, onSave, isSaved }: TripView
                         }`}
                       >
                         {getIconComponent(sect.icon)}
-                        <span>{sect.title}</span>
+                        <span>{getTransitSectionLabel(sect)}</span>
                       </button>
                     );
                   })}
@@ -1040,7 +1029,7 @@ export default function TripView({ tripPlan, onBack, onSave, isSaved }: TripView
                         <div className="space-y-3">
                           <h4 className="font-bold text-slate-850 text-sm flex items-center gap-2">
                             {getIconComponent(activeSect.icon)}
-                            {activeSect.title}
+                            {getTransitSectionLabel(activeSect)}
                           </h4>
 
                           <div className="space-y-2.5">
@@ -1069,12 +1058,9 @@ export default function TripView({ tripPlan, onBack, onSave, isSaved }: TripView
                     <div className="space-y-2.5">
                       <div className="flex items-center gap-1.5 text-slate-650 font-bold text-xs uppercase tracking-wider">
                         <Navigation className="w-3.5 h-3.5 text-indigo-500" />
-                        Fontes Fundamentadas
+                        {t('trip.sourcesTitle')}
                       </div>
-                      <p className="text-[11px] text-slate-500 leading-normal">
-                        Esta pesquisa foi fundamentada em resultados reais do Google Search para garantir segurança e
-                        dados atualizados.
-                      </p>
+                      <p className="text-[11px] text-slate-500 leading-normal">{t('trip.sourcesDesc')}</p>
 
                       {transitData.sources && transitData.sources.length > 0 ? (
                         <div className="space-y-1.5 max-h-[160px] overflow-y-auto pr-1">
@@ -1099,12 +1085,12 @@ export default function TripView({ tripPlan, onBack, onSave, isSaved }: TripView
                           ))}
                         </div>
                       ) : (
-                        <p className="text-[10px] text-slate-400 italic">Pesquisado via indexador do Google.</p>
+                        <p className="text-[10px] text-slate-400 italic">{t('trip.searchSource')}</p>
                       )}
                     </div>
 
                     <div className="text-[10px] italic font-medium text-slate-400/90 text-right">
-                      Google Search Grounding Engine
+                      {t('trip.groundingEngine')}
                     </div>
                   </div>
                 </div>

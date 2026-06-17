@@ -14,7 +14,7 @@ import AiSettingsModal from '@/src/components/AiSettingsModal';
 import AiGenerationRecoveryModal from '@/src/components/AiGenerationRecoveryModal';
 import { parseShareHash } from '@/src/lib/share';
 import { generateTripPlanFn } from '@/src/server/planner.functions';
-import { listTripsFn, saveTripFn, deleteTripFn } from '@/src/server/trips.functions';
+import { listTripsFn, deleteTripFn } from '@/src/server/trips.functions';
 import { signOutAndRedirect } from '@/src/lib/auth-actions';
 
 export const Route = createFileRoute('/_authenticated/')({
@@ -80,44 +80,18 @@ function HomePage() {
     setSearchParams(params);
 
     try {
-      const data = await generateTripPlanFn({
+      const parsedPlan = (await generateTripPlanFn({
         data: { params, locale: i18n.language },
-      });
-
-      const parsedPlan: TripPlan = {
-        ...(data as Omit<
-          TripPlan,
-          'id' | 'createdAt' | 'budgetPreference' | 'stylePreference' | 'companionPreference'
-        >),
-        id: `trip_${Date.now()}`,
-        createdAt: new Date().toISOString(),
-        budgetPreference: params.budget,
-        stylePreference: params.style,
-        companionPreference: params.companion,
-      };
+      })) as TripPlan;
 
       setActivePlan(parsedPlan);
+      await loadSavedTrips();
     } catch (err: unknown) {
       const message = err instanceof Error ? err.message : t('errors.genericError');
       setGenerationError(message);
       setRecoveryModalOpen(true);
     } finally {
       setIsLoading(false);
-    }
-  };
-
-  const handleSaveTrip = async () => {
-    if (!activePlan) return;
-    if (
-      savedTrips.some(
-        (trip) => trip.destination === activePlan.destination && trip.durationDays === activePlan.durationDays,
-      )
-    ) {
-      return;
-    }
-    const result = await saveTripFn({ data: { plan: activePlan, searchParams } });
-    if (result.success) {
-      await loadSavedTrips();
     }
   };
 
@@ -132,14 +106,6 @@ function HomePage() {
     setActivePlan(trip);
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
-
-  const isActivePlanSaved = activePlan
-    ? savedTrips.some(
-        (trip) =>
-          trip.id === activePlan.id ||
-          (trip.destination === activePlan.destination && trip.durationDays === activePlan.durationDays),
-      )
-    : false;
 
   return (
     <div className="min-h-screen bg-slate-50/50 text-slate-800 font-sans selection:bg-indigo-50 selection:text-indigo-950 pb-20">
@@ -235,12 +201,7 @@ function HomePage() {
               exit={{ opacity: 0 }}
               transition={{ duration: 0.3 }}
             >
-              <TripView
-                tripPlan={activePlan}
-                onBack={() => setActivePlan(null)}
-                onSave={handleSaveTrip}
-                isSaved={isActivePlanSaved}
-              />
+              <TripView tripPlan={activePlan} onBack={() => setActivePlan(null)} />
             </motion.div>
           ) : (
             <motion.div
@@ -282,9 +243,8 @@ function HomePage() {
       />
 
       <footer className="mt-24 border-t border-slate-150 text-center py-8 text-slate-400 text-xs">
-        <div className="max-w-7xl mx-auto px-4 space-y-2">
+        <div className="max-w-7xl mx-auto px-4">
           <p>{t('footer.copyright')}</p>
-          <p className="text-[10px] text-slate-450">{t('footer.poweredBy')}</p>
         </div>
       </footer>
     </div>
