@@ -56,6 +56,8 @@ describe('getAiConfig', () => {
 
   it('returns nvidia-nim defaults when AI_PROVIDER is nvidia-nim', () => {
     vi.stubEnv('AI_PROVIDER', 'nvidia-nim');
+    vi.stubEnv('GEMINI_API_KEY', '');
+    vi.stubEnv('NVIDIA_API_KEY', 'key');
 
     expect(getAiConfig()).toEqual({
       providerId: 'nvidia-nim',
@@ -67,6 +69,8 @@ describe('getAiConfig', () => {
 
   it('allows AI_MODEL override for any provider', () => {
     vi.stubEnv('AI_PROVIDER', 'nvidia-nim');
+    vi.stubEnv('GEMINI_API_KEY', '');
+    vi.stubEnv('NVIDIA_API_KEY', 'key');
     vi.stubEnv('AI_MODEL', 'nvidia/nemotron-3-nano-30b-a3b');
 
     expect(getAiConfig().model).toBe('nvidia/nemotron-3-nano-30b-a3b');
@@ -88,6 +92,7 @@ describe('resolveAiConfig', () => {
 
   it('uses user provider preference over env default', () => {
     vi.stubEnv('AI_PROVIDER', 'gemini');
+    vi.stubEnv('GEMINI_API_KEY', 'key');
     vi.stubEnv('NVIDIA_API_KEY', 'key');
 
     expect(resolveAiConfig({ providerId: 'nvidia-nim', model: null })).toEqual({
@@ -100,6 +105,8 @@ describe('resolveAiConfig', () => {
 
   it('uses user model preference when provider is set', () => {
     vi.stubEnv('AI_PROVIDER', 'gemini');
+    vi.stubEnv('GEMINI_API_KEY', 'key');
+    vi.stubEnv('NVIDIA_API_KEY', 'key');
 
     expect(resolveAiConfig({ providerId: 'nvidia-nim', model: 'meta/llama-3.1-8b-instruct' }).model).toBe(
       'meta/llama-3.1-8b-instruct',
@@ -108,6 +115,8 @@ describe('resolveAiConfig', () => {
 
   it('falls back to env when user has no preferences', () => {
     vi.stubEnv('AI_PROVIDER', 'nvidia-nim');
+    vi.stubEnv('GEMINI_API_KEY', '');
+    vi.stubEnv('NVIDIA_API_KEY', 'key');
     vi.stubEnv('AI_MODEL', 'env-model');
 
     expect(resolveAiConfig(null)).toEqual({
@@ -132,6 +141,8 @@ describe('PROVIDER_MODELS', () => {
 
   it('falls back to hosted default when saved nvidia model is unavailable', () => {
     vi.stubEnv('AI_PROVIDER', 'gemini');
+    vi.stubEnv('GEMINI_API_KEY', 'key');
+    vi.stubEnv('NVIDIA_API_KEY', 'key');
 
     expect(
       resolveAiConfig({

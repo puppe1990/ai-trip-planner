@@ -23,6 +23,7 @@ describe('getLlmProvider', () => {
 
   it('returns nvidia-nim provider when configured', () => {
     vi.stubEnv('AI_PROVIDER', 'nvidia-nim');
+    vi.stubEnv('GEMINI_API_KEY', '');
     vi.stubEnv('NVIDIA_API_KEY', 'test-nvidia-key');
 
     const provider = getLlmProvider();
