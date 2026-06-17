@@ -53,8 +53,6 @@ export async function saveTrip(
 }
 
 export async function deleteTrip(db: AppDatabase, userId: string, tripId: string): Promise<boolean> {
-  const result = await db
-    .delete(savedTrips)
-    .where(and(eq(savedTrips.id, tripId), eq(savedTrips.userId, userId)));
+  const result = await db.delete(savedTrips).where(and(eq(savedTrips.id, tripId), eq(savedTrips.userId, userId)));
   return (result.rowsAffected ?? 0) > 0;
 }

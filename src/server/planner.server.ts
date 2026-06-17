@@ -1,7 +1,7 @@
 import type { GoogleGenAI } from '@google/genai';
 import { getGeminiLanguage } from '../i18n/index';
 import { responseSchema } from '../lib/planner-schema';
-import type { TripSearchParams } from '../types';
+import type { DayPlan, TripSearchParams } from '../types';
 
 export class ValidationError extends Error {
   constructor(message: string) {
@@ -48,7 +48,7 @@ export interface PlannerResult {
   };
   packingEssentials: string[];
   weatherExpected: string;
-  days: unknown[];
+  days: DayPlan[];
   tips: Array<{ category: string; text: string }>;
 }
 

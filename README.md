@@ -25,12 +25,12 @@ cp .env.example .env
 
 Preencha o `.env`:
 
-| Variável | Descrição |
-|----------|-----------|
-| `GEMINI_API_KEY` | Chave da API Google Gemini |
-| `TURSO_DATABASE_URL` | `file:./data/trip-planner.sqlite` para dev local |
+| Variável             | Descrição                                               |
+| -------------------- | ------------------------------------------------------- |
+| `GEMINI_API_KEY`     | Chave da API Google Gemini                              |
+| `TURSO_DATABASE_URL` | `file:./data/trip-planner.sqlite` para dev local        |
 | `BETTER_AUTH_SECRET` | String aleatória longa (ex.: `openssl rand -base64 32`) |
-| `BETTER_AUTH_URL` | URL base em dev: `http://localhost:3000` |
+| `BETTER_AUTH_URL`    | URL base em dev: `http://localhost:3000`                |
 
 ```bash
 npm run db:push
@@ -41,17 +41,17 @@ Acesse [http://localhost:3000](http://localhost:3000), crie uma conta e gere seu
 
 ## Scripts
 
-| Comando | Descrição |
-|---------|-----------|
-| `npm run dev` | Servidor de desenvolvimento |
-| `npm run build` | Build de produção |
-| `npm run start` | Servidor de produção |
-| `npm test` | Testes (Vitest) |
-| `npm run lint` | Typecheck (`tsc --noEmit`) |
-| `npm run format` | Formata com Prettier |
-| `npm run format:check` | Verifica formatação |
-| `npm run ci` | format + lint + test + build |
-| `npm run db:push` | Aplica schema no banco |
+| Comando                | Descrição                    |
+| ---------------------- | ---------------------------- |
+| `npm run dev`          | Servidor de desenvolvimento  |
+| `npm run build`        | Build de produção            |
+| `npm run start`        | Servidor de produção         |
+| `npm test`             | Testes (Vitest)              |
+| `npm run lint`         | Typecheck (`tsc --noEmit`)   |
+| `npm run format`       | Formata com Prettier         |
+| `npm run format:check` | Verifica formatação          |
+| `npm run ci`           | format + lint + test + build |
+| `npm run db:push`      | Aplica schema no banco       |
 
 ## Qualidade
 

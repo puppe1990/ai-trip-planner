@@ -10,19 +10,13 @@ interface SavedTripsProps {
   onDeleteTrip: (id: string, e: React.MouseEvent) => void;
 }
 
-export default function SavedTrips({
-  savedTrips,
-  onSelectTrip,
-  onDeleteTrip,
-}: SavedTripsProps) {
+export default function SavedTrips({ savedTrips, onSelectTrip, onDeleteTrip }: SavedTripsProps) {
   const { t, i18n } = useTranslation();
   const [searchTerm, setSearchTerm] = useState('');
 
   const dateLocale = i18n.language?.startsWith('en') ? 'en-US' : 'pt-BR';
 
-  const filteredTrips = savedTrips.filter((trip) =>
-    trip.destination.toLowerCase().includes(searchTerm.toLowerCase())
-  );
+  const filteredTrips = savedTrips.filter((trip) => trip.destination.toLowerCase().includes(searchTerm.toLowerCase()));
 
   return (
     <div className="space-y-6">
@@ -67,17 +61,13 @@ export default function SavedTrips({
           </div>
         </div>
       ) : filteredTrips.length === 0 ? (
-        <div className="text-center py-8 text-slate-450 text-xs">
-          {t('saved.noResults', { term: searchTerm })}
-        </div>
+        <div className="text-center py-8 text-slate-450 text-xs">{t('saved.noResults', { term: searchTerm })}</div>
       ) : (
         /* Trips Cards list */
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {filteredTrips.map((trip) => {
             // Pick a beautiful color palette based on destination name hash
-            const indexHash = trip.destination
-              .split('')
-              .reduce((acc, char) => acc + char.charCodeAt(0), 0);
+            const indexHash = trip.destination.split('').reduce((acc, char) => acc + char.charCodeAt(0), 0);
             const gradients = [
               'from-sky-500 via-indigo-500 to-indigo-600',
               'from-emerald-400 via-teal-500 to-emerald-600',
@@ -100,8 +90,7 @@ export default function SavedTrips({
                 >
                   <div className="space-y-1 max-w-[80%]">
                     <span className="text-[9px] uppercase tracking-wider font-extrabold bg-white/20 px-2 py-0.5 rounded-full backdrop-blur-sm">
-                      {trip.durationDays}{' '}
-                      {trip.durationDays === 1 ? t('common.day') : t('common.daysLabel')}
+                      {trip.durationDays} {trip.durationDays === 1 ? t('common.day') : t('common.daysLabel')}
                     </span>
                     <h3 className="font-extrabold text-base leading-tight truncate drop-shadow-sm text-white">
                       {trip.destination}

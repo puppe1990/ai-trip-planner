@@ -2,12 +2,7 @@ import type { TripPlan } from '../types';
 
 function escapeText(str: string): string {
   if (!str) return '';
-  return str
-    .replace(/\\/g, '\\\\')
-    .replace(/;/g, '\\;')
-    .replace(/,/g, '\\,')
-    .replace(/\n/g, '\\n')
-    .replace(/\r/g, '');
+  return str.replace(/\\/g, '\\\\').replace(/;/g, '\\;').replace(/,/g, '\\,').replace(/\n/g, '\\n').replace(/\r/g, '');
 }
 
 function formatTime(dateObj: Date, h: number, m: number): string {
@@ -40,7 +35,18 @@ export function generateIcsContent(tripPlan: TripPlan, startDate: string): strin
 
     const events = [
       { slot: 'morning', start: [9, 0] as const, end: [12, 0] as const, label: 'Manhã', activity: day.morning },
-      { slot: 'dine', start: [13, 0] as const, end: [14, 30] as const, label: 'Almoço', activity: { title: day.diningSpot.name, description: day.diningSpot.description, duration: '', cost: day.diningSpot.priceLevel } },
+      {
+        slot: 'dine',
+        start: [13, 0] as const,
+        end: [14, 30] as const,
+        label: 'Almoço',
+        activity: {
+          title: day.diningSpot.name,
+          description: day.diningSpot.description,
+          duration: '',
+          cost: day.diningSpot.priceLevel,
+        },
+      },
       { slot: 'afternoon', start: [15, 0] as const, end: [18, 0] as const, label: 'Tarde', activity: day.afternoon },
       { slot: 'evening', start: [20, 0] as const, end: [23, 0] as const, label: 'Noite', activity: day.evening },
     ];
@@ -51,7 +57,9 @@ export function generateIcsContent(tripPlan: TripPlan, startDate: string): strin
       icsLines.push(`DTSTAMP:${nowString}`);
       icsLines.push(`DTSTART:${formatTime(eventDate, evt.start[0], evt.start[1])}`);
       icsLines.push(`DTEND:${formatTime(eventDate, evt.end[0], evt.end[1])}`);
-      icsLines.push(`SUMMARY:${escapeText(`[Dia ${day.dayNumber}] ${day.theme} - ${evt.label}: ${evt.activity.title}`)}`);
+      icsLines.push(
+        `SUMMARY:${escapeText(`[Dia ${day.dayNumber}] ${day.theme} - ${evt.label}: ${evt.activity.title}`)}`,
+      );
       icsLines.push(`DESCRIPTION:${escapeText(evt.activity.description)}`);
       icsLines.push(`LOCATION:${escapeText(tripPlan.destination)}`);
       icsLines.push('END:VEVENT');

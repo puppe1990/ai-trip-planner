@@ -42,10 +42,12 @@ describe('generateIcsContent', () => {
   it('escapes semicolons in text fields', () => {
     const planWithSpecial = {
       ...plan,
-      days: [{
-        ...plan.days[0],
-        morning: { ...plan.days[0].morning, description: 'Visita; com guia' },
-      }],
+      days: [
+        {
+          ...plan.days[0],
+          morning: { ...plan.days[0].morning, description: 'Visita; com guia' },
+        },
+      ],
     };
     const ics = generateIcsContent(planWithSpecial, '2026-06-15');
     expect(ics).toContain('Visita\\; com guia');

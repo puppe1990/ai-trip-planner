@@ -14,12 +14,7 @@ import {
 } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import type { TFunction } from 'i18next';
-import {
-  buildMapPoints,
-  buildRoutesPath,
-  type MapPoint,
-  type TimeSlot,
-} from '@/src/lib/map-points';
+import { buildMapPoints, buildRoutesPath, type MapPoint, type TimeSlot } from '@/src/lib/map-points';
 import type { TripPlan } from '@/src/types';
 
 interface InteractiveTripMapProps {
@@ -42,10 +37,7 @@ function getTimeSlotLabel(timeSlot: TimeSlot, t: TFunction): string {
   }
 }
 
-export default function InteractiveTripMap({
-  tripPlan,
-  activeDay,
-}: InteractiveTripMapProps) {
+export default function InteractiveTripMap({ tripPlan, activeDay }: InteractiveTripMapProps) {
   const { t } = useTranslation();
   const [selectedPoint, setSelectedPoint] = useState<MapPoint | null>(null);
   const [filterDay, setFilterDay] = useState<number | 'all'>(activeDay);
@@ -65,10 +57,7 @@ export default function InteractiveTripMap({
     return mapPoints.filter((p) => p.dayNumber === filterDay);
   }, [mapPoints, filterDay]);
 
-  const routesPath = useMemo(
-    () => buildRoutesPath(filteredPoints),
-    [filteredPoints],
-  );
+  const routesPath = useMemo(() => buildRoutesPath(filteredPoints), [filteredPoints]);
 
   const handleZoomIn = () => setZoom((z) => Math.min(3, z + 0.2));
   const handleZoomOut = () => setZoom((z) => Math.max(0.8, z - 0.2));
@@ -119,9 +108,7 @@ export default function InteractiveTripMap({
           <button
             onClick={() => setFilterDay('all')}
             className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-all cursor-pointer ${
-              filterDay === 'all'
-                ? 'bg-indigo-600 text-white shadow-sm'
-                : 'text-slate-400 hover:text-slate-200'
+              filterDay === 'all' ? 'bg-indigo-600 text-white shadow-sm' : 'text-slate-400 hover:text-slate-200'
             }`}
           >
             {t('trip.viewAll')}
@@ -168,12 +155,8 @@ export default function InteractiveTripMap({
               <Navigation className="w-3.5 h-3.5 text-indigo-400" />
               {t('map.cartographicAxis')}
             </div>
-            <div>
-              Min Lng: {Math.min(...mapPoints.map((p) => p.lng)).toFixed(4)}°
-            </div>
-            <div>
-              Max Lat: {Math.max(...mapPoints.map((p) => p.lat)).toFixed(4)}°
-            </div>
+            <div>Min Lng: {Math.min(...mapPoints.map((p) => p.lng)).toFixed(4)}°</div>
+            <div>Max Lat: {Math.max(...mapPoints.map((p) => p.lat)).toFixed(4)}°</div>
           </div>
 
           <div className="absolute top-4 left-4 flex flex-col gap-1.5 z-25">
@@ -238,21 +221,17 @@ export default function InteractiveTripMap({
             {filteredPoints.map((point) => {
               const isSelected = selectedPoint?.id === point.id;
 
-              let colorClasses =
-                'bg-indigo-600 border-indigo-400 text-indigo-100 shadow-indigo-600/30';
+              let colorClasses = 'bg-indigo-600 border-indigo-400 text-indigo-100 shadow-indigo-600/30';
               let timeIcon = <Sun className="w-2.5 h-2.5" />;
 
               if (point.timeSlot === 'Tarde') {
-                colorClasses =
-                  'bg-sky-500 border-sky-300 text-sky-100 shadow-sky-500/30';
+                colorClasses = 'bg-sky-500 border-sky-300 text-sky-100 shadow-sky-500/30';
                 timeIcon = <CloudSun className="w-2.5 h-2.5" />;
               } else if (point.timeSlot === 'Noite') {
-                colorClasses =
-                  'bg-slate-700 border-slate-500 text-slate-100 shadow-slate-700/30';
+                colorClasses = 'bg-slate-700 border-slate-500 text-slate-100 shadow-slate-700/30';
                 timeIcon = <Moon className="w-2.5 h-2.5" />;
               } else if (point.timeSlot === 'Gastronomia') {
-                colorClasses =
-                  'bg-orange-600 border-orange-400 text-orange-100 shadow-orange-600/30';
+                colorClasses = 'bg-orange-600 border-orange-400 text-orange-100 shadow-orange-600/30';
                 timeIcon = <UtensilsCrossed className="w-2.5 h-2.5" />;
               }
 
@@ -289,23 +268,15 @@ export default function InteractiveTripMap({
                 <div className="flex justify-between items-start border-b border-slate-800 pb-2 mb-2.5">
                   <div className="space-y-0.5">
                     <span className="inline-flex items-center gap-1 text-[9px] uppercase tracking-wider font-extrabold text-indigo-400 bg-indigo-500/10 px-2 py-0.5 rounded">
-                      {t('common.day')} {selectedPoint.dayNumber} •{' '}
-                      {getTimeSlotLabel(selectedPoint.timeSlot, t)}
+                      {t('common.day')} {selectedPoint.dayNumber} • {getTimeSlotLabel(selectedPoint.timeSlot, t)}
                     </span>
-                    <h4 className="font-extrabold text-xs text-slate-100 mt-1">
-                      {selectedPoint.title}
-                    </h4>
+                    <h4 className="font-extrabold text-xs text-slate-100 mt-1">{selectedPoint.title}</h4>
                   </div>
-                  <button
-                    onClick={() => setSelectedPoint(null)}
-                    className="p-1 text-slate-400 hover:text-slate-100"
-                  >
+                  <button onClick={() => setSelectedPoint(null)} className="p-1 text-slate-400 hover:text-slate-100">
                     <XButton className="w-3 h-3" />
                   </button>
                 </div>
-                <p className="text-[11px] text-slate-300 leading-relaxed line-clamp-3">
-                  {selectedPoint.description}
-                </p>
+                <p className="text-[11px] text-slate-300 leading-relaxed line-clamp-3">{selectedPoint.description}</p>
 
                 <div className="mt-3 pt-2.5 border-t border-slate-800 text-[10px] text-slate-400 flex justify-between items-center font-mono">
                   <span>
@@ -333,15 +304,10 @@ export default function InteractiveTripMap({
             {filteredPoints.map((point) => {
               const isSelected = selectedPoint?.id === point.id;
 
-              let slotBadge =
-                'text-indigo-400 bg-indigo-950/40 border-indigo-900/30';
-              if (point.timeSlot === 'Tarde')
-                slotBadge = 'text-sky-400 bg-sky-950/40 border-sky-900/30';
-              if (point.timeSlot === 'Noite')
-                slotBadge = 'text-slate-400 bg-slate-900/40 border-slate-850';
-              if (point.timeSlot === 'Gastronomia')
-                slotBadge =
-                  'text-orange-405 bg-orange-950/20 border-orange-900/30';
+              let slotBadge = 'text-indigo-400 bg-indigo-950/40 border-indigo-900/30';
+              if (point.timeSlot === 'Tarde') slotBadge = 'text-sky-400 bg-sky-950/40 border-sky-900/30';
+              if (point.timeSlot === 'Noite') slotBadge = 'text-slate-400 bg-slate-900/40 border-slate-850';
+              if (point.timeSlot === 'Gastronomia') slotBadge = 'text-orange-405 bg-orange-950/20 border-orange-900/30';
 
               return (
                 <button
@@ -363,9 +329,7 @@ export default function InteractiveTripMap({
                       {getTimeSlotLabel(point.timeSlot, t)}
                     </span>
                   </div>
-                  <h5 className="font-bold text-slate-100 truncate w-full">
-                    {point.title}
-                  </h5>
+                  <h5 className="font-bold text-slate-100 truncate w-full">{point.title}</h5>
                 </button>
               );
             })}
@@ -391,11 +355,7 @@ function XButton({ className }: { className?: string }) {
       stroke="currentColor"
       className={className}
     >
-      <path
-        strokeLinecap="round"
-        strokeLinejoin="round"
-        d="M6 18L18 6M6 6l12 12"
-      />
+      <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
     </svg>
   );
 }

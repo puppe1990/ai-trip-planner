@@ -22,15 +22,17 @@ Line 1 covers downtown`;
 
   it('extracts unique grounding sources', () => {
     const sources = extractGroundingSources({
-      candidates: [{
-        groundingMetadata: {
-          groundingChunks: [
-            { web: { uri: 'https://example.com/a', title: 'Source A' } },
-            { web: { uri: 'https://example.com/a', title: 'Duplicate' } },
-            { web: { uri: 'https://example.com/b', title: 'Source B' } },
-          ],
+      candidates: [
+        {
+          groundingMetadata: {
+            groundingChunks: [
+              { web: { uri: 'https://example.com/a', title: 'Source A' } },
+              { web: { uri: 'https://example.com/a', title: 'Duplicate' } },
+              { web: { uri: 'https://example.com/b', title: 'Source B' } },
+            ],
+          },
         },
-      }],
+      ],
     });
     expect(sources).toHaveLength(2);
     expect(sources[0].url).toBe('https://example.com/a');

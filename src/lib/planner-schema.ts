@@ -82,5 +82,15 @@ export const responseSchema = {
       },
     },
   },
-  required: ['destination', 'durationDays', 'tagline', 'summary', 'budgetEstimate', 'packingEssentials', 'weatherExpected', 'days', 'tips'],
+  required: [
+    'destination',
+    'durationDays',
+    'tagline',
+    'summary',
+    'budgetEstimate',
+    'packingEssentials',
+    'weatherExpected',
+    'days',
+    'tips',
+  ],
 };
