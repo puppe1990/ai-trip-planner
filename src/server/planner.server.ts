@@ -1,5 +1,10 @@
-import { buildPlannerJsonSchemaInstruction } from '../lib/planner-json-instructions';
-import { parsePlannerResult } from '../lib/planner-zod-schema';
+import {
+  buildPlannerDaySchemaInstruction,
+  buildPlannerJsonSchemaInstruction,
+  buildPlannerOutlineSchemaInstruction,
+  buildPlannerTipsSchemaInstruction,
+} from '../lib/planner-json-instructions';
+import { parsePlannerDay, parsePlannerOutline, parsePlannerResult, parsePlannerTips } from '../lib/planner-zod-schema';
 import { getGeminiLanguage } from '../i18n/index';
 import type { LlmProvider } from '../lib/llm/types';
 import type { AppDatabase } from '../lib/db/index';
@@ -38,7 +43,7 @@ Context for personalization:
 ${languageInstruction} Organize activities realistically with morning, afternoon and evening plans coherent with travel distances and times.`;
 }
 
-export interface PlannerResult {
+export interface PlannerOutline {
   destination: string;
   durationDays: number;
   tagline: string;
@@ -51,8 +56,126 @@ export interface PlannerResult {
   };
   packingEssentials: string[];
   weatherExpected: string;
+}
+
+export interface PlannerResult extends PlannerOutline {
   days: DayPlan[];
   tips: Array<{ category: string; text: string }>;
+}
+
+function getPlannerSystemInstruction(locale: string): string {
+  const lang = getGeminiLanguage(locale);
+  return lang === 'en'
+    ? 'You are a professional travel guide. Create logical, detailed itineraries with authentic local experiences. Respond strictly in the provided JSON schema and in English.'
+    : 'Você é um guia turístico profissional. Crie itinerários lógicos e detalhados com experiências locais autênticas. Responda estritamente no schema JSON fornecido e em Português (pt-BR).';
+}
+
+async function withGenerationRetries<T>(operation: () => Promise<T>): Promise<T> {
+  let delay = 1500;
+
+  for (let attempt = 1; attempt <= 3; attempt++) {
+    try {
+      return await operation();
+    } catch (error: unknown) {
+      if (attempt === 3) throw error;
+      await new Promise((resolve) => setTimeout(resolve, delay));
+      delay *= 2;
+    }
+  }
+
+  throw new Error('Generation failed.');
+}
+
+async function requestPlannerJson(
+  provider: LlmProvider,
+  locale: string,
+  schemaInstruction: string,
+  prompt: string,
+): Promise<string> {
+  const responseText = await provider.generateJson({
+    system: `${getPlannerSystemInstruction(locale)}\n\n${schemaInstruction}`,
+    prompt: `${prompt}\n\n${schemaInstruction}`,
+    temperature: 0.8,
+  });
+
+  if (!responseText) throw new Error('No content returned by model.');
+  return responseText;
+}
+
+export function assemblePlannerResult(
+  outline: PlannerOutline,
+  days: DayPlan[],
+  tips: Array<{ category: string; text: string }>,
+): PlannerResult {
+  return {
+    ...outline,
+    days,
+    tips,
+  };
+}
+
+export async function generateTripOutline(
+  provider: LlmProvider,
+  params: TripSearchParams,
+  locale = 'pt-BR',
+): Promise<PlannerOutline> {
+  validateSearchParams(params);
+  const schemaInstruction = buildPlannerOutlineSchemaInstruction();
+  const prompt = `${buildPlannerPrompt(params, locale)}\n\nCreate only the trip overview: tagline, summary, budgetEstimate, packingEssentials and weatherExpected.`;
+
+  return withGenerationRetries(async () => {
+    const responseText = await requestPlannerJson(provider, locale, schemaInstruction, prompt);
+    return parsePlannerOutline(responseText, {
+      destination: params.destination.trim(),
+      durationDays: params.duration,
+    });
+  });
+}
+
+export async function generateTripDay(
+  provider: LlmProvider,
+  params: TripSearchParams,
+  locale: string,
+  dayNumber: number,
+  outline: PlannerOutline,
+): Promise<DayPlan> {
+  const schemaInstruction = buildPlannerDaySchemaInstruction();
+  const prompt = `${buildPlannerPrompt(params, locale)}
+
+Trip overview:
+- Tagline: ${outline.tagline}
+- Summary: ${outline.summary}
+
+Create ONLY day ${dayNumber} of ${params.duration}. Keep activities realistic for the destination and coherent with the overview.`;
+  return withGenerationRetries(async () => {
+    const responseText = await requestPlannerJson(provider, locale, schemaInstruction, prompt);
+    return parsePlannerDay(responseText, dayNumber);
+  });
+}
+
+export async function generateTripTips(
+  provider: LlmProvider,
+  params: TripSearchParams,
+  locale: string,
+  outline: PlannerOutline,
+  days: DayPlan[],
+): Promise<Array<{ category: string; text: string }>> {
+  const schemaInstruction = buildPlannerTipsSchemaInstruction();
+  const dayThemes = days.map((day) => `Day ${day.dayNumber}: ${day.theme}`).join('\n');
+  const prompt = `${buildPlannerPrompt(params, locale)}
+
+Trip overview:
+- Summary: ${outline.summary}
+- Weather: ${outline.weatherExpected}
+
+Day themes:
+${dayThemes}
+
+Create practical travel tips for this itinerary.`;
+  return withGenerationRetries(async () => {
+    const responseText = await requestPlannerJson(provider, locale, schemaInstruction, prompt);
+    return parsePlannerTips(responseText);
+  });
 }
 
 export async function generateTripPlan(
@@ -61,40 +184,16 @@ export async function generateTripPlan(
   locale = 'pt-BR',
 ): Promise<PlannerResult> {
   validateSearchParams(params);
-
-  const lang = getGeminiLanguage(locale);
-  const systemInstruction =
-    lang === 'en'
-      ? 'You are a professional travel guide. Create logical, detailed itineraries with authentic local experiences. Respond strictly in the provided JSON schema and in English.'
-      : 'Você é um guia turístico profissional. Crie itinerários lógicos e detalhados com experiências locais autênticas. Responda estritamente no schema JSON fornecido e em Português (pt-BR).';
-
   const schemaInstruction = buildPlannerJsonSchemaInstruction();
-  const promptMsg = `${buildPlannerPrompt(params, locale)}\n\n${schemaInstruction}`;
-  const fullSystemInstruction = `${systemInstruction}\n\n${schemaInstruction}`;
-  let delay = 1500;
+  const prompt = buildPlannerPrompt(params, locale);
 
-  for (let attempt = 1; attempt <= 3; attempt++) {
-    try {
-      const responseText = await provider.generateJson({
-        system: fullSystemInstruction,
-        prompt: promptMsg,
-        temperature: 0.8,
-      });
-
-      if (!responseText) throw new Error('No content returned by model.');
-
-      return parsePlannerResult(responseText, {
-        destination: params.destination.trim(),
-        durationDays: params.duration,
-      });
-    } catch (error: unknown) {
-      if (attempt === 3) throw error;
-      await new Promise((resolve) => setTimeout(resolve, delay));
-      delay *= 2;
-    }
-  }
-
-  throw new Error('No content returned by model.');
+  return withGenerationRetries(async () => {
+    const responseText = await requestPlannerJson(provider, locale, schemaInstruction, prompt);
+    return parsePlannerResult(responseText, {
+      destination: params.destination.trim(),
+      durationDays: params.duration,
+    });
+  });
 }
 
 export function buildTripPlanFromGeneration(
@@ -110,6 +209,19 @@ export function buildTripPlanFromGeneration(
     stylePreference: params.style,
     companionPreference: params.companion,
   };
+}
+
+export async function persistAssembledTripPlan(
+  db: AppDatabase,
+  userId: string,
+  params: TripSearchParams,
+  outline: PlannerOutline,
+  days: DayPlan[],
+  tips: Array<{ category: string; text: string }>,
+): Promise<TripPlan> {
+  const generated = assemblePlannerResult(outline, days, tips);
+  const plan = buildTripPlanFromGeneration(generated, params);
+  return upsertTrip(db, userId, plan, params);
 }
 
 export async function generateAndPersistTripPlan(

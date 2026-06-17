@@ -65,6 +65,13 @@
   "loading": {
     "title": "Artificial Intelligence is thinking...",
     "hint": "This may take 15 to 30 seconds while we structure the best realistic itinerary for you. Please wait.",
+    "multiStepHint": "Generating in steps to avoid server timeouts. This may take 1 to 3 minutes — each step runs separately.",
+    "steps": {
+      "outline": "Building the trip overview...",
+      "day": "Generating day {{day}} of {{total}}...",
+      "tips": "Gathering practical tips...",
+      "saving": "Saving your itinerary..."
+    },
     "didYouKnow": "Did you know?",
     "tip": "Providing specific notes (e.g. \"I prefer short walks\" or \"gluten restrictions\") helps the AI recalibrate stop and restaurant suggestions to match your real taste!",
     "messages": [

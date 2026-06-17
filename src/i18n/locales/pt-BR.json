@@ -65,6 +65,13 @@
   "loading": {
     "title": "A Inteligência Artificial está pensando...",
     "hint": "Isso pode levar de 15 a 30 segundos enquanto estruturamos o melhor itinerário realista para você. Por favor, aguarde.",
+    "multiStepHint": "Gerando em etapas para evitar timeout no servidor. Pode levar de 1 a 3 minutos — cada etapa é salva separadamente.",
+    "steps": {
+      "outline": "Montando visão geral da viagem...",
+      "day": "Gerando dia {{day}} de {{total}}...",
+      "tips": "Coletando dicas práticas...",
+      "saving": "Salvando seu roteiro..."
+    },
     "didYouKnow": "Você sabia?",
     "tip": "Oferecer notas específicas (ex: \"gosto de caminhadas curtas\" ou \"restrições a glúten\") faz a IA recalibrar as sugestões de pontos de parada e restaurantes para aproximar as sugestões do seu gosto real!",
     "messages": [

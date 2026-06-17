@@ -1,5 +1,6 @@
 import { z } from 'zod';
-import type { PlannerResult } from '../server/planner.server';
+import type { DayPlan, TravelTip } from '../types';
+import type { PlannerOutline, PlannerResult } from '../server/planner.server';
 
 const activitySchema = z.object({
   title: z.string(),
@@ -24,26 +25,35 @@ const dayPlanSchema = z.object({
   diningSpot: diningSpotSchema,
 });
 
-export const plannerResultSchema = z.object({
+const budgetEstimateSchema = z.object({
+  totalCostEstimate: z.string(),
+  hotelAverageNight: z.string(),
+  foodAverageDay: z.string(),
+  transportAverageDay: z.string(),
+});
+
+const travelTipSchema = z.object({
+  category: z.string(),
+  text: z.string(),
+});
+
+export const plannerOutlineSchema = z.object({
   destination: z.string(),
   durationDays: z.number().int(),
   tagline: z.string(),
   summary: z.string(),
-  budgetEstimate: z.object({
-    totalCostEstimate: z.string(),
-    hotelAverageNight: z.string(),
-    foodAverageDay: z.string(),
-    transportAverageDay: z.string(),
-  }),
+  budgetEstimate: budgetEstimateSchema,
   packingEssentials: z.array(z.string()),
   weatherExpected: z.string(),
+});
+
+export const plannerTipsSchema = z.object({
+  tips: z.array(travelTipSchema).min(1),
+});
+
+export const plannerResultSchema = plannerOutlineSchema.extend({
   days: z.array(dayPlanSchema),
-  tips: z.array(
-    z.object({
-      category: z.string(),
-      text: z.string(),
-    }),
-  ),
+  tips: z.array(travelTipSchema),
 });
 
 export type PlannerParseContext = {
@@ -89,7 +99,11 @@ export function normalizePlannerPayload(parsed: unknown, context?: PlannerParseC
   return normalized;
 }
 
-export function parsePlannerResult(rawJson: string, context?: PlannerParseContext): PlannerResult {
+function formatPlannerValidationError(path: string, message?: string): Error {
+  return new Error(`Invalid planner JSON at ${path}: ${message ?? 'validation failed'}`);
+}
+
+function parseWithSchema<T>(rawJson: string, schema: z.ZodType<T>, context?: PlannerParseContext): T {
   let parsed: unknown;
 
   try {
@@ -100,12 +114,31 @@ export function parsePlannerResult(rawJson: string, context?: PlannerParseContex
 
   parsed = normalizePlannerPayload(parsed, context);
 
-  const result = plannerResultSchema.safeParse(parsed);
+  const result = schema.safeParse(parsed);
   if (!result.success) {
     const issue = result.error.issues[0];
-    const path = issue?.path.join('.') || 'response';
-    throw new Error(`Invalid planner JSON at ${path}: ${issue?.message ?? 'validation failed'}`);
+    throw formatPlannerValidationError(issue?.path.join('.') || 'response', issue?.message);
   }
 
   return result.data;
+}
+
+export function parsePlannerOutline(rawJson: string, context?: PlannerParseContext): PlannerOutline {
+  return parseWithSchema(rawJson, plannerOutlineSchema, context);
+}
+
+export function parsePlannerDay(rawJson: string, dayNumber: number): DayPlan {
+  const parsed = parseWithSchema(rawJson, dayPlanSchema);
+  if (parsed.dayNumber !== dayNumber) {
+    throw new Error(`Invalid planner JSON at dayNumber: expected ${dayNumber}, received ${parsed.dayNumber}`);
+  }
+  return parsed;
+}
+
+export function parsePlannerTips(rawJson: string): TravelTip[] {
+  return parseWithSchema(rawJson, plannerTipsSchema).tips;
+}
+
+export function parsePlannerResult(rawJson: string, context?: PlannerParseContext): PlannerResult {
+  return parseWithSchema(rawJson, plannerResultSchema, context);
 }

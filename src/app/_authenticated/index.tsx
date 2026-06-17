@@ -13,7 +13,8 @@ import LanguageSwitcher from '@/src/components/LanguageSwitcher';
 import AiSettingsModal from '@/src/components/AiSettingsModal';
 import AiGenerationRecoveryModal from '@/src/components/AiGenerationRecoveryModal';
 import { parseShareHash } from '@/src/lib/share';
-import { generateTripPlanFn } from '@/src/server/planner.functions';
+import { generateTripPlanForUser } from '@/src/lib/trip-generation-client';
+import type { TripGenerationProgress } from '@/src/lib/trip-generation';
 import { listTripsFn, deleteTripFn } from '@/src/server/trips.functions';
 import { signOutAndRedirect } from '@/src/lib/auth-actions';
 
@@ -30,6 +31,7 @@ function HomePage() {
   const [savedTrips, setSavedTrips] = useState<TripPlan[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [loadingStep, setLoadingStep] = useState(0);
+  const [generationProgress, setGenerationProgress] = useState<TripGenerationProgress | null>(null);
   const [generationError, setGenerationError] = useState<string | null>(null);
   const [recoveryModalOpen, setRecoveryModalOpen] = useState(false);
 
@@ -76,13 +78,14 @@ function HomePage() {
     setIsLoading(true);
     setGenerationError(null);
     setRecoveryModalOpen(false);
+    setGenerationProgress(null);
     setActivePlan(null);
     setSearchParams(params);
 
     try {
-      const parsedPlan = (await generateTripPlanFn({
-        data: { params, locale: i18n.language },
-      })) as TripPlan;
+      const parsedPlan = await generateTripPlanForUser(params, i18n.language, (progress) => {
+        setGenerationProgress(progress);
+      });
 
       setActivePlan(parsedPlan);
       await loadSavedTrips();
@@ -181,9 +184,16 @@ function HomePage() {
                   </span>
                 </div>
                 <h3 className="text-xl font-bold text-slate-800 transition-all duration-300">
-                  {loadingMessages[loadingStep]}
+                  {generationProgress
+                    ? t(`loading.steps.${generationProgress.phase}`, {
+                        day: generationProgress.dayNumber,
+                        total: generationProgress.totalDays,
+                      })
+                    : loadingMessages[loadingStep]}
                 </h3>
-                <p className="text-xs text-slate-450 leading-relaxed max-w-xs mx-auto">{t('loading.hint')}</p>
+                <p className="text-xs text-slate-450 leading-relaxed max-w-xs mx-auto">
+                  {generationProgress ? t('loading.multiStepHint') : t('loading.hint')}
+                </p>
               </div>
               <div className="bg-indigo-50/40 border border-indigo-150 p-4 rounded-2xl space-y-1 text-left w-full">
                 <h4 className="text-xs font-bold text-indigo-850 flex items-center gap-1.5">

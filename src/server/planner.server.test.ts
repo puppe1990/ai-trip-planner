@@ -5,9 +5,13 @@ import { createTestDb, destroyTestDb } from '../test/db';
 import type { Client } from '@libsql/client';
 import { user } from '../lib/db/schema';
 import {
+  assemblePlannerResult,
   buildPlannerPrompt,
   generateAndPersistTripPlan,
+  generateTripDay,
+  generateTripOutline,
   generateTripPlan,
+  generateTripTips,
   validateSearchParams,
   ValidationError,
 } from './planner.server';
@@ -110,6 +114,99 @@ describe('planner.server', () => {
     expect(result.destination).toBe('Tokyo, Japan');
     expect(generateJson).toHaveBeenCalledTimes(2);
     expect(generateJson.mock.calls[0]?.[0]?.system).toContain('destination');
+  });
+
+  it('generates outline via a dedicated schema prompt', async () => {
+    const outlineJson = {
+      destination: 'Tokyo, Japan',
+      durationDays: 5,
+      tagline: 'Future meets tradition',
+      summary: 'Amazing trip',
+      budgetEstimate: validPlannerJson.budgetEstimate,
+      packingEssentials: validPlannerJson.packingEssentials,
+      weatherExpected: validPlannerJson.weatherExpected,
+    };
+    const generateJson = vi.fn().mockResolvedValue(JSON.stringify(outlineJson));
+    const provider = createMockProvider(generateJson);
+
+    const result = await generateTripOutline(provider, validParams, 'en');
+
+    expect(result.summary).toBe('Amazing trip');
+    expect(generateJson).toHaveBeenCalledOnce();
+    expect(generateJson).toHaveBeenCalledWith(
+      expect.objectContaining({
+        system: expect.stringContaining('budgetEstimate'),
+        prompt: expect.stringContaining('Tokyo, Japan'),
+      }),
+    );
+  });
+
+  it('generates a single day with outline context', async () => {
+    const outline = {
+      destination: 'Tokyo, Japan',
+      durationDays: 5,
+      tagline: 'Future meets tradition',
+      summary: 'Amazing trip',
+      budgetEstimate: validPlannerJson.budgetEstimate,
+      packingEssentials: validPlannerJson.packingEssentials,
+      weatherExpected: validPlannerJson.weatherExpected,
+    };
+    const generateJson = vi.fn().mockResolvedValue(JSON.stringify(validPlannerJson.days[0]));
+    const provider = createMockProvider(generateJson);
+
+    const result = await generateTripDay(provider, validParams, 'en', 1, outline);
+
+    expect(result.dayNumber).toBe(1);
+    expect(generateJson).toHaveBeenCalledWith(
+      expect.objectContaining({
+        prompt: expect.stringContaining('day 1'),
+        system: expect.stringContaining('dayNumber'),
+      }),
+    );
+  });
+
+  it('generates tips from outline and days context', async () => {
+    const outline = {
+      destination: 'Tokyo, Japan',
+      durationDays: 5,
+      tagline: 'Future meets tradition',
+      summary: 'Amazing trip',
+      budgetEstimate: validPlannerJson.budgetEstimate,
+      packingEssentials: validPlannerJson.packingEssentials,
+      weatherExpected: validPlannerJson.weatherExpected,
+    };
+    const generateJson = vi.fn().mockResolvedValue(JSON.stringify({ tips: validPlannerJson.tips }));
+    const provider = createMockProvider(generateJson);
+
+    const result = await generateTripTips(provider, validParams, 'en', outline, validPlannerJson.days);
+
+    expect(result).toEqual(validPlannerJson.tips);
+    expect(generateJson).toHaveBeenCalledWith(
+      expect.objectContaining({
+        prompt: expect.stringContaining('Amazing trip'),
+        system: expect.stringContaining('tips'),
+      }),
+    );
+  });
+
+  it('assembles outline, days and tips into a planner result', () => {
+    const outline = {
+      destination: 'Tokyo, Japan',
+      durationDays: 5,
+      tagline: 'Future meets tradition',
+      summary: 'Amazing trip',
+      budgetEstimate: validPlannerJson.budgetEstimate,
+      packingEssentials: validPlannerJson.packingEssentials,
+      weatherExpected: validPlannerJson.weatherExpected,
+    };
+
+    const result = assemblePlannerResult(outline, validPlannerJson.days, validPlannerJson.tips);
+
+    expect(result).toEqual({
+      ...outline,
+      days: validPlannerJson.days,
+      tips: validPlannerJson.tips,
+    });
   });
 
   it('retries provider.generateJson up to three times', async () => {
