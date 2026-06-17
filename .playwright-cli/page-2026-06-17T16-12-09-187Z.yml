@@ -1,0 +1,38 @@
+- generic [ref=e116]:
+    - banner [ref=e117]:
+        - generic [ref=e118]:
+            - generic [ref=e119]:
+                - img [ref=e121]
+                - generic [ref=e124]:
+                    - heading "TripPlanner AI" [level=1] [ref=e125]:
+                        - text: TripPlanner
+                        - generic [ref=e126]: AI
+                    - paragraph [ref=e127]: Your virtual assistant for smart itineraries
+            - generic [ref=e128]:
+                - button "AI settings" [ref=e129]:
+                    - img [ref=e130]
+                - generic [ref=e133]:
+                    - img [ref=e134]
+                    - button "Language" [ref=e137] [cursor=pointer]: PT
+                    - button "Language" [ref=e138] [cursor=pointer]: EN
+                - button "Saves" [ref=e139]:
+                    - img [ref=e140]
+                    - text: Saves
+                - button "Sign out" [ref=e145]:
+                    - img [ref=e146]
+    - main [ref=e149]:
+        - generic [ref=e310]:
+            - img [ref=e314]
+            - generic [ref=e316]:
+                - generic [ref=e319]: Artificial Intelligence is thinking...
+                - heading "Evaluating currency rates and average costs..." [level=3] [ref=e320]
+                - paragraph [ref=e321]: This may take 15 to 30 seconds while we structure the best realistic itinerary for you. Please wait.
+            - generic [ref=e322]:
+                - heading "Did you know?" [level=4] [ref=e323]:
+                    - img [ref=e324]
+                    - text: Did you know?
+                - paragraph [ref=e326]: Providing specific notes (e.g. "I prefer short walks" or "gluten restrictions") helps the AI recalibrate stop and restaurant suggestions to match your real taste!
+    - contentinfo [ref=e306]:
+        - generic [ref=e307]:
+            - paragraph [ref=e308]: © 2026 TripPlanner AI • Plan responsibly and enjoy your vacation.
+            - paragraph [ref=e309]: Built with Google Gemini 3.5-flash for geographic trip planning.

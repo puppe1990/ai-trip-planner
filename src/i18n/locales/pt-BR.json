@@ -51,6 +51,7 @@
     "highDemand": "O modelo pode estar com alta demanda. Troque de modelo ou tente de novo em instantes.",
     "modelNotFound": "Este modelo não está disponível na API NVIDIA NIM. Escolha outro modelo da lista.",
     "invalidJson": "A IA retornou um JSON incompleto. Tente novamente ou troque para Google Gemini, que segue o schema com mais precisão.",
+    "serverTimeout": "A geração excedeu o tempo limite do servidor (modelos grandes como Llama 70B podem levar mais de 2 minutos). Use Google Gemini ou um modelo NVIDIA menor, como Nemotron Nano 9B.",
     "changeSettings": "Ajustar provider e modelo"
   },
   "errors": {

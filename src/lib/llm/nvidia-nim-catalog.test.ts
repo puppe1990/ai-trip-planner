@@ -24,7 +24,7 @@ describe('nvidia-nim-catalog', () => {
 
   it('exposes only hosted models in provider catalog', () => {
     expect(PROVIDER_MODELS['nvidia-nim'].some((model) => model.id === 'qwen/qwen2.5-72b-instruct')).toBe(false);
-    expect(PROVIDER_MODELS['nvidia-nim'][0]?.id).toBe('meta/llama-3.3-70b-instruct');
+    expect(PROVIDER_MODELS['nvidia-nim'][0]?.id).toBe('nvidia/nvidia-nemotron-nano-9b-v2');
   });
 
   it('throws when saving an unhosted model', () => {

@@ -2,8 +2,10 @@ import { assertNvidiaModelHosted } from './nvidia-nim-catalog';
 import type { GenerateJsonRequest, GenerateTextRequest, LlmProvider } from './types';
 
 const NIM_CHAT_COMPLETIONS_URL = 'https://integrate.api.nvidia.com/v1/chat/completions';
-/** Trip-plan JSON often exceeds the API default (4096); raise to avoid truncated responses. */
-const NIM_JSON_MAX_TOKENS = 8192;
+/** Keep under Netlify's ~26s function limit; large models can exceed it before this cap. */
+const NIM_REQUEST_TIMEOUT_MS = 22_000;
+/** Enough for a full itinerary JSON without pushing slow 70B models past serverless limits. */
+const NIM_JSON_MAX_TOKENS = 4096;
 
 type ChatCompletionResponse = {
   choices?: Array<{ message?: { content?: string } }>;
@@ -12,14 +14,30 @@ type ChatCompletionResponse = {
 async function callNimChatCompletions(apiKey: string, model: string, body: Record<string, unknown>): Promise<string> {
   assertNvidiaModelHosted(model);
 
-  const response = await fetch(NIM_CHAT_COMPLETIONS_URL, {
-    method: 'POST',
-    headers: {
-      Authorization: `Bearer ${apiKey}`,
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify(body),
-  });
+  const controller = new AbortController();
+  const timeout = setTimeout(() => controller.abort(), NIM_REQUEST_TIMEOUT_MS);
+
+  let response: Response;
+  try {
+    response = await fetch(NIM_CHAT_COMPLETIONS_URL, {
+      method: 'POST',
+      headers: {
+        Authorization: `Bearer ${apiKey}`,
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(body),
+      signal: controller.signal,
+    });
+  } catch (error) {
+    if (error instanceof Error && error.name === 'AbortError') {
+      throw new Error(
+        `NVIDIA NIM request timed out after ${NIM_REQUEST_TIMEOUT_MS / 1000}s. Use Google Gemini or a smaller NVIDIA model (e.g. Nemotron Nano 9B).`,
+      );
+    }
+    throw error;
+  } finally {
+    clearTimeout(timeout);
+  }
 
   if (!response.ok) {
     const errorText = await response.text();

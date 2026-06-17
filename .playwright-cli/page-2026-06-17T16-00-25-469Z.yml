@@ -1,0 +1,196 @@
+- generic [ref=e116]:
+    - banner [ref=e117]:
+        - generic [ref=e118]:
+            - generic [ref=e119]:
+                - img [ref=e121]
+                - generic [ref=e124]:
+                    - heading "TripPlanner AI" [level=1] [ref=e125]:
+                        - text: TripPlanner
+                        - generic [ref=e126]: AI
+                    - paragraph [ref=e127]: Your virtual assistant for smart itineraries
+            - generic [ref=e128]:
+                - button "AI settings" [ref=e129]:
+                    - img [ref=e130]
+                - generic [ref=e133]:
+                    - img [ref=e134]
+                    - button "Language" [ref=e137] [cursor=pointer]: PT
+                    - button "Language" [ref=e138] [cursor=pointer]: EN
+                - button "Saves" [ref=e139]:
+                    - img [ref=e140]
+                    - text: Saves
+                - button "Sign out" [ref=e145]:
+                    - img [ref=e146]
+    - main [ref=e149]:
+        - generic [ref=e150]:
+            - generic [ref=e151]:
+                - generic [ref=e152]:
+                    - heading "Quick Popular Itineraries" [level=3] [ref=e153]:
+                        - img [ref=e154]
+                        - text: Quick Popular Itineraries
+                    - paragraph [ref=e157]: Click below to try an instant itinerary planned by our AI.
+                    - generic [ref=e158]:
+                        - button "🇯🇵 5 days Tokyo, Japan Futuristic synergy and ancient traditions" [active] [ref=e159] [cursor=pointer]:
+                            - generic [ref=e161]:
+                                - generic [ref=e162]: 🇯🇵
+                                - generic [ref=e163]: 5 days
+                            - generic [ref=e164]:
+                                - heading "Tokyo, Japan" [level=4] [ref=e165]
+                                - paragraph [ref=e166]: Futuristic synergy and ancient traditions
+                        - button "🇫🇷 4 days Paris, France Romance, legendary museums and charming cafés" [ref=e167] [cursor=pointer]:
+                            - generic [ref=e169]:
+                                - generic [ref=e170]: 🇫🇷
+                                - generic [ref=e171]: 4 days
+                            - generic [ref=e172]:
+                                - heading "Paris, France" [level=4] [ref=e173]
+                                - paragraph [ref=e174]: Romance, legendary museums and charming cafés
+                        - button "🇧🇷 3 days Rio de Janeiro, Brazil Tropical energy between beaches and mountains" [ref=e175] [cursor=pointer]:
+                            - generic [ref=e177]:
+                                - generic [ref=e178]: 🇧🇷
+                                - generic [ref=e179]: 3 days
+                            - generic [ref=e180]:
+                                - heading "Rio de Janeiro, Brazil" [level=4] [ref=e181]
+                                - paragraph [ref=e182]: Tropical energy between beaches and mountains
+                        - button "🇮🇹 5 days Rome, Italy An unforgettable journey through the cradle of civilization" [ref=e183] [cursor=pointer]:
+                            - generic [ref=e185]:
+                                - generic [ref=e186]: 🇮🇹
+                                - generic [ref=e187]: 5 days
+                            - generic [ref=e188]:
+                                - heading "Rome, Italy" [level=4] [ref=e189]
+                                - paragraph [ref=e190]: An unforgettable journey through the cradle of civilization
+                - separator [ref=e191]
+                - generic [ref=e192]:
+                    - heading "Customize Your Smart Itinerary" [level=2] [ref=e193]:
+                        - img [ref=e194]
+                        - text: Customize Your Smart Itinerary
+                    - generic [ref=e197]:
+                        - generic [ref=e198]:
+                            - generic [ref=e199]:
+                                - img [ref=e200]
+                                - text: Where do you want to go?*
+                            - textbox "Where do you want to go?*" [ref=e204]:
+                                - /placeholder: 'E.g.: Paris, Tokyo, Natal - Brazil, Buenos Aires...'
+                                - text: Tóquio, Japão
+                            - paragraph [ref=e205]: You can specify a city, country or state.
+                        - generic [ref=e206]:
+                            - generic [ref=e207]:
+                                - img [ref=e208]
+                                - text: 'Duration (Days: 5)'
+                            - generic [ref=e210]:
+                                - 'slider "Duration (Days: 5)" [ref=e310] [cursor=pointer]': '5'
+                                - generic [ref=e212]: 5d
+                            - paragraph [ref=e213]: Plans from 1 to 10 days.
+                    - generic [ref=e214]:
+                        - generic [ref=e215]:
+                            - generic [ref=e216]: 'Estimated Budget:'
+                            - generic [ref=e217]: Mid-range
+                        - generic [ref=e218]:
+                            - button "Budget 💸 Hostels, local meals and extensive public transport" [ref=e219] [cursor=pointer]:
+                                - generic [ref=e221]: Budget 💸
+                                - paragraph [ref=e222]: Hostels, local meals and extensive public transport
+                            - button "Moderate 👨‍👩‍👧 3-star hotels, nice bistros and some taxis/Uber" [ref=e223] [cursor=pointer]:
+                                - generic [ref=e225]: Moderate 👨‍👩‍👧
+                                - paragraph [ref=e227]: 3-star hotels, nice bistros and some taxis/Uber
+                            - button "Premium ✨ Boutique hotels, exclusive experiences and fine dining" [ref=e228] [cursor=pointer]:
+                                - generic [ref=e230]: Premium ✨
+                                - paragraph [ref=e231]: Boutique hotels, exclusive experiences and fine dining
+                    - generic [ref=e232]:
+                        - generic [ref=e234]: 'Travel Style:'
+                        - generic [ref=e235]:
+                            - button "Balanced ⚖️" [ref=e236] [cursor=pointer]:
+                                - generic [ref=e237]: Balanced ⚖️
+                            - button "Adventure & Nature 🏔️" [ref=e238] [cursor=pointer]:
+                                - generic [ref=e239]: Adventure & Nature 🏔️
+                            - button "Cultural & Historic 🏛️" [ref=e240] [cursor=pointer]:
+                                - generic [ref=e241]: Cultural & Historic 🏛️
+                            - button "Relaxing 🏖️" [ref=e242] [cursor=pointer]:
+                                - generic [ref=e243]: Relaxing 🏖️
+                            - button "Foodie Focus 🍜" [ref=e244] [cursor=pointer]:
+                                - generic [ref=e245]: Foodie Focus 🍜
+                            - button "Family 🧸" [ref=e246] [cursor=pointer]:
+                                - generic [ref=e247]: Family 🧸
+                    - generic [ref=e248]:
+                        - generic [ref=e249]:
+                            - generic [ref=e250]:
+                                - img [ref=e251]
+                                - text: 'Travel companions:'
+                            - generic [ref=e256]:
+                                - button "Solo Traveler 🎒" [ref=e257] [cursor=pointer]:
+                                    - generic [ref=e258]: Solo Traveler 🎒
+                                - button "Couple / Romantic 💑" [ref=e260] [cursor=pointer]:
+                                    - generic [ref=e261]: Couple / Romantic 💑
+                                - button "Group of Friends 👯" [ref=e262] [cursor=pointer]:
+                                    - generic [ref=e263]: Group of Friends 👯
+                                - button "Family with Kids/Elders 👨‍👩‍👧‍👦" [ref=e264] [cursor=pointer]:
+                                    - generic [ref=e265]: Family with Kids/Elders 👨‍👩‍👧‍👦
+                        - generic [ref=e266]:
+                            - generic [ref=e267]:
+                                - img [ref=e268]
+                                - text: 'Season or time of year (Optional):'
+                            - textbox "Season or time of year (Optional):" [ref=e270]:
+                                - /placeholder: "E.g.: October, Summer, Christmas, New Year's Eve..."
+                                - text: Primavera (Cerejeiras)
+                            - paragraph [ref=e271]: This helps the AI adjust the ideal wardrobe and suggest season-appropriate activities.
+                    - generic [ref=e272]:
+                        - generic [ref=e273]:
+                            - img [ref=e274]
+                            - text: 'Additional notes or restrictions (Optional):'
+                        - textbox "Additional notes or restrictions (Optional):" [ref=e279]:
+                            - /placeholder: 'E.g.: Vegetarian/Vegan, prefer to avoid long art museums...'
+                            - text: Quero ver templos históricos e tecnologia em Akihabara.
+                    - button "Generate Personalized Itinerary" [ref=e281] [cursor=pointer]:
+                        - img [ref=e282]
+                        - text: Generate Personalized Itinerary
+            - generic [ref=e285]:
+                - separator [ref=e286]
+                - generic [ref=e288]:
+                    - generic [ref=e290]:
+                        - heading "My Saved Itineraries (0)" [level=2] [ref=e291]:
+                            - img [ref=e292]
+                            - text: My Saved Itineraries (0)
+                        - paragraph [ref=e297]: Plans saved to your account for access on any device.
+                    - generic [ref=e298]:
+                        - img [ref=e300]
+                        - generic [ref=e303]:
+                            - heading "No saved itineraries yet" [level=3] [ref=e304]
+                            - paragraph [ref=e305]: Customize and create a trip itinerary using the form above! After generation, you can save it here.
+    - dialog "AI generation failed" [ref=e314]:
+        - generic [ref=e315]:
+            - generic [ref=e316]:
+                - img [ref=e318]
+                - generic [ref=e320]:
+                    - heading "AI generation failed" [level=2] [ref=e321]
+                    - paragraph [ref=e322]: Retry or choose another provider/model
+            - button "Cancel" [ref=e323]:
+                - img [ref=e324]
+        - generic [ref=e327]:
+            - paragraph [ref=e328]: GEMINI_API_KEY not found in environment variables.
+            - paragraph [ref=e329]: The model may be under high demand. Switch models or try again shortly.
+        - generic [ref=e330]:
+            - generic [ref=e331]:
+                - img [ref=e332]
+                - generic [ref=e335]: Adjust provider and model
+            - generic [ref=e336]:
+                - generic [ref=e337]: Provider
+                - combobox "Provider" [ref=e338]:
+                    - option "Google Gemini (unavailable)" [disabled] [selected]
+                    - option "NVIDIA NIM"
+            - generic [ref=e339]:
+                - generic [ref=e340]: Model
+                - generic [ref=e341]:
+                    - log [ref=e343]
+                    - generic [ref=e344]:
+                        - generic [ref=e345]:
+                            - generic [ref=e346]: Gemini 3.5 Flash
+                            - combobox "Model" [ref=e348]
+                        - img [ref=e351]
+        - generic [ref=e353]:
+            - paragraph [ref=e354]: Your selected settings will be saved before generating.
+            - generic [ref=e355]:
+                - button "Cancel" [ref=e356]
+                - button "Try again" [ref=e357]:
+                    - img [ref=e358]
+                    - text: Try again
+    - contentinfo [ref=e306]:
+        - generic [ref=e307]:
+            - paragraph [ref=e308]: © 2026 TripPlanner AI • Plan responsibly and enjoy your vacation.
+            - paragraph [ref=e309]: Built with Google Gemini 3.5-flash for geographic trip planning.

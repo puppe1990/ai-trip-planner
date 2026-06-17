@@ -10,6 +10,7 @@ describe('parseAiGenerationError', () => {
       message:
         'This model is currently experiencing high demand. Spikes in demand are usually temporary. Please try again later.',
       statusCode: 503,
+      isServerlessTimeout: false,
       isRetryable: true,
     });
   });
@@ -18,6 +19,7 @@ describe('parseAiGenerationError', () => {
     expect(parseAiGenerationError('Destination and duration are required.')).toEqual({
       message: 'Destination and duration are required.',
       statusCode: undefined,
+      isServerlessTimeout: false,
       isRetryable: false,
     });
   });
@@ -26,6 +28,7 @@ describe('parseAiGenerationError', () => {
     expect(parseAiGenerationError('Invalid planner JSON at destination: expected string')).toEqual({
       message: 'Invalid planner JSON at destination: expected string',
       statusCode: undefined,
+      isServerlessTimeout: false,
       isRetryable: true,
     });
   });
@@ -34,6 +37,16 @@ describe('parseAiGenerationError', () => {
     expect(parseAiGenerationError('NVIDIA NIM request failed (404): 404 page not found')).toEqual({
       message: 'NVIDIA NIM request failed (404): 404 page not found',
       statusCode: 404,
+      isServerlessTimeout: false,
+      isRetryable: true,
+    });
+  });
+
+  it('marks netlify timeout errors as retryable serverless timeouts', () => {
+    expect(parseAiGenerationError('("errorType":"Error","errorMessage":"An unknown error has occurred")')).toEqual({
+      message: '("errorType":"Error","errorMessage":"An unknown error has occurred")',
+      statusCode: undefined,
+      isServerlessTimeout: true,
       isRetryable: true,
     });
   });

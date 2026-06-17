@@ -2,6 +2,7 @@ export type ParsedAiError = {
   message: string;
   isRetryable: boolean;
   statusCode?: number;
+  isServerlessTimeout?: boolean;
 };
 
 function extractJsonMessage(payload: unknown): string | null {
@@ -33,6 +34,15 @@ function isInvalidPlannerJsonMessage(message: string): boolean {
   return /Invalid planner JSON|Planner response is not valid JSON/i.test(message);
 }
 
+function isServerlessTimeoutMessage(message: string): boolean {
+  return (
+    /unknown error has occurred/i.test(message) ||
+    /errorType["']?\s*:\s*["']?Error/i.test(message) ||
+    /timed out after \d+s/i.test(message) ||
+    /function.*timed out|execution timed out/i.test(message)
+  );
+}
+
 export function isPlannerJsonValidationError(message: string): boolean {
   return isInvalidPlannerJsonMessage(message);
 }
@@ -51,10 +61,13 @@ export function parseAiGenerationError(raw: string): ParsedAiError {
           ? ((parsed as Record<string, unknown>).error as Record<string, unknown> | undefined)?.status
           : undefined;
 
+      const isServerlessTimeout = isServerlessTimeoutMessage(message) || isServerlessTimeoutMessage(raw);
       return {
         message,
         statusCode,
+        isServerlessTimeout,
         isRetryable:
+          isServerlessTimeout ||
           isModelUnavailableMessage(message, statusCode) ||
           isTransientMessage(message, statusCode) ||
           isInvalidPlannerJsonMessage(message) ||
@@ -65,13 +78,15 @@ export function parseAiGenerationError(raw: string): ParsedAiError {
     }
   }
 
-  const message = raw;
+  const isServerlessTimeout = isServerlessTimeoutMessage(raw);
   return {
-    message,
+    message: raw,
     statusCode,
+    isServerlessTimeout,
     isRetryable:
-      isModelUnavailableMessage(message, statusCode) ||
-      isTransientMessage(message, statusCode) ||
-      isInvalidPlannerJsonMessage(message),
+      isServerlessTimeout ||
+      isModelUnavailableMessage(raw, statusCode) ||
+      isTransientMessage(raw, statusCode) ||
+      isInvalidPlannerJsonMessage(raw),
   };
 }

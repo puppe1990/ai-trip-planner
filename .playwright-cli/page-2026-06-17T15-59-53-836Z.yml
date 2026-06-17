@@ -1,0 +1,150 @@
+- generic [ref=e2]:
+    - banner [ref=e3]:
+        - generic [ref=e4]:
+            - link "Avant Energia" [ref=e5] [cursor=pointer]:
+                - /url: /
+                - img "Avant Energia" [ref=e7]
+            - navigation [ref=e8]:
+                - link "Home" [ref=e9] [cursor=pointer]:
+                    - /url: /
+                - generic [ref=e10]:
+                    - button "Institucional" [ref=e11]:
+                        - text: Institucional
+                        - img [ref=e12]
+                    - generic:
+                        - generic:
+                            - link "Sobre Nós":
+                                - /url: /sobre
+                            - link "Sustentabilidade":
+                                - /url: /sustentabilidade
+                            - link "Trabalhe Conosco":
+                                - /url: /trabalhe-conosco
+                - link "Como Funciona" [ref=e14] [cursor=pointer]:
+                    - /url: /como-funciona
+                - link "Seja um Gerador" [ref=e15] [cursor=pointer]:
+                    - /url: /seja-um-gerador
+                - link "Contato" [ref=e16] [cursor=pointer]:
+                    - /url: /contato
+            - link "Quero Economizar" [ref=e18] [cursor=pointer]:
+                - /url: /#simular
+    - main [ref=e19]:
+        - generic [ref=e25]:
+            - generic [ref=e26]:
+                - paragraph [ref=e27]: AVANT Energia
+                - heading "Economia na conta de energia para empresas." [level=1] [ref=e28]
+                - paragraph [ref=e29]: Energia por assinatura para empresas do Sul do Brasil com a AVANT. Sem investimento e sem obras!
+                - generic [ref=e30]:
+                    - link "Quero economizar" [ref=e31] [cursor=pointer]:
+                        - /url: /#simular
+                        - text: Quero economizar
+                        - img [ref=e32]
+                    - link "Saiba Mais" [ref=e34] [cursor=pointer]:
+                        - /url: /como-funciona
+                - generic [ref=e35]:
+                    - generic [ref=e36]:
+                        - img [ref=e37]
+                        - text: Sem obras, sem instalações no local e sem investimento.
+                    - generic [ref=e40]:
+                        - img [ref=e41]
+                        - text: Contratação 100% online e energia sustentável chegando pela concessionária normalmente.
+            - img "Pessoa segurando um tablet com demonstrativo de economia da AVANT Energia" [ref=e46]
+        - generic [ref=e48]:
+            - heading "Por que sua empresa precisa conhecer a AVANT Energia?" [level=2] [ref=e50]
+            - generic [ref=e51]:
+                - article [ref=e52]:
+                    - img [ref=e54]
+                    - heading "Energia mais barata" [level=3] [ref=e57]
+                    - paragraph [ref=e58]: Sua empresa economiza na conta de energia durante todo o mês com a AVANT.
+                - article [ref=e59]:
+                    - img [ref=e61]
+                    - heading "Sustentabilidade" [level=3] [ref=e64]
+                    - paragraph [ref=e65]: Faça a transição energética do seu negócio consumindo energia limpa e alinhando sua empresa à práticas sustentáveis.
+                - article [ref=e66]:
+                    - img [ref=e68]
+                    - heading "Serviço digital" [level=3] [ref=e71]
+                    - paragraph [ref=e72]: Contrate e receba sua energia 100% online. Sem obras no local e sem burocracia.
+    - contentinfo [ref=e76]:
+        - generic [ref=e78]:
+            - generic [ref=e79]:
+                - img "AVANT Energia" [ref=e80]
+                - paragraph [ref=e81]: A AVANT é especialista em energia por assinatura para empresas no Sul do Brasil. Reduza custos na conta de luz da sua empresa com energia sustentável, de forma 100% digital, sem obras e sem investimentos.
+                - generic [ref=e82]:
+                    - link "Contato" [ref=e83] [cursor=pointer]:
+                        - /url: /contato
+                    - link "Trabalhe Conosco" [ref=e84] [cursor=pointer]:
+                        - /url: /trabalhe-conosco
+            - generic [ref=e85]:
+                - generic [ref=e86]:
+                    - paragraph [ref=e87]: AVANT Energia
+                    - list [ref=e88]:
+                        - listitem [ref=e89]:
+                            - link "Sobre Nós" [ref=e90] [cursor=pointer]:
+                                - /url: /sobre
+                                - text: Sobre Nós
+                                - img [ref=e91]
+                        - listitem [ref=e94]:
+                            - link "Sustentabilidade" [ref=e95] [cursor=pointer]:
+                                - /url: /sustentabilidade
+                                - text: Sustentabilidade
+                                - img [ref=e96]
+                        - listitem [ref=e99]:
+                            - link "Seja um Gerador" [ref=e100] [cursor=pointer]:
+                                - /url: /seja-um-gerador
+                                - text: Seja um Gerador
+                                - img [ref=e101]
+                        - listitem [ref=e104]:
+                            - link "Blog" [ref=e105] [cursor=pointer]:
+                                - /url: /blog
+                                - text: Blog
+                                - img [ref=e106]
+                        - listitem [ref=e109]:
+                            - link "Trabalhe Conosco" [ref=e110] [cursor=pointer]:
+                                - /url: /trabalhe-conosco
+                                - text: Trabalhe Conosco
+                                - img [ref=e111]
+                - generic [ref=e114]:
+                    - paragraph [ref=e115]: Links Úteis
+                    - list [ref=e116]:
+                        - listitem [ref=e117]:
+                            - link "Política de Privacidade" [ref=e118] [cursor=pointer]:
+                                - /url: /politicas-de-privacidade
+                                - text: Política de Privacidade
+                                - img [ref=e119]
+                        - listitem [ref=e122]:
+                            - link "Termos de Uso" [ref=e123] [cursor=pointer]:
+                                - /url: /termos-de-uso
+                                - text: Termos de Uso
+                                - img [ref=e124]
+                - generic [ref=e127]:
+                    - paragraph [ref=e128]: Fale com a gente
+                    - list [ref=e129]:
+                        - listitem [ref=e130]:
+                            - img [ref=e131]
+                            - generic [ref=e133]: +55 (51) 3500 8800
+                        - listitem [ref=e134]:
+                            - img [ref=e135]
+                            - generic [ref=e138]: contato@avantenergia.com.br
+                        - listitem [ref=e139]:
+                            - img [ref=e140]
+                            - generic [ref=e143]: Av. Carlos Gomes, 1340 - 7º andar, Auxiliadora, Porto Alegre/RS, 90480-001
+                        - listitem [ref=e144]: Atendimento das 8h30 às 17h30 (dias úteis)
+                    - generic [ref=e145]:
+                        - link "Facebook" [ref=e146] [cursor=pointer]:
+                            - /url: https://www.facebook.com/avantenergiaoficial/
+                            - img [ref=e147]
+                        - link "Instagram" [ref=e149] [cursor=pointer]:
+                            - /url: https://www.instagram.com/avantenergiaoficial/
+                            - img [ref=e150]
+                        - link "LinkedIn" [ref=e153] [cursor=pointer]:
+                            - /url: https://www.linkedin.com/company/avant-energia/
+                            - img [ref=e154]
+                        - link "YouTube" [ref=e158] [cursor=pointer]:
+                            - /url: https://www.youtube.com/@avantenergiaoficial
+                            - img [ref=e159]
+        - generic [ref=e162]:
+            - paragraph [ref=e163]: Copyright © 2026 AVANT Energia. Todos os direitos reservados.
+            - generic [ref=e164]:
+                - link "Política de Privacidade" [ref=e165] [cursor=pointer]:
+                    - /url: /politicas-de-privacidade
+                - link "Termos de Uso" [ref=e166] [cursor=pointer]:
+                    - /url: /termos-de-uso

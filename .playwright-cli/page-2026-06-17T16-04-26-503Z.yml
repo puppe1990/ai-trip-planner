@@ -1,0 +1,156 @@
+- generic [ref=e2]:
+    - banner [ref=e3]:
+        - generic [ref=e4]:
+            - generic [ref=e5]:
+                - img [ref=e7]
+                - generic [ref=e10]:
+                    - heading "TripPlanner IA" [level=1] [ref=e11]:
+                        - text: TripPlanner
+                        - generic [ref=e12]: IA
+                    - paragraph [ref=e13]: Seu assistente virtual para roteiros inteligentes
+            - generic [ref=e14]:
+                - button "Configurações da IA" [ref=e15]:
+                    - img [ref=e16]
+                - generic [ref=e19]:
+                    - img [ref=e20]
+                    - button "Idioma" [ref=e23] [cursor=pointer]: PT
+                    - button "Idioma" [ref=e24] [cursor=pointer]: EN
+                - button "Saves" [ref=e25]:
+                    - img [ref=e26]
+                    - text: Saves
+                - button "Sign out" [ref=e31]:
+                    - img [ref=e32]
+    - main [ref=e35]:
+        - generic [ref=e36]:
+            - generic [ref=e37]:
+                - generic [ref=e38]:
+                    - heading "Roteiros Populares Rápidos" [level=3] [ref=e39]:
+                        - img [ref=e40]
+                        - text: Roteiros Populares Rápidos
+                    - paragraph [ref=e43]: Clique abaixo para experimentar um roteiro instantâneo planejado pela nossa IA.
+                    - generic [ref=e44]:
+                        - button "🇯🇵 5 dias Tóquio, Japão Sinergia futurista e tradições milenares" [ref=e45] [cursor=pointer]:
+                            - generic [ref=e47]:
+                                - generic [ref=e48]: 🇯🇵
+                                - generic [ref=e49]: 5 dias
+                            - generic [ref=e50]:
+                                - heading "Tóquio, Japão" [level=4] [ref=e51]
+                                - paragraph [ref=e52]: Sinergia futurista e tradições milenares
+                        - button "🇫🇷 4 dias Paris, França Romantismo, museus lendários e cafés de charme" [ref=e53] [cursor=pointer]:
+                            - generic [ref=e55]:
+                                - generic [ref=e56]: 🇫🇷
+                                - generic [ref=e57]: 4 dias
+                            - generic [ref=e58]:
+                                - heading "Paris, França" [level=4] [ref=e59]
+                                - paragraph [ref=e60]: Romantismo, museus lendários e cafés de charme
+                        - button "🇧🇷 3 dias Rio de Janeiro, Brasil Energia tropical entre praias e montanhas" [ref=e61] [cursor=pointer]:
+                            - generic [ref=e63]:
+                                - generic [ref=e64]: 🇧🇷
+                                - generic [ref=e65]: 3 dias
+                            - generic [ref=e66]:
+                                - heading "Rio de Janeiro, Brasil" [level=4] [ref=e67]
+                                - paragraph [ref=e68]: Energia tropical entre praias e montanhas
+                        - button "🇮🇹 5 dias Roma, Itália Uma jornada inesquecível pelo berço da civilização" [ref=e69] [cursor=pointer]:
+                            - generic [ref=e71]:
+                                - generic [ref=e72]: 🇮🇹
+                                - generic [ref=e73]: 5 dias
+                            - generic [ref=e74]:
+                                - heading "Roma, Itália" [level=4] [ref=e75]
+                                - paragraph [ref=e76]: Uma jornada inesquecível pelo berço da civilização
+                - separator [ref=e77]
+                - generic [ref=e78]:
+                    - heading "Personalize seu Roteiro Inteligente" [level=2] [ref=e79]:
+                        - img [ref=e80]
+                        - text: Personalize seu Roteiro Inteligente
+                    - generic [ref=e83]:
+                        - generic [ref=e84]:
+                            - generic [ref=e85]:
+                                - img [ref=e86]
+                                - text: Para onde deseja ir?*
+                            - textbox "Para onde deseja ir?*" [ref=e90]:
+                                - /placeholder: 'Ex: Paris, Tóquio, Natal - RN, Buenos Aires...'
+                            - paragraph [ref=e91]: Pode citar cidade, país ou estado específico.
+                        - generic [ref=e92]:
+                            - generic [ref=e93]:
+                                - img [ref=e94]
+                                - text: 'Duração (Dias: 4)'
+                            - generic [ref=e96]:
+                                - 'slider "Duração (Dias: 4)" [ref=e97] [cursor=pointer]': '4'
+                                - generic [ref=e98]: 4d
+                            - paragraph [ref=e99]: Planejamentos de 1 a 10 dias.
+                    - generic [ref=e100]:
+                        - generic [ref=e101]:
+                            - generic [ref=e102]: 'Orçamento Estimado:'
+                            - generic [ref=e103]: Intermediário
+                        - generic [ref=e104]:
+                            - button "Econômico 💸 Albergues, refeições locais e transporte público massivo" [ref=e105] [cursor=pointer]:
+                                - generic [ref=e107]: Econômico 💸
+                                - paragraph [ref=e108]: Albergues, refeições locais e transporte público massivo
+                            - button "Moderado 👨‍👩‍👧 Hoteis 3 estrelas, bistrôs agradáveis e alguns táxis/Uber" [ref=e109] [cursor=pointer]:
+                                - generic [ref=e111]: Moderado 👨‍👩‍👧
+                                - paragraph [ref=e113]: Hoteis 3 estrelas, bistrôs agradáveis e alguns táxis/Uber
+                            - button "Premium ✨ Hoteis boutique, experiências exclusivas e alta gastronomia" [ref=e114] [cursor=pointer]:
+                                - generic [ref=e116]: Premium ✨
+                                - paragraph [ref=e117]: Hoteis boutique, experiências exclusivas e alta gastronomia
+                    - generic [ref=e118]:
+                        - generic [ref=e120]: 'Estilo de Viagem:'
+                        - generic [ref=e121]:
+                            - button "Equilibrado ⚖️" [ref=e122] [cursor=pointer]:
+                                - generic [ref=e123]: Equilibrado ⚖️
+                            - button "Aventura & Natureza 🏔️" [ref=e124] [cursor=pointer]:
+                                - generic [ref=e125]: Aventura & Natureza 🏔️
+                            - button "Cultural & Histórico 🏛️" [ref=e126] [cursor=pointer]:
+                                - generic [ref=e127]: Cultural & Histórico 🏛️
+                            - button "Relaxante 🏖️" [ref=e128] [cursor=pointer]:
+                                - generic [ref=e129]: Relaxante 🏖️
+                            - button "Foco Culinário 🍜" [ref=e130] [cursor=pointer]:
+                                - generic [ref=e131]: Foco Culinário 🍜
+                            - button "Familiar 🧸" [ref=e132] [cursor=pointer]:
+                                - generic [ref=e133]: Familiar 🧸
+                    - generic [ref=e134]:
+                        - generic [ref=e135]:
+                            - generic [ref=e136]:
+                                - img [ref=e137]
+                                - text: 'Companhia de viagem:'
+                            - generic [ref=e142]:
+                                - button "Viajando Só (Solo) 🎒" [ref=e143] [cursor=pointer]:
+                                    - generic [ref=e144]: Viajando Só (Solo) 🎒
+                                - button "Em Casal / Romântico 💑" [ref=e146] [cursor=pointer]:
+                                    - generic [ref=e147]: Em Casal / Romântico 💑
+                                - button "Grupo de Amigos 👯" [ref=e148] [cursor=pointer]:
+                                    - generic [ref=e149]: Grupo de Amigos 👯
+                                - button "Família com Filhos/Idosos 👨‍👩‍👧‍👦" [ref=e150] [cursor=pointer]:
+                                    - generic [ref=e151]: Família com Filhos/Idosos 👨‍👩‍👧‍👦
+                        - generic [ref=e152]:
+                            - generic [ref=e153]:
+                                - img [ref=e154]
+                                - text: 'Estação ou época do ano (Opcional):'
+                            - textbox "Estação ou época do ano (Opcional):" [ref=e156]:
+                                - /placeholder: 'Ex: Outubro, Verão, Natal, Réveillon...'
+                            - paragraph [ref=e157]: Isso ajuda a IA a ajustar o guarda-roupa ideal e sugerir passeios adequados à estação.
+                    - generic [ref=e158]:
+                        - generic [ref=e159]:
+                            - img [ref=e160]
+                            - text: 'Notas adicionais ou restrições (Opcional):'
+                        - textbox "Notas adicionais ou restrições (Opcional):" [ref=e165]:
+                            - /placeholder: 'Ex: Viajo Vegetarian/Vegano, prefiro evitar museus de arte longos...'
+                    - button "Gerar Roteiro Personalizado" [disabled] [ref=e167]:
+                        - img [ref=e168]
+                        - text: Gerar Roteiro Personalizado
+            - generic [ref=e171]:
+                - separator [ref=e172]
+                - generic [ref=e174]:
+                    - generic [ref=e176]:
+                        - heading "Meus Roteiros Salvos (0)" [level=2] [ref=e177]:
+                            - img [ref=e178]
+                            - text: Meus Roteiros Salvos (0)
+                        - paragraph [ref=e183]: Planejamentos arquivados na sua conta para acesso em qualquer dispositivo.
+                    - generic [ref=e184]:
+                        - img [ref=e186]
+                        - generic [ref=e189]:
+                            - heading "Nenhum roteiro salvo ainda" [level=3] [ref=e190]
+                            - paragraph [ref=e191]: Personalize e crie um roteiro de viagem usando a caixa acima! No final da geração, você poderá salvá-lo aqui.
+    - contentinfo [ref=e192]:
+        - generic [ref=e193]:
+            - paragraph [ref=e194]: © 2026 TripPlanner IA • Planeje com responsabilidade e aproveite as férias.
+            - paragraph [ref=e195]: Desenvolvido com o modelo Google Gemini 3.5-flash para roteirização geográfica.

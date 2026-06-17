@@ -126,7 +126,9 @@ export default function AiGenerationRecoveryModal({
               </div>
 
               <div className="rounded-2xl border border-rose-100 bg-rose-50/80 p-4 mb-4">
-                <p className="text-sm leading-relaxed text-rose-800">{parsedError?.message}</p>
+                <p className="text-sm leading-relaxed text-rose-800">
+                  {parsedError?.isServerlessTimeout ? t('generationRecovery.serverTimeout') : parsedError?.message}
+                </p>
                 {parsedError?.statusCode === 404 && (
                   <p className="mt-2 text-[11px] text-rose-700/80">{t('generationRecovery.modelNotFound')}</p>
                 )}

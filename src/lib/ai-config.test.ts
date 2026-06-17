@@ -55,7 +55,7 @@ describe('getAiConfig', () => {
     expect(getAiConfig()).toEqual({
       providerId: 'nvidia-nim',
       provider: 'NVIDIA NIM',
-      model: 'meta/llama-3.3-70b-instruct',
+      model: 'nvidia/nvidia-nemotron-nano-9b-v2',
       capabilities: { structuredJson: true, webGrounding: false },
     });
   });
@@ -91,7 +91,7 @@ describe('resolveAiConfig', () => {
     expect(resolveAiConfig({ providerId: 'nvidia-nim', model: null })).toEqual({
       providerId: 'nvidia-nim',
       provider: 'NVIDIA NIM',
-      model: 'meta/llama-3.3-70b-instruct',
+      model: 'nvidia/nvidia-nemotron-nano-9b-v2',
       capabilities: { structuredJson: true, webGrounding: false },
     });
   });
@@ -129,7 +129,7 @@ describe('PROVIDER_MODELS', () => {
   it('exposes only hosted nvidia nim model options', () => {
     expect(PROVIDER_MODELS['nvidia-nim'].length).toBe(6);
     expect(PROVIDER_MODELS['nvidia-nim'].some((model) => model.id === 'qwen/qwen2.5-72b-instruct')).toBe(false);
-    expect(PROVIDER_MODELS['nvidia-nim'][0]?.id).toBe('meta/llama-3.3-70b-instruct');
+    expect(PROVIDER_MODELS['nvidia-nim'][0]?.id).toBe('nvidia/nvidia-nemotron-nano-9b-v2');
   });
 
   it('falls back to hosted default when saved nvidia model is unavailable', () => {
@@ -142,7 +142,7 @@ describe('PROVIDER_MODELS', () => {
         providerId: 'nvidia-nim',
         model: 'qwen/qwen2.5-72b-instruct',
       }).model,
-    ).toBe('meta/llama-3.3-70b-instruct');
+    ).toBe('nvidia/nvidia-nemotron-nano-9b-v2');
   });
 
   it('does not surface unavailable nvidia models in the picker', () => {

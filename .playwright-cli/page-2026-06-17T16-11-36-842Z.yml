@@ -1,0 +1,29 @@
+- generic [ref=e5]:
+    - generic [ref=e7]:
+        - img [ref=e8]
+        - button "Idioma" [ref=e11] [cursor=pointer]: PT
+        - button "Idioma" [ref=e12] [cursor=pointer]: EN
+    - generic [ref=e13]:
+        - generic [ref=e14]:
+            - img [ref=e16]
+            - heading "TripPlanner IA" [level=1] [ref=e19]
+            - paragraph [ref=e20]: Seu assistente virtual para roteiros inteligentes
+        - generic [ref=e21]:
+            - generic [ref=e22]:
+                - heading "Bem-vindo de volta" [level=2] [ref=e23]
+                - paragraph [ref=e24]: Entre para planejar e salvar seus roteiros de viagem com IA.
+            - generic [ref=e25]:
+                - generic [ref=e26]:
+                    - generic [ref=e27]: E-mail
+                    - textbox "seu@email.com" [ref=e28]
+                - generic [ref=e29]:
+                    - generic [ref=e30]: Senha
+                    - generic [ref=e31]:
+                        - textbox [ref=e32]
+                        - button "Mostrar senha" [ref=e33]:
+                            - img [ref=e34]
+                - button "Entrar" [ref=e37]
+            - paragraph [ref=e38]:
+                - text: Não tem conta?
+                - link "Criar conta" [ref=e39] [cursor=pointer]:
+                    - /url: /signup
