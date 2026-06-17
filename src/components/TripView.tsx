@@ -46,7 +46,7 @@ import { getDestinationClimate } from '@/src/lib/climate';
 import { calculateGroupBudget } from '@/src/lib/budget';
 import { generateIcsContent } from '@/src/lib/ics-export';
 import { buildShareUrl } from '@/src/lib/share';
-import { parseTransitSections, type TransitSection } from '@/src/lib/transit-parse';
+import { formatTransitContentLines, parseTransitSections, type TransitSection } from '@/src/lib/transit-parse';
 import { searchTransitFn } from '@/src/server/transit.functions';
 import InteractiveTripMap from './InteractiveTripMap';
 
@@ -1005,7 +1005,7 @@ export default function TripView({ tripPlan, onBack }: TripViewProps) {
                       const activeSect = transitSections[activeTransitTabIndex];
                       if (!activeSect) return null;
 
-                      const lines = activeSect.content.split('\n').filter((l) => l.trim().length > 0);
+                      const lines = formatTransitContentLines(activeSect.content);
                       const getIconComponent = (iconName: string) => {
                         switch (iconName) {
                           case 'Car':
@@ -1033,20 +1033,22 @@ export default function TripView({ tripPlan, onBack }: TripViewProps) {
                           </h4>
 
                           <div className="space-y-2.5">
-                            {lines.map((ln, lIdx) => {
-                              const cleanLine = ln.trim();
-                              // Check if line looks like a list item or note
-                              const isBullet =
-                                cleanLine.startsWith('-') || cleanLine.startsWith('*') || /^\d+\./.test(cleanLine);
-                              const text = isBullet ? cleanLine.replace(/^[-*\d.]\s*/, '') : cleanLine;
-
-                              return (
-                                <div key={lIdx} className="flex items-start gap-2.5">
-                                  <span className="text-[10px] text-indigo-500 mt-1">✦</span>
-                                  <p className="text-xs text-slate-650 leading-relaxed font-semibold">{text}</p>
-                                </div>
-                              );
-                            })}
+                            {lines.map((segments, lIdx) => (
+                              <div key={lIdx} className="flex items-start gap-2.5">
+                                <span className="text-[10px] text-indigo-500 mt-1">✦</span>
+                                <p className="text-xs text-slate-650 leading-relaxed">
+                                  {segments.map((segment, sIdx) =>
+                                    segment.type === 'bold' ? (
+                                      <strong key={sIdx} className="font-semibold text-slate-800">
+                                        {segment.text}
+                                      </strong>
+                                    ) : (
+                                      <span key={sIdx}>{segment.text}</span>
+                                    ),
+                                  )}
+                                </p>
+                              </div>
+                            ))}
                           </div>
                         </div>
                       );

@@ -66,6 +66,29 @@ function detectSectionKey(loweredTitle: string): TransitSectionKey {
   return 'other';
 }
 
+export type InlineSegment = { type: 'text' | 'bold'; text: string };
+
+export function parseInlineSegments(text: string): InlineSegment[] {
+  return text
+    .split(/(\*\*[^*]+\*\*)/g)
+    .filter((part) => part.length > 0)
+    .map((part) => {
+      const match = part.match(/^\*\*(.+)\*\*$/);
+      return match ? { type: 'bold' as const, text: match[1] } : { type: 'text' as const, text: part };
+    });
+}
+
+export function formatTransitContentLines(content: string): InlineSegment[][] {
+  return content
+    .split('\n')
+    .map((line) => line.trim())
+    .filter((line) => line.length > 0)
+    .map((line) => {
+      const withoutBullet = line.replace(/^[-*•]\s+/, '').replace(/^\d+\.\s+/, '');
+      return parseInlineSegments(withoutBullet);
+    });
+}
+
 export function parseTransitSections(rawText: string): TransitSection[] {
   const parts = rawText.split('###');
   const sections: TransitSection[] = [];

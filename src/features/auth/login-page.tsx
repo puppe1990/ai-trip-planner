@@ -29,7 +29,9 @@ export function LoginPage() {
         setError(t('auth.loginError'));
         return;
       }
-      await navigate({ to: '/' });
+      // Full reload so the authenticated route sees the new session cookie.
+      window.location.assign('/');
+      return;
     } catch {
       setError(t('auth.serverError'));
     } finally {
