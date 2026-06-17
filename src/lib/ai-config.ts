@@ -80,9 +80,21 @@ export function parseProviderId(value: string): LlmProviderId {
   throw new InvalidAiProviderError(value);
 }
 
+export function getConfiguredProviderIds(): LlmProviderId[] {
+  return (Object.keys(PROVIDER_DEFAULTS) as LlmProviderId[]).filter(isProviderConfigured);
+}
+
 export function getProviderId(): LlmProviderId {
-  const raw = resolveEnv(process.env.AI_PROVIDER, 'gemini');
-  return parseProviderId(raw);
+  const envRaw = process.env.AI_PROVIDER?.trim();
+  if (envRaw) {
+    const envProvider = parseProviderId(envRaw);
+    if (isProviderConfigured(envProvider)) return envProvider;
+  }
+
+  const configured = getConfiguredProviderIds();
+  if (configured[0]) return configured[0];
+
+  return parseProviderId(resolveEnv(process.env.AI_PROVIDER, 'gemini'));
 }
 
 export type AiConfig = {
@@ -125,7 +137,7 @@ export function getAiConfig(): AiConfig {
 export function resolveAiConfig(preferences: UserAiPreferences | null | undefined): AiConfig {
   if (!preferences?.providerId) return getAiConfig();
 
-  const providerId = preferences.providerId;
+  const providerId = isProviderConfigured(preferences.providerId) ? preferences.providerId : getProviderId();
   const defaults = PROVIDER_DEFAULTS[providerId];
   const savedModel = preferences.model?.trim();
   const model =

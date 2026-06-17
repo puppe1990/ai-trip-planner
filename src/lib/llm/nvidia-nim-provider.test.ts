@@ -71,6 +71,7 @@ describe('createNvidiaNimProvider', () => {
 
     const body = JSON.parse((fetchMock.mock.calls[0][1] as RequestInit).body as string);
     expect(body.response_format).toEqual({ type: 'json_object' });
+    expect(body.max_tokens).toBe(8192);
     expect(body.temperature).toBe(0.8);
   });
 

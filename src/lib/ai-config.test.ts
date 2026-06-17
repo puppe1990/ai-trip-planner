@@ -21,6 +21,14 @@ describe('getProviderId', () => {
 
   it('returns nvidia-nim when configured', () => {
     vi.stubEnv('AI_PROVIDER', 'nvidia-nim');
+    vi.stubEnv('NVIDIA_API_KEY', 'key');
+    expect(getProviderId()).toBe('nvidia-nim');
+  });
+
+  it('falls back to nvidia-nim when gemini env is set but not configured', () => {
+    vi.stubEnv('AI_PROVIDER', 'gemini');
+    vi.stubEnv('GEMINI_API_KEY', '');
+    vi.stubEnv('NVIDIA_API_KEY', 'key');
     expect(getProviderId()).toBe('nvidia-nim');
   });
 
@@ -70,8 +78,17 @@ describe('resolveAiConfig', () => {
     vi.unstubAllEnvs();
   });
 
+  it('falls back when saved provider is not configured', () => {
+    vi.stubEnv('AI_PROVIDER', 'gemini');
+    vi.stubEnv('GEMINI_API_KEY', '');
+    vi.stubEnv('NVIDIA_API_KEY', 'key');
+
+    expect(resolveAiConfig({ providerId: 'gemini', model: null }).providerId).toBe('nvidia-nim');
+  });
+
   it('uses user provider preference over env default', () => {
     vi.stubEnv('AI_PROVIDER', 'gemini');
+    vi.stubEnv('NVIDIA_API_KEY', 'key');
 
     expect(resolveAiConfig({ providerId: 'nvidia-nim', model: null })).toEqual({
       providerId: 'nvidia-nim',

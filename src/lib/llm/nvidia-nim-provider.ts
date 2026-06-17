@@ -2,6 +2,8 @@ import { assertNvidiaModelHosted } from './nvidia-nim-catalog';
 import type { GenerateJsonRequest, GenerateTextRequest, LlmProvider } from './types';
 
 const NIM_CHAT_COMPLETIONS_URL = 'https://integrate.api.nvidia.com/v1/chat/completions';
+/** Trip-plan JSON often exceeds the API default (4096); raise to avoid truncated responses. */
+const NIM_JSON_MAX_TOKENS = 8192;
 
 type ChatCompletionResponse = {
   choices?: Array<{ message?: { content?: string } }>;
@@ -51,6 +53,7 @@ export function createNvidiaNimProvider(config: { apiKey: string; model: string 
     async generateJson(request: GenerateJsonRequest): Promise<string> {
       return callNimChatCompletions(apiKey, model, {
         model,
+        max_tokens: NIM_JSON_MAX_TOKENS,
         temperature: request.temperature ?? 0.8,
         response_format: { type: 'json_object' },
         messages: [
