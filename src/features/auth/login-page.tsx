@@ -104,10 +104,6 @@ export function LoginPage() {
                 {t('auth.signup')}
               </Link>
             </p>
-
-            <p className="text-center text-[10px] text-slate-400 font-semibold uppercase tracking-wider">
-              {t('auth.poweredBy')}
-            </p>
           </div>
         </div>
       </div>

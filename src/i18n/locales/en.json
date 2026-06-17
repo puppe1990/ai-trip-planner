@@ -127,8 +127,7 @@
     "hasAccount": "Already have an account?",
     "loginError": "Incorrect email or password.",
     "signupError": "Could not create account. Please try again.",
-    "serverError": "Could not connect to server. Please try again.",
-    "poweredBy": "Powered by Turso"
+    "serverError": "Could not connect to server. Please try again."
   },
   "trip": {
     "itineraryBadge": "personalized {{days}}-day itinerary",

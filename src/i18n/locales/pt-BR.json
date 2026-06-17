@@ -127,8 +127,7 @@
     "hasAccount": "Já tem conta?",
     "loginError": "E-mail ou senha incorretos.",
     "signupError": "Não foi possível criar a conta. Tente novamente.",
-    "serverError": "Não foi possível conectar ao servidor. Tente novamente.",
-    "poweredBy": "Potencializado por Turso"
+    "serverError": "Não foi possível conectar ao servidor. Tente novamente."
   },
   "trip": {
     "itineraryBadge": "itinerário personalizado de {{days}} dias",
