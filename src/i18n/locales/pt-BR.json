@@ -21,6 +21,15 @@
     "portuguese": "Português",
     "english": "English"
   },
+  "aiSettings": {
+    "open": "Configurações da IA",
+    "title": "Configurações da IA",
+    "subtitle": "Provider e modelo usados para gerar roteiros",
+    "provider": "Provider",
+    "model": "Modelo",
+    "loading": "Carregando...",
+    "hint": "Essas configurações são definidas no servidor da aplicação."
+  },
   "footer": {
     "copyright": "© 2026 TripPlanner IA • Planeje com responsabilidade e aproveite as férias.",
     "poweredBy": "Desenvolvido com o modelo Google Gemini 3.5-flash para roteirização geográfica."

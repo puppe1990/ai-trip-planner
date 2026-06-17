@@ -21,6 +21,15 @@
     "portuguese": "Português",
     "english": "English"
   },
+  "aiSettings": {
+    "open": "AI settings",
+    "title": "AI Settings",
+    "subtitle": "Provider and model used to generate trip plans",
+    "provider": "Provider",
+    "model": "Model",
+    "loading": "Loading...",
+    "hint": "These settings are defined on the application server."
+  },
   "footer": {
     "copyright": "© 2026 TripPlanner AI • Plan responsibly and enjoy your vacation.",
     "poweredBy": "Built with Google Gemini 3.5-flash for geographic trip planning."

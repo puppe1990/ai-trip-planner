@@ -1,4 +1,5 @@
 import type { GoogleGenAI } from '@google/genai';
+import { getAiConfig } from '../lib/ai-config';
 import { getGeminiLanguage } from '../i18n/index';
 import { responseSchema } from '../lib/planner-schema';
 import type { DayPlan, TripSearchParams } from '../types';
@@ -72,7 +73,7 @@ export async function generateTripPlan(
   for (let attempt = 1; attempt <= 3; attempt++) {
     try {
       response = await client.models.generateContent({
-        model: 'gemini-3.5-flash',
+        model: getAiConfig().model,
         contents: promptMsg,
         config: {
           systemInstruction,

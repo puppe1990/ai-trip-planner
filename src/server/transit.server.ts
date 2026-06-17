@@ -1,4 +1,5 @@
 import type { GoogleGenAI } from '@google/genai';
+import { getAiConfig } from '../lib/ai-config';
 import { getGeminiLanguage } from '../i18n/index';
 
 export type { TransitSection } from '../lib/transit-parse';
@@ -56,7 +57,7 @@ export async function searchTransit(
   }
 
   const response = await client.models.generateContent({
-    model: 'gemini-3.5-flash',
+    model: getAiConfig().model,
     contents: buildTransitPrompt(destination, locale),
     config: {
       tools: [{ googleSearch: {} }],

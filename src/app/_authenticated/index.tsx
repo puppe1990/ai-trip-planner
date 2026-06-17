@@ -10,6 +10,7 @@ import SearchForm from '@/src/components/SearchForm';
 import TripView from '@/src/components/TripView';
 import SavedTrips from '@/src/components/SavedTrips';
 import LanguageSwitcher from '@/src/components/LanguageSwitcher';
+import AiSettingsModal from '@/src/components/AiSettingsModal';
 import { parseShareHash } from '@/src/lib/share';
 import { generateTripPlanFn } from '@/src/server/planner.functions';
 import { listTripsFn, saveTripFn, deleteTripFn } from '@/src/server/trips.functions';
@@ -154,6 +155,7 @@ function HomePage() {
           </div>
 
           <div className="flex items-center gap-3">
+            <AiSettingsModal />
             <LanguageSwitcher />
             <button
               type="button"
