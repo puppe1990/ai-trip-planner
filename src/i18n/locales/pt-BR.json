@@ -28,15 +28,31 @@
     "provider": "Provider",
     "model": "Modelo",
     "loading": "Carregando...",
+    "saving": "Salvando...",
+    "save": "Salvar",
+    "unavailable": "indisponível",
+    "loadError": "Não foi possível carregar as configurações.",
+    "saveError": "Não foi possível salvar as configurações.",
     "capabilities": "Capacidades",
     "structuredJson": "JSON estruturado",
     "webGrounding": "Busca web",
     "webGroundingUnavailable": "Busca web indisponível",
-    "hint": "Essas configurações são definidas no servidor da aplicação."
+    "hint": "Suas preferências são salvas na conta e usadas nas próximas gerações."
   },
   "footer": {
     "copyright": "© 2026 TripPlanner IA • Planeje com responsabilidade e aproveite as férias.",
     "poweredBy": "Desenvolvido com o modelo Google Gemini 3.5-flash para roteirização geográfica."
+  },
+  "generationRecovery": {
+    "title": "Falha na geração com IA",
+    "subtitle": "Tente novamente ou escolha outro provider/modelo",
+    "retry": "Tentar novamente",
+    "retrying": "Tentando...",
+    "retryHint": "As configurações escolhidas serão salvas antes de gerar.",
+    "highDemand": "O modelo pode estar com alta demanda. Troque de modelo ou tente de novo em instantes.",
+    "modelNotFound": "Este modelo não está disponível na API NVIDIA NIM. Escolha outro modelo da lista.",
+    "invalidJson": "A IA retornou um JSON incompleto. Tente novamente ou troque para Google Gemini, que segue o schema com mais precisão.",
+    "changeSettings": "Ajustar provider e modelo"
   },
   "errors": {
     "generationFailed": "Falha na geração com IA",

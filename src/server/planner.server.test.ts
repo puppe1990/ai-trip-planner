@@ -87,6 +87,20 @@ describe('planner.server', () => {
     );
   });
 
+  it('retries when planner JSON validation fails', async () => {
+    const generateJson = vi
+      .fn()
+      .mockResolvedValueOnce(JSON.stringify({ tagline: 'missing required fields' }))
+      .mockResolvedValue(JSON.stringify(validPlannerJson));
+
+    const provider = createMockProvider(generateJson);
+    const result = await generateTripPlan(provider, validParams, 'en');
+
+    expect(result.destination).toBe('Tokyo, Japan');
+    expect(generateJson).toHaveBeenCalledTimes(2);
+    expect(generateJson.mock.calls[0]?.[0]?.system).toContain('destination');
+  });
+
   it('retries provider.generateJson up to three times', async () => {
     const generateJson = vi
       .fn()

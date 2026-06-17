@@ -23,6 +23,7 @@ describe('getLlmProvider', () => {
 
   it('returns nvidia-nim provider when configured', () => {
     vi.stubEnv('AI_PROVIDER', 'nvidia-nim');
+    vi.stubEnv('GEMINI_API_KEY', '');
     vi.stubEnv('NVIDIA_API_KEY', 'test-nvidia-key');
 
     const provider = getLlmProvider();
@@ -31,17 +32,21 @@ describe('getLlmProvider', () => {
     expect(provider.displayName).toBe('NVIDIA NIM');
   });
 
-  it('throws when gemini api key is missing', () => {
+  it('falls back to nvidia when gemini env is set but not configured', () => {
     vi.stubEnv('AI_PROVIDER', 'gemini');
     vi.stubEnv('GEMINI_API_KEY', '');
+    vi.stubEnv('NVIDIA_API_KEY', 'test-nvidia-key');
 
-    expect(() => getLlmProvider()).toThrow('GEMINI_API_KEY');
+    const provider = getLlmProvider();
+
+    expect(provider.id).toBe('nvidia-nim');
   });
 
-  it('throws when nvidia api key is missing', () => {
-    vi.stubEnv('AI_PROVIDER', 'nvidia-nim');
+  it('throws when no provider api keys are configured', () => {
+    vi.stubEnv('AI_PROVIDER', 'gemini');
+    vi.stubEnv('GEMINI_API_KEY', '');
     vi.stubEnv('NVIDIA_API_KEY', '');
 
-    expect(() => getLlmProvider()).toThrow('NVIDIA_API_KEY');
+    expect(() => getLlmProvider()).toThrow('GEMINI_API_KEY');
   });
 });

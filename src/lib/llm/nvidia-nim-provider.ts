@@ -1,12 +1,17 @@
+import { assertNvidiaModelHosted } from './nvidia-nim-catalog';
 import type { GenerateJsonRequest, GenerateTextRequest, LlmProvider } from './types';
 
 const NIM_CHAT_COMPLETIONS_URL = 'https://integrate.api.nvidia.com/v1/chat/completions';
+/** Trip-plan JSON often exceeds the API default (4096); raise to avoid truncated responses. */
+const NIM_JSON_MAX_TOKENS = 8192;
 
 type ChatCompletionResponse = {
   choices?: Array<{ message?: { content?: string } }>;
 };
 
-async function callNimChatCompletions(apiKey: string, body: Record<string, unknown>): Promise<string> {
+async function callNimChatCompletions(apiKey: string, model: string, body: Record<string, unknown>): Promise<string> {
+  assertNvidiaModelHosted(model);
+
   const response = await fetch(NIM_CHAT_COMPLETIONS_URL, {
     method: 'POST',
     headers: {
@@ -18,6 +23,11 @@ async function callNimChatCompletions(apiKey: string, body: Record<string, unkno
 
   if (!response.ok) {
     const errorText = await response.text();
+    if (response.status === 404) {
+      throw new Error(
+        `NVIDIA NIM request failed (404): Model "${model}" is not available on the hosted API. Choose another model.`,
+      );
+    }
     throw new Error(`NVIDIA NIM request failed (${response.status}): ${errorText}`);
   }
 
@@ -41,8 +51,9 @@ export function createNvidiaNimProvider(config: { apiKey: string; model: string 
     capabilities: { structuredJson: true, webGrounding: false },
 
     async generateJson(request: GenerateJsonRequest): Promise<string> {
-      return callNimChatCompletions(apiKey, {
+      return callNimChatCompletions(apiKey, model, {
         model,
+        max_tokens: NIM_JSON_MAX_TOKENS,
         temperature: request.temperature ?? 0.8,
         response_format: { type: 'json_object' },
         messages: [
@@ -53,7 +64,7 @@ export function createNvidiaNimProvider(config: { apiKey: string; model: string 
     },
 
     async generateText(request: GenerateTextRequest): Promise<string> {
-      return callNimChatCompletions(apiKey, {
+      return callNimChatCompletions(apiKey, model, {
         model,
         temperature: request.temperature ?? 0.5,
         messages: [

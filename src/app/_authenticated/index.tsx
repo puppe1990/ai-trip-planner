@@ -1,7 +1,7 @@
 import { createFileRoute, useNavigate, useRouter } from '@tanstack/react-router';
 import { useEffect, useState } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
-import { Luggage, AlertCircle, X, Plane, Info, LogOut } from 'lucide-react';
+import { Luggage, Plane, Info, LogOut } from 'lucide-react';
 import { AppLogo } from '@/src/components/AppLogo';
 import { useTranslation } from 'react-i18next';
 import type { TripPlan, TripSearchParams } from '@/src/types';
@@ -11,6 +11,7 @@ import TripView from '@/src/components/TripView';
 import SavedTrips from '@/src/components/SavedTrips';
 import LanguageSwitcher from '@/src/components/LanguageSwitcher';
 import AiSettingsModal from '@/src/components/AiSettingsModal';
+import AiGenerationRecoveryModal from '@/src/components/AiGenerationRecoveryModal';
 import { parseShareHash } from '@/src/lib/share';
 import { generateTripPlanFn } from '@/src/server/planner.functions';
 import { listTripsFn, saveTripFn, deleteTripFn } from '@/src/server/trips.functions';
@@ -29,7 +30,8 @@ function HomePage() {
   const [savedTrips, setSavedTrips] = useState<TripPlan[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [loadingStep, setLoadingStep] = useState(0);
-  const [errorText, setErrorText] = useState<string | null>(null);
+  const [generationError, setGenerationError] = useState<string | null>(null);
+  const [recoveryModalOpen, setRecoveryModalOpen] = useState(false);
 
   const loadingMessages = t('loading.messages', { returnObjects: true }) as string[];
 
@@ -72,7 +74,8 @@ function HomePage() {
 
   const handleTripSubmission = async (params: TripSearchParams) => {
     setIsLoading(true);
-    setErrorText(null);
+    setGenerationError(null);
+    setRecoveryModalOpen(false);
     setActivePlan(null);
     setSearchParams(params);
 
@@ -96,7 +99,8 @@ function HomePage() {
       setActivePlan(parsedPlan);
     } catch (err: unknown) {
       const message = err instanceof Error ? err.message : t('errors.genericError');
-      setErrorText(message);
+      setGenerationError(message);
+      setRecoveryModalOpen(true);
     } finally {
       setIsLoading(false);
     }
@@ -188,19 +192,6 @@ function HomePage() {
       </header>
 
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-8 space-y-12">
-        {errorText && (
-          <div className="p-4 bg-rose-50 border border-rose-100 text-rose-800 rounded-2xl flex items-start gap-3 shadow-sm max-w-2xl mx-auto">
-            <AlertCircle className="w-5 h-5 flex-shrink-0 text-rose-500 mt-0.5" />
-            <div className="flex-grow space-y-1">
-              <h4 className="font-bold text-sm">{t('errors.generationFailed')}</h4>
-              <p className="text-xs leading-relaxed text-rose-750">{errorText}</p>
-            </div>
-            <button onClick={() => setErrorText(null)} className="text-rose-450 hover:text-rose-750 transition-colors">
-              <X className="w-4 h-4" />
-            </button>
-          </div>
-        )}
-
         <AnimatePresence mode="wait">
           {isLoading ? (
             <motion.div
@@ -275,6 +266,20 @@ function HomePage() {
           )}
         </AnimatePresence>
       </main>
+
+      <AiGenerationRecoveryModal
+        open={recoveryModalOpen}
+        errorText={generationError}
+        onClose={() => {
+          setRecoveryModalOpen(false);
+          setGenerationError(null);
+        }}
+        onRetry={async () => {
+          setRecoveryModalOpen(false);
+          setGenerationError(null);
+          await handleTripSubmission(searchParams);
+        }}
+      />
 
       <footer className="mt-24 border-t border-slate-150 text-center py-8 text-slate-400 text-xs">
         <div className="max-w-7xl mx-auto px-4 space-y-2">

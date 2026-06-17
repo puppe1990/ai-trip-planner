@@ -71,7 +71,23 @@ describe('createNvidiaNimProvider', () => {
 
     const body = JSON.parse((fetchMock.mock.calls[0][1] as RequestInit).body as string);
     expect(body.response_format).toEqual({ type: 'json_object' });
+    expect(body.max_tokens).toBe(8192);
     expect(body.temperature).toBe(0.8);
+  });
+
+  it('rejects unhosted models before calling the API', async () => {
+    const fetchMock = vi.fn();
+    vi.stubGlobal('fetch', fetchMock);
+
+    const provider = createNvidiaNimProvider({
+      apiKey: 'nvapi-test-key',
+      model: 'qwen/qwen2.5-72b-instruct',
+    });
+
+    await expect(provider.generateText({ system: 'sys', prompt: 'prompt' })).rejects.toThrow(
+      'not available on the hosted NVIDIA NIM API',
+    );
+    expect(fetchMock).not.toHaveBeenCalled();
   });
 
   it('throws a helpful error when the API fails', async () => {
@@ -89,6 +105,24 @@ describe('createNvidiaNimProvider', () => {
 
     await expect(provider.generateText({ system: 'sys', prompt: 'prompt' })).rejects.toThrow(
       'NVIDIA NIM request failed (401): Unauthorized',
+    );
+  });
+
+  it('throws a model-specific message for hosted-model 404 responses', async () => {
+    const fetchMock = vi.fn().mockResolvedValue({
+      ok: false,
+      status: 404,
+      text: async () => '404 page not found',
+    });
+    vi.stubGlobal('fetch', fetchMock);
+
+    const provider = createNvidiaNimProvider({
+      apiKey: 'nvapi-test-key',
+      model: 'meta/llama-3.3-70b-instruct',
+    });
+
+    await expect(provider.generateText({ system: 'sys', prompt: 'prompt' })).rejects.toThrow(
+      'Model "meta/llama-3.3-70b-instruct" is not available on the hosted API',
     );
   });
 });
