@@ -121,11 +121,39 @@
     "friends": "Group of Friends 👯",
     "family": "Family with Kids/Elders 👨‍👩‍👧‍👦"
   },
+  "quickRegions": {
+    "brazil": "Brazil",
+    "europe": "Europe",
+    "asia": "Asia",
+    "americas": "Americas",
+    "africa": "Africa",
+    "oceania": "Oceania"
+  },
   "quickDest": {
-    "tokyo": { "name": "Tokyo, Japan", "tagline": "Futuristic synergy and ancient traditions" },
-    "paris": { "name": "Paris, France", "tagline": "Romance, legendary museums and charming cafés" },
     "rio": { "name": "Rio de Janeiro, Brazil", "tagline": "Tropical energy between beaches and mountains" },
-    "rome": { "name": "Rome, Italy", "tagline": "An unforgettable journey through the cradle of civilization" }
+    "saoPaulo": { "name": "São Paulo, Brazil", "tagline": "Cultural metropolis, food and urban art" },
+    "salvador": { "name": "Salvador, Bahia", "tagline": "Afro-Brazilian history and coastal beaches" },
+    "florianopolis": { "name": "Florianópolis, Brazil", "tagline": "Magic island with beaches and trails" },
+    "paris": { "name": "Paris, France", "tagline": "Romance, legendary museums and charming cafés" },
+    "rome": { "name": "Rome, Italy", "tagline": "An unforgettable journey through the cradle of civilization" },
+    "barcelona": { "name": "Barcelona, Spain", "tagline": "Gaudí architecture and Mediterranean life" },
+    "lisbon": { "name": "Lisbon, Portugal", "tagline": "Hills, trams and pastéis de nata" },
+    "tokyo": { "name": "Tokyo, Japan", "tagline": "Futuristic synergy and ancient traditions" },
+    "bangkok": { "name": "Bangkok, Thailand", "tagline": "Golden temples and unforgettable street food" },
+    "bali": { "name": "Bali, Indonesia", "tagline": "Temples, rice terraces and paradise beaches" },
+    "seoul": { "name": "Seoul, South Korea", "tagline": "Tradition and modernity in perfect harmony" },
+    "newYork": { "name": "New York, USA", "tagline": "The city that never sleeps" },
+    "buenosAires": { "name": "Buenos Aires, Argentina", "tagline": "Tango, steak and porteño passion" },
+    "cancun": { "name": "Cancún, Mexico", "tagline": "Caribbean blue and Mayan ruins" },
+    "lima": { "name": "Lima, Peru", "tagline": "Latin America's gastronomic capital" },
+    "marrakech": { "name": "Marrakech, Morocco", "tagline": "Vibrant souks and Moorish architecture" },
+    "capeTown": { "name": "Cape Town, South Africa", "tagline": "Mountains, vineyards and wild coast" },
+    "cairo": { "name": "Cairo, Egypt", "tagline": "Ancient pyramids and pharaonic history" },
+    "zanzibar": { "name": "Zanzibar, Tanzania", "tagline": "Crystal-clear beaches on the Indian Ocean" },
+    "sydney": { "name": "Sydney, Australia", "tagline": "Opera House, Bondi and outdoor lifestyle" },
+    "queenstown": { "name": "Queenstown, New Zealand", "tagline": "Extreme adventure in epic landscapes" },
+    "fiji": { "name": "Fiji", "tagline": "Tropical islands and Pacific hospitality" },
+    "melbourne": { "name": "Melbourne, Australia", "tagline": "Specialty coffee and street art" }
   },
   "saved": {
     "title": "My Saved Itineraries ({{count}})",

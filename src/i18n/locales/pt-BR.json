@@ -121,11 +121,39 @@
     "friends": "Grupo de Amigos 👯",
     "family": "Família com Filhos/Idosos 👨‍👩‍👧‍👦"
   },
+  "quickRegions": {
+    "brazil": "Brasil",
+    "europe": "Europa",
+    "asia": "Ásia",
+    "americas": "Américas",
+    "africa": "África",
+    "oceania": "Oceania"
+  },
   "quickDest": {
-    "tokyo": { "name": "Tóquio, Japão", "tagline": "Sinergia futurista e tradições milenares" },
-    "paris": { "name": "Paris, França", "tagline": "Romantismo, museus lendários e cafés de charme" },
     "rio": { "name": "Rio de Janeiro, Brasil", "tagline": "Energia tropical entre praias e montanhas" },
-    "rome": { "name": "Roma, Itália", "tagline": "Uma jornada inesquecível pelo berço da civilização" }
+    "saoPaulo": { "name": "São Paulo, Brasil", "tagline": "Metrópole cultural, gastronomia e arte urbana" },
+    "salvador": { "name": "Salvador, Bahia", "tagline": "História afro-brasileira e praias do litoral" },
+    "florianopolis": { "name": "Florianópolis, Brasil", "tagline": "Ilha da magia com praias e trilhas" },
+    "paris": { "name": "Paris, França", "tagline": "Romantismo, museus lendários e cafés de charme" },
+    "rome": { "name": "Roma, Itália", "tagline": "Uma jornada inesquecível pelo berço da civilização" },
+    "barcelona": { "name": "Barcelona, Espanha", "tagline": "Arquitetura de Gaudí e vida mediterrânea" },
+    "lisbon": { "name": "Lisboa, Portugal", "tagline": "Colinas, elétricos e pastéis de nata" },
+    "tokyo": { "name": "Tóquio, Japão", "tagline": "Sinergia futurista e tradições milenares" },
+    "bangkok": { "name": "Bangkok, Tailândia", "tagline": "Templos dourados e street food inesquecível" },
+    "bali": { "name": "Bali, Indonésia", "tagline": "Templos, arrozais e praias paradisíacas" },
+    "seoul": { "name": "Seul, Coreia do Sul", "tagline": "Tradição e modernidade em perfeita harmonia" },
+    "newYork": { "name": "Nova York, EUA", "tagline": "A cidade que nunca dorme" },
+    "buenosAires": { "name": "Buenos Aires, Argentina", "tagline": "Tango, bife e paixão portenha" },
+    "cancun": { "name": "Cancún, México", "tagline": "Caribe azul e ruínas maias" },
+    "lima": { "name": "Lima, Peru", "tagline": "Capital gastronômica da América Latina" },
+    "marrakech": { "name": "Marrakech, Marrocos", "tagline": "Souks vibrantes e arquitetura mourisca" },
+    "capeTown": { "name": "Cidade do Cabo, África do Sul", "tagline": "Montanhas, vinícolas e costa selvagem" },
+    "cairo": { "name": "Cairo, Egito", "tagline": "Pirâmides milenares e história faraônica" },
+    "zanzibar": { "name": "Zanzibar, Tanzânia", "tagline": "Praias de águas cristalinas no Índico" },
+    "sydney": { "name": "Sydney, Austrália", "tagline": "Opera House, Bondi e estilo de vida ao ar livre" },
+    "queenstown": { "name": "Queenstown, Nova Zelândia", "tagline": "Aventura extrema em paisagens épicas" },
+    "fiji": { "name": "Fiji", "tagline": "Ilhas tropicais e hospitalidade do Pacífico" },
+    "melbourne": { "name": "Melbourne, Austrália", "tagline": "Cafés de especialidade e arte de rua" }
   },
   "saved": {
     "title": "Meus Roteiros Salvos ({{count}})",
