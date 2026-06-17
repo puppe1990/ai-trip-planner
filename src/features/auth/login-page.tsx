@@ -4,6 +4,7 @@ import { Compass } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { signIn, useSession } from '@/src/lib/auth-client';
 import LanguageSwitcher from '@/src/components/LanguageSwitcher';
+import PasswordInput from '@/src/components/PasswordInput';
 
 export function LoginPage() {
   const { t } = useTranslation();
@@ -86,13 +87,7 @@ export function LoginPage() {
               </div>
               <div className="space-y-2">
                 <label className="block text-sm font-medium text-slate-700">{t('auth.password')}</label>
-                <input
-                  type="password"
-                  required
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                  className="w-full px-4 py-3 rounded-xl border border-slate-200 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100 transition-all"
-                />
+                <PasswordInput value={password} onChange={setPassword} required />
               </div>
               <button
                 type="submit"

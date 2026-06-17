@@ -116,6 +116,8 @@
     "signupSubtitle": "Cadastre-se para gerar roteiros personalizados e salvá-los na nuvem.",
     "email": "E-mail",
     "password": "Senha",
+    "showPassword": "Mostrar senha",
+    "hidePassword": "Ocultar senha",
     "name": "Nome",
     "login": "Entrar",
     "loggingIn": "Entrando...",

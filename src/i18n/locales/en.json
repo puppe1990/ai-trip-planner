@@ -116,6 +116,8 @@
     "signupSubtitle": "Sign up to generate personalized itineraries and save them to the cloud.",
     "email": "Email",
     "password": "Password",
+    "showPassword": "Show password",
+    "hidePassword": "Hide password",
     "name": "Name",
     "login": "Sign in",
     "loggingIn": "Signing in...",
