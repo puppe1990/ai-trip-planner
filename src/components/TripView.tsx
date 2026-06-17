@@ -1,45 +1,6 @@
 import React, { useState, useMemo } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
-import {
-  Calendar,
-  DollarSign,
-  Compass,
-  MapPin,
-  Luggage,
-  Coffee,
-  Sun,
-  Info,
-  ArrowLeft,
-  CheckCircle,
-  Save,
-  Printer,
-  Share2,
-  Activity as ActivityIcon,
-  Clock,
-  PiggyBank,
-  Lightbulb,
-  Building,
-  UtensilsCrossed,
-  Sparkles,
-  Award,
-  Users,
-  Thermometer,
-  CloudRain,
-  Snowflake,
-  Umbrella,
-  Droplets,
-  Flame,
-  Wind,
-  Loader2,
-  Car,
-  Smartphone,
-  Train,
-  Bus,
-  CreditCard,
-  Search,
-  Navigation,
-  ExternalLink,
-} from 'lucide-react';
+import { Icon, TransitIcon } from './Icon';
 import { useTranslation } from 'react-i18next';
 import type { TripPlan } from '@/src/types';
 import { getDestinationClimate } from '@/src/lib/climate';
@@ -169,7 +130,7 @@ export default function TripView({ tripPlan, onBack, onSave, isSaved }: TripView
           onClick={onBack}
           className="flex items-center gap-2 text-sm text-slate-600 hover:text-indigo-600 font-semibold cursor-pointer transition-colors"
         >
-          <ArrowLeft className="w-4 h-4" />
+          <Icon name="arrow-left" className="text-base" />
           {t('common.back')}
         </button>
 
@@ -178,7 +139,7 @@ export default function TripView({ tripPlan, onBack, onSave, isSaved }: TripView
             onClick={() => setIsShareOpen(true)}
             className="flex items-center gap-2 text-xs font-semibold bg-white text-slate-700 hover:text-indigo-600 border border-slate-200 px-4 py-2.5 rounded-xl transition-all shadow-sm cursor-pointer ml-auto sm:ml-0"
           >
-            <Share2 className="w-3.5 h-3.5 text-indigo-500" />
+            <Icon name="share" className="text-sm text-indigo-500" />
             {t('common.share')}
           </button>
 
@@ -186,7 +147,7 @@ export default function TripView({ tripPlan, onBack, onSave, isSaved }: TripView
             onClick={() => window.print()}
             className="flex items-center gap-2 text-xs font-semibold bg-white text-slate-700 hover:text-indigo-600 border border-slate-200 px-4 py-2.5 rounded-xl transition-all shadow-sm cursor-pointer"
           >
-            <Printer className="w-3.5 h-3.5" />
+            <Icon name="printer" className="text-sm" />
             {t('common.print')}
           </button>
 
@@ -194,7 +155,7 @@ export default function TripView({ tripPlan, onBack, onSave, isSaved }: TripView
             onClick={() => setIsCalendarOpen(true)}
             className="flex items-center gap-2 text-xs font-semibold bg-white text-slate-700 hover:text-indigo-600 border border-slate-200 px-4 py-2.5 rounded-xl transition-all shadow-sm cursor-pointer"
           >
-            <Calendar className="w-3.5 h-3.5 text-rose-500" />
+            <Icon name="calendar" className="text-sm text-rose-500" />
             {t('common.calendar')}
           </button>
 
@@ -207,7 +168,7 @@ export default function TripView({ tripPlan, onBack, onSave, isSaved }: TripView
                 : 'bg-indigo-600 border-indigo-600 text-white hover:bg-indigo-700 shadow-indigo-600/10'
             }`}
           >
-            <Save className="w-3.5 h-3.5" />
+            <Icon name="save" className="text-sm" />
             {isSaved ? t('common.saved') : t('common.save')}
           </button>
         </div>
@@ -224,7 +185,7 @@ export default function TripView({ tripPlan, onBack, onSave, isSaved }: TripView
 
         <div className="space-y-4 max-w-3xl relative z-10">
           <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold bg-indigo-500/25 border border-indigo-400/20 text-indigo-350">
-            <Sparkles className="w-3.5 h-3.5" />
+            <Icon name="sparkles" className="text-sm" />
             itinerário personalizado de {tripPlan.durationDays} dias
           </span>
 
@@ -249,7 +210,7 @@ export default function TripView({ tripPlan, onBack, onSave, isSaved }: TripView
           <div className="space-y-4">
             <div className="flex items-center justify-between">
               <h3 className="font-bold text-slate-800 text-base flex items-center gap-2">
-                <PiggyBank className="w-5 h-5 text-indigo-650" />
+                <Icon name="piggy-bank" className="text-lg text-indigo-650" />
                 Simulador Financeiro Local
               </h3>
               <span className="text-[10px] bg-slate-50 border border-slate-100 py-1 px-2.5 rounded-full font-semibold text-slate-400 font-mono">
@@ -264,7 +225,7 @@ export default function TripView({ tripPlan, onBack, onSave, isSaved }: TripView
             {/* Travelers counter */}
             <div className="flex items-center justify-between bg-slate-50 border border-slate-100 p-3 rounded-2xl">
               <span className="text-xs font-bold text-slate-600 flex items-center gap-1.5 ml-1">
-                <Users className="w-3.5 h-3.5 text-indigo-500" />
+                <Icon name="users" className="text-sm text-indigo-500" />
                 Quantidade de Viajantes
               </span>
               <div className="flex items-center gap-3">
@@ -323,7 +284,7 @@ export default function TripView({ tripPlan, onBack, onSave, isSaved }: TripView
           <div className="bg-white p-6 rounded-2xl border border-slate-100/95 shadow-sm flex flex-col justify-between">
             <div className="space-y-1">
               <div className="w-8 h-8 rounded-lg bg-rose-50 flex items-center justify-center text-rose-500 mb-2">
-                <Building className="w-4 h-4" />
+                <Icon name="building" className="text-base" />
               </div>
               <h4 className="text-xs font-bold text-slate-500 uppercase tracking-wider">Hospedagem por Noite</h4>
               <p className="text-lg font-black text-slate-850">{tripPlan.budgetEstimate.hotelAverageNight}</p>
@@ -336,7 +297,7 @@ export default function TripView({ tripPlan, onBack, onSave, isSaved }: TripView
           <div className="bg-white p-6 rounded-2xl border border-slate-100/95 shadow-sm flex flex-col justify-between">
             <div className="space-y-1">
               <div className="w-8 h-8 rounded-lg bg-amber-50 flex items-center justify-center text-amber-500 mb-2">
-                <Coffee className="w-4 h-4" />
+                <Icon name="coffee" className="text-base" />
               </div>
               <h4 className="text-xs font-bold text-slate-500 uppercase tracking-wider">Alimentação por Dia</h4>
               <p className="text-lg font-black text-slate-850">{tripPlan.budgetEstimate.foodAverageDay}</p>
@@ -349,7 +310,7 @@ export default function TripView({ tripPlan, onBack, onSave, isSaved }: TripView
           <div className="bg-white p-6 rounded-2xl border border-slate-100/95 shadow-sm flex flex-col justify-between">
             <div className="space-y-1">
               <div className="w-8 h-8 rounded-lg bg-blue-50 flex items-center justify-center text-blue-500 mb-2">
-                <Compass className="w-4 h-4" />
+                <Icon name="compass" className="text-base" />
               </div>
               <h4 className="text-xs font-bold text-slate-500 uppercase tracking-wider">Transporte por Dia</h4>
               <p className="text-lg font-black text-slate-850">{tripPlan.budgetEstimate.transportAverageDay}</p>
@@ -362,7 +323,7 @@ export default function TripView({ tripPlan, onBack, onSave, isSaved }: TripView
           <div className="bg-gradient-to-r from-amber-400/10 to-indigo-400/10 p-6 rounded-2xl border border-amber-100/60 shadow-sm flex flex-col justify-between">
             <div className="space-y-1">
               <div className="w-8 h-8 rounded-lg bg-amber-500/25 flex items-center justify-center text-amber-600 mb-2">
-                <Award className="w-4 h-4" />
+                <Icon name="award" className="text-base" />
               </div>
               <h4 className="text-xs font-bold text-amber-950 uppercase tracking-wider">
                 Orçamento de Referência Total
@@ -383,7 +344,7 @@ export default function TripView({ tripPlan, onBack, onSave, isSaved }: TripView
 
       {/* Main section: Days Tabs & Detailed Plan */}
       <h2 className="text-2xl font-black text-slate-855 flex items-center gap-2 pt-4 print:hidden">
-        <Calendar className="w-6 h-6 text-indigo-650" />
+        <Icon name="calendar" className="text-xl text-indigo-650" />
         Cronograma Dia a Dia da Viagem
       </h2>
 
@@ -461,7 +422,7 @@ export default function TripView({ tripPlan, onBack, onSave, isSaved }: TripView
                         Manhã
                       </span>
                       <span className="text-slate-450 font-medium flex items-center gap-1">
-                        <Clock className="w-3 h-3" /> {activeDayPlan.morning.duration}
+                        <Icon name="clock" className="text-xs" /> {activeDayPlan.morning.duration}
                       </span>
                       <span className="text-slate-450 font-medium">• Custos: {activeDayPlan.morning.cost}</span>
                     </div>
@@ -482,7 +443,7 @@ export default function TripView({ tripPlan, onBack, onSave, isSaved }: TripView
                         Tarde
                       </span>
                       <span className="text-slate-450 font-medium flex items-center gap-1">
-                        <Clock className="w-3 h-3" /> {activeDayPlan.afternoon.duration}
+                        <Icon name="clock" className="text-xs" /> {activeDayPlan.afternoon.duration}
                       </span>
                       <span className="text-slate-450 font-medium">• Custos: {activeDayPlan.afternoon.cost}</span>
                     </div>
@@ -503,7 +464,7 @@ export default function TripView({ tripPlan, onBack, onSave, isSaved }: TripView
                         Noite
                       </span>
                       <span className="text-slate-450 font-medium flex items-center gap-1">
-                        <Clock className="w-3 h-3" /> {activeDayPlan.evening.duration}
+                        <Icon name="clock" className="text-xs" /> {activeDayPlan.evening.duration}
                       </span>
                       <span className="text-slate-450 font-medium">• Custos: {activeDayPlan.evening.cost}</span>
                     </div>
@@ -518,7 +479,7 @@ export default function TripView({ tripPlan, onBack, onSave, isSaved }: TripView
                 <div className="flex items-center justify-between border-b border-indigo-50 pb-2.5">
                   <div className="flex items-center gap-2">
                     <div className="w-7 h-7 rounded-lg bg-orange-100 text-orange-600 flex items-center justify-center">
-                      <UtensilsCrossed className="w-3.5 h-3.5" />
+                      <Icon name="utensils" className="text-sm" />
                     </div>
                     <h5 className="font-bold text-sm text-slate-800">Recomendação Gastronômica do Dia</h5>
                   </div>
@@ -544,7 +505,7 @@ export default function TripView({ tripPlan, onBack, onSave, isSaved }: TripView
       {/* Printable Sequential Itinerary (Exclusive to Paper PDF/Printed Documents) */}
       <div className="hidden print:block space-y-8 pt-4">
         <h2 className="text-xl font-bold text-slate-900 border-b-2 border-slate-200 pb-2 flex items-center gap-2">
-          <Calendar className="w-5 h-5 text-indigo-700" />
+          <Icon name="calendar" className="text-lg text-indigo-700" />
           Roteiro Completo Detalhado ({tripPlan.durationDays} {tripPlan.durationDays === 1 ? 'Dia' : 'Dias'})
         </h2>
 
@@ -615,7 +576,7 @@ export default function TripView({ tripPlan, onBack, onSave, isSaved }: TripView
         <div className="md:col-span-1 bg-white p-6 rounded-3xl border border-slate-100 shadow-xl shadow-slate-100/40 flex flex-col justify-between space-y-4">
           <div className="space-y-4">
             <h3 className="font-bold text-slate-850 text-base flex items-center gap-2">
-              <Luggage className="w-5 h-5 text-indigo-600" />
+              <Icon name="luggage" className="text-lg text-indigo-600" />
               Checklist de Bagagem
             </h3>
 
@@ -635,7 +596,7 @@ export default function TripView({ tripPlan, onBack, onSave, isSaved }: TripView
                   >
                     <div className="flex-shrink-0">
                       {isChecked ? (
-                        <CheckCircle className="w-5 h-5 text-emerald-500 fill-emerald-5" />
+                        <Icon name="check" className="text-lg text-emerald-500 font-bold" />
                       ) : (
                         <div className="w-5 h-5 rounded-md border-2 border-slate-200 bg-white" />
                       )}
@@ -666,7 +627,7 @@ export default function TripView({ tripPlan, onBack, onSave, isSaved }: TripView
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-slate-100/60 pb-4">
               <div className="flex items-start gap-3">
                 <div className="w-11 h-11 rounded-2xl bg-sky-50 text-sky-600 flex items-center justify-center flex-shrink-0 border border-sky-100 shadow-sm shadow-sky-50">
-                  <Sun className="w-6 h-6 text-sky-500 animate-[spin_8s_linear_infinite]" />
+                  <Icon name="sun" className="text-xl text-sky-500" spin />
                 </div>
                 <div className="space-y-0.5">
                   <h3 className="font-bold text-slate-800 text-base">Previsão Climática Sazonal</h3>
@@ -688,7 +649,7 @@ export default function TripView({ tripPlan, onBack, onSave, isSaved }: TripView
 
             {/* AI Summary Banner */}
             <div className="bg-slate-50/70 border border-slate-100 p-4 rounded-2xl text-xs text-slate-600 leading-relaxed flex gap-3 items-start">
-              <Info className="w-4 h-4 text-emerald-600 mt-0.5 flex-shrink-0" />
+              <Icon name="info" className="text-base text-emerald-600 mt-0.5 shrink-0" />
               <div>
                 <span className="font-bold text-slate-750 block mb-0.5">Resumo de Clima Informado</span>
                 {tripPlan.weatherExpected}
@@ -756,9 +717,7 @@ export default function TripView({ tripPlan, onBack, onSave, isSaved }: TripView
               const isVeryHot = activeMonth.tempMax >= 30;
               const isCold = activeMonth.tempMax < 12;
 
-              let TempIcon = Thermometer;
-              if (isVeryHot) TempIcon = Flame;
-              else if (isCold) TempIcon = Snowflake;
+              const tempIconName = isVeryHot ? 'flame' : isCold ? 'snowflake' : 'thermometer';
 
               return (
                 <div className="bg-gradient-to-b from-slate-50/50 to-slate-50/10 border border-slate-150/50 rounded-2xl p-4 md:p-5 space-y-4">
@@ -808,8 +767,9 @@ export default function TripView({ tripPlan, onBack, onSave, isSaved }: TripView
                     {/* Temperature Column */}
                     <div className="space-y-3.5 col-span-1 md:border-r md:border-slate-100 md:pr-4">
                       <div className="flex items-center gap-2 text-slate-500">
-                        <TempIcon
-                          className={`w-4 h-4 ${isVeryHot ? 'text-orange-500' : isCold ? 'text-sky-500' : 'text-amber-500'}`}
+                        <Icon
+                          name={tempIconName}
+                          className={`text-base ${isVeryHot ? 'text-orange-500' : isCold ? 'text-sky-500' : 'text-amber-500'}`}
                         />
                         <span className="text-xs font-bold uppercase tracking-wider">Metas de Temperatura</span>
                       </div>
@@ -847,7 +807,7 @@ export default function TripView({ tripPlan, onBack, onSave, isSaved }: TripView
                       <div className="space-y-1.5">
                         <div className="flex items-center justify-between text-xs text-slate-600">
                           <span className="flex items-center gap-1.5 font-semibold">
-                            <Umbrella className="w-4 h-4 text-sky-500" />
+                            <Icon name="umbrella" className="text-base text-sky-500" />
                             Probabilidade de Chuva:
                           </span>
                           <span className="font-bold text-slate-800">{activeMonth.precip}%</span>
@@ -861,7 +821,7 @@ export default function TripView({ tripPlan, onBack, onSave, isSaved }: TripView
                       <div className="space-y-1.5">
                         <div className="flex items-center justify-between text-xs text-slate-600">
                           <span className="flex items-center gap-1.5 font-semibold">
-                            <Sun className="w-4 h-4 text-amber-500" />
+                            <Icon name="sun" className="text-base text-amber-500" />
                             Insolação Diária Média:
                           </span>
                           <span className="font-bold text-slate-800">{activeMonth.sunHours} horas</span>
@@ -880,7 +840,7 @@ export default function TripView({ tripPlan, onBack, onSave, isSaved }: TripView
                     <div className="col-span-1 flex flex-col justify-between space-y-3">
                       <div className="space-y-1.5">
                         <div className="flex items-center gap-1.5 text-slate-500">
-                          <Luggage className="w-4 h-4 text-indigo-500" />
+                          <Icon name="luggage" className="text-base text-indigo-500" />
                           <span className="text-xs font-bold uppercase tracking-wider">Guia de Vestuário & Mala</span>
                         </div>
                         <p className="text-[11px] text-slate-600 leading-relaxed font-semibold">
@@ -904,7 +864,7 @@ export default function TripView({ tripPlan, onBack, onSave, isSaved }: TripView
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-slate-100/60 pb-4">
               <div className="flex items-start gap-3">
                 <div className="w-11 h-11 rounded-2xl bg-indigo-50 text-indigo-600 flex items-center justify-center flex-shrink-0 border border-indigo-100 shadow-sm shadow-indigo-50">
-                  <Search className="w-6 h-6 text-indigo-500 animate-pulse" />
+                  <Icon name="search" className="text-xl text-indigo-500" pulse />
                 </div>
                 <div className="space-y-0.5">
                   <h3 className="font-bold text-slate-800 text-sm sm:text-base flex items-center gap-1.5">
@@ -935,7 +895,7 @@ export default function TripView({ tripPlan, onBack, onSave, isSaved }: TripView
                   onClick={fetchUrbanMobilityDetails}
                   className="inline-flex items-center gap-2 bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-bold px-5 py-2.5 rounded-xl shadow-md transition-all scale-100 active:scale-95 cursor-pointer"
                 >
-                  <Search className="w-4 h-4" />
+                  <Icon name="search" className="text-base" />
                   Pesquisar Aplicativos & Tarifas Atuais
                 </button>
               </div>
@@ -943,7 +903,7 @@ export default function TripView({ tripPlan, onBack, onSave, isSaved }: TripView
 
             {isTransitLoading && (
               <div className="bg-slate-50/70 border border-slate-100 rounded-2xl p-8 flex flex-col items-center justify-center text-center space-y-3">
-                <Loader2 className="w-8 h-8 text-indigo-600 animate-spin" />
+                <Icon name="loader" className="text-3xl text-indigo-600" spin />
                 <div className="space-y-1">
                   <p className="text-xs font-bold text-slate-755">Utilizando o Google Search...</p>
                   <p className="text-[11px] text-slate-500 max-w-sm leading-relaxed">
@@ -973,24 +933,9 @@ export default function TripView({ tripPlan, onBack, onSave, isSaved }: TripView
                 <div className="flex flex-wrap gap-1 border-b border-slate-100 pb-2">
                   {transitSections.map((sect, idx) => {
                     const isSelected = idx === activeTransitTabIndex;
-                    const getIconComponent = (iconName: string) => {
-                      switch (iconName) {
-                        case 'Car':
-                          return <Car className="w-4 h-4" />;
-                        case 'Smartphone':
-                          return <Smartphone className="w-4 h-4" />;
-                        case 'Train':
-                          return <Train className="w-4 h-4 text-emerald-650" />;
-                        case 'Bus':
-                          return <Bus className="w-4 h-4" />;
-                        case 'CreditCard':
-                          return <CreditCard className="w-4 h-4 text-violet-650" />;
-                        case 'Lightbulb':
-                          return <Lightbulb className="w-4 h-4 text-amber-500" />;
-                        default:
-                          return <Navigation className="w-4 h-4" />;
-                      }
-                    };
+                    const getIconComponent = (iconName: string, size = 'text-base') => (
+                      <TransitIcon icon={iconName} className={size} />
+                    );
                     return (
                       <button
                         key={sect.title}
@@ -1017,24 +962,9 @@ export default function TripView({ tripPlan, onBack, onSave, isSaved }: TripView
                       if (!activeSect) return null;
 
                       const lines = activeSect.content.split('\n').filter((l) => l.trim().length > 0);
-                      const getIconComponent = (iconName: string) => {
-                        switch (iconName) {
-                          case 'Car':
-                            return <Car className="w-4.5 h-4.5" />;
-                          case 'Smartphone':
-                            return <Smartphone className="w-4.5 h-4.5" />;
-                          case 'Train':
-                            return <Train className="w-4.5 h-4.5 text-emerald-650" />;
-                          case 'Bus':
-                            return <Bus className="w-4.5 h-4.5" />;
-                          case 'CreditCard':
-                            return <CreditCard className="w-4.5 h-4.5 text-violet-650" />;
-                          case 'Lightbulb':
-                            return <Lightbulb className="w-4.5 h-4.5 text-amber-500" />;
-                          default:
-                            return <Navigation className="w-4.5 h-4.5" />;
-                        }
-                      };
+                      const getIconComponent = (iconName: string, size = 'text-base') => (
+                        <TransitIcon icon={iconName} className={size} />
+                      );
 
                       return (
                         <div className="space-y-3">
@@ -1068,7 +998,7 @@ export default function TripView({ tripPlan, onBack, onSave, isSaved }: TripView
                   <div className="col-span-1 bg-gradient-to-b from-indigo-50/20 to-slate-50/40 rounded-2xl p-4 border border-indigo-100/40 flex flex-col justify-between space-y-3">
                     <div className="space-y-2.5">
                       <div className="flex items-center gap-1.5 text-slate-650 font-bold text-xs uppercase tracking-wider">
-                        <Navigation className="w-3.5 h-3.5 text-indigo-500" />
+                        <Icon name="navigation" className="text-sm text-indigo-500" />
                         Fontes Fundamentadas
                       </div>
                       <p className="text-[11px] text-slate-500 leading-normal">
@@ -1086,7 +1016,10 @@ export default function TripView({ tripPlan, onBack, onSave, isSaved }: TripView
                               rel="noreferrer"
                               className="group flex items-start gap-1.5 p-2 bg-white rounded-xl border border-slate-100 hover:border-indigo-150 transition-all text-left block cursor-pointer"
                             >
-                              <ExternalLink className="w-3 h-3 text-indigo-500 mt-0.5 flex-shrink-0 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" />
+                              <Icon
+                                name="external-link"
+                                className="text-xs text-indigo-500 mt-0.5 shrink-0 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform"
+                              />
                               <div className="space-y-0.5 overflow-hidden">
                                 <span className="text-[10px] text-slate-700 font-bold truncate block group-hover:text-indigo-650">
                                   {src.title}
@@ -1126,7 +1059,7 @@ export default function TripView({ tripPlan, onBack, onSave, isSaved }: TripView
           {/* Core Tips Lists */}
           <div className="bg-white p-6 rounded-3xl border border-slate-100 shadow-xl shadow-slate-100/40 space-y-4">
             <h3 className="font-bold text-slate-850 text-base flex items-center gap-2">
-              <Lightbulb className="w-5 h-5 text-yellow-500 fill-yellow-50" />
+              <Icon name="lightbulb" className="text-lg text-yellow-500" />
               Conselhos & Dicas Práticas Locais
             </h3>
 
@@ -1180,9 +1113,7 @@ export default function TripView({ tripPlan, onBack, onSave, isSaved }: TripView
                     onClick={() => setIsShareOpen(false)}
                     className="p-1.5 rounded-lg hover:bg-slate-800 text-slate-400 hover:text-slate-200 transition-colors cursor-pointer"
                   >
-                    <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
-                      <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
-                    </svg>
+                    <Icon name="x" className="text-base font-bold" />
                   </button>
                 </div>
 
@@ -1255,7 +1186,7 @@ export default function TripView({ tripPlan, onBack, onSave, isSaved }: TripView
                     >
                       {copied ? (
                         <>
-                          <CheckCircle className="w-3.5 h-3.5" />
+                          <Icon name="check" className="text-sm font-bold" />
                           Copiado!
                         </>
                       ) : (
@@ -1276,10 +1207,7 @@ export default function TripView({ tripPlan, onBack, onSave, isSaved }: TripView
                     rel="noopener noreferrer"
                     className="flex items-center justify-center gap-2 bg-[#25D366]/10 hover:bg-[#25D366]/20 border border-[#25D366]/30 text-[#25D366] py-2.5 rounded-xl text-xs font-bold transition-all text-center cursor-pointer"
                   >
-                    <svg className="w-4 h-4 fill-current" viewBox="0 0 24 24">
-                      <path d="M17.472 14.382c-.022-.008-1.243-.614-1.437-.682-.194-.069-.336-.102-.477.1-.14.2-.543.682-.665.821-.122.14-.243.156-.463.047-.223-.11-1.07-.394-2.03-1.25-.747-.665-1.247-1.488-1.39-1.73-.14-.243-.015-.373.107-.493.11-.11.243-.284.365-.426.12-.14.16-.24.24-.4.08-.162.04-.303-.02-.423-.06-.12-.478-1.153-.654-1.577-.17-.411-.341-.354-.478-.361-.123-.006-.264-.006-.405-.006-.14 0-.366.052-.558.26-.192.208-.734.717-.734 1.748 0 1.03.75 2.023.855 2.164.104.14 1.472 2.25 3.566 3.155.498.215.887.343 1.196.44.5.16 1.062.137 1.465.077.45-.067 1.383-.564 1.58-.108.197-.457.197-.85 0-.918-.02-.008-.108-.046-.242-.113" />
-                      <path d="M12.003 21c-1.623 0-3.213-.42-4.62-1.214L3.5 21l1.248-3.921A8.96 8.96 0 0 1 3 12c0-4.963 4.04-9 9.003-9 4.961 0 8.997 4.037 8.997 9 0 4.963-4.036 9-8.997 9m0-16.71c-4.245 0-7.7 3.456-7.7 7.7 0 1.396.375 2.76 1.085 3.953l-.756 2.378 2.434-.638A7.665 7.665 0 0 0 12.003 18.7c4.245 0 7.7-3.457 7.7-7.7 0-4.244-3.455-7.7-7.7-7.7" />
-                    </svg>
+                    <Icon name="whatsapp" className="text-base" />
                     WhatsApp
                   </a>
 
@@ -1287,13 +1215,7 @@ export default function TripView({ tripPlan, onBack, onSave, isSaved }: TripView
                     href={`mailto:?subject=Roteiro%20de%20Viagem%20para%20${encodeURIComponent(tripPlan.destination)}&body=Ol%C3%A1!%20Planejei%20um%20roteiro%20de%20viagem%20incr%C3%ADvel%20para%20${encodeURIComponent(tripPlan.destination)}%20com%20IA.%20Acesse%20as%20paradas%20e%20o%20mapa%20por%20este%20link:%0A%0A${encodeURIComponent(shareUrl)}`}
                     className="flex items-center justify-center gap-2 bg-slate-800 hover:bg-slate-750 border border-slate-700 text-slate-200 py-2.5 rounded-xl text-xs font-bold transition-all text-center cursor-pointer"
                   >
-                    <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"
-                      />
-                    </svg>
+                    <Icon name="mail" className="text-base" />
                     E-mail
                   </a>
                 </div>
@@ -1339,9 +1261,7 @@ export default function TripView({ tripPlan, onBack, onSave, isSaved }: TripView
                     onClick={() => setIsCalendarOpen(false)}
                     className="p-1.5 rounded-lg hover:bg-slate-800 text-slate-400 hover:text-slate-200 transition-colors cursor-pointer"
                   >
-                    <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
-                      <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
-                    </svg>
+                    <Icon name="x" className="text-base font-bold" />
                   </button>
                 </div>
 
@@ -1399,7 +1319,7 @@ export default function TripView({ tripPlan, onBack, onSave, isSaved }: TripView
                     onClick={handleExportCalendar}
                     className="w-full py-3 px-4 rounded-xl bg-gradient-to-r from-rose-600 to-rose-550 hover:from-rose-550 hover:to-rose-500 text-white text-xs font-black transition-all shadow-md active:scale-[0.98] cursor-pointer flex items-center justify-center gap-2"
                   >
-                    <Calendar className="w-4 h-4" />
+                    <Icon name="calendar" className="text-base" />
                     Baixar Arquivo de Calendário (.ics)
                   </button>
 

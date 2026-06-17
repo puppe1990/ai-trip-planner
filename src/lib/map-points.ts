@@ -158,3 +158,31 @@ export function buildRoutesPath(points: MapPoint[]): string {
     return `${path} C ${cx1} ${cy1}, ${cx2} ${cy2}, ${p.x} ${p.y}`;
   }, '');
 }
+
+export function drawRoutesOnCanvas(ctx: CanvasRenderingContext2D, points: MapPoint[]): void {
+  if (points.length < 2) return;
+
+  const sorted = sortPointsChronologically(points);
+  const gradient = ctx.createLinearGradient(0, 0, 700, 450);
+  gradient.addColorStop(0, 'rgba(79, 70, 229, 0.8)');
+  gradient.addColorStop(0.5, 'rgba(6, 182, 212, 0.8)');
+  gradient.addColorStop(1, 'rgba(16, 185, 129, 0.8)');
+
+  ctx.strokeStyle = gradient;
+  ctx.lineWidth = 2.5;
+  ctx.setLineDash([6, 5]);
+  ctx.beginPath();
+  ctx.moveTo(sorted[0].x, sorted[0].y);
+
+  for (let index = 1; index < sorted.length; index++) {
+    const p = sorted[index];
+    const prev = sorted[index - 1];
+    const cx1 = prev.x + (p.x - prev.x) / 2;
+    const cy1 = prev.y;
+    const cx2 = prev.x + (p.x - prev.x) / 2;
+    const cy2 = p.y;
+    ctx.bezierCurveTo(cx1, cy1, cx2, cy2, p.x, p.y);
+  }
+
+  ctx.stroke();
+}

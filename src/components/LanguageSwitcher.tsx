@@ -1,4 +1,4 @@
-import { Globe } from 'lucide-react';
+import { Icon } from '@/src/components/Icon';
 import { useTranslation } from 'react-i18next';
 import { SUPPORTED_LANGUAGES, type AppLanguage } from '../i18n/index';
 
@@ -12,7 +12,7 @@ export default function LanguageSwitcher() {
 
   return (
     <div className="flex items-center gap-1 bg-slate-50 border border-slate-100 rounded-xl p-1">
-      <Globe className="w-3.5 h-3.5 text-slate-400 ml-1.5" aria-hidden />
+      <Icon name="globe" className="text-sm text-slate-400 ml-1.5" />
       {SUPPORTED_LANGUAGES.map((lang) => (
         <button
           key={lang}

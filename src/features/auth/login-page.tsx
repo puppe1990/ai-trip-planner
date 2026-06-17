@@ -1,6 +1,6 @@
 import { useEffect, useState, type FormEvent } from 'react';
 import { Link, useNavigate } from '@tanstack/react-router';
-import { Compass } from 'lucide-react';
+import { Icon } from '@/src/components/Icon';
 import { useTranslation } from 'react-i18next';
 import { signIn, useSession } from '@/src/lib/auth-client';
 import LanguageSwitcher from '@/src/components/LanguageSwitcher';
@@ -49,7 +49,7 @@ export function LoginPage() {
         <div className="bg-white rounded-3xl shadow-xl shadow-slate-100/40 border border-slate-100 overflow-hidden">
           <div className="bg-gradient-to-r from-slate-900 via-indigo-950 to-slate-900 p-10 text-center">
             <div className="w-16 h-16 rounded-2xl bg-indigo-600 flex items-center justify-center text-white shadow-md shadow-indigo-600/20 mx-auto mb-4">
-              <Compass className="w-8 h-8" />
+              <Icon name="compass" className="text-3xl" />
             </div>
             <h1 className="text-2xl font-black text-white tracking-tight">
               {t('common.appName')}{' '}

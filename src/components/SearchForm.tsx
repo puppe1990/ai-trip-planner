@@ -1,6 +1,6 @@
 import React from 'react';
 import { motion } from 'motion/react';
-import { MapPin, Calendar, Compass, Users, Sparkles, CalendarDays, PenTool } from 'lucide-react';
+import { Icon } from '@/src/components/Icon';
 import { useTranslation } from 'react-i18next';
 import type { TripSearchParams } from '@/src/types';
 import { BUDGET_OPTIONS, STYLE_OPTIONS, COMPANION_OPTIONS, QUICK_DESTINATIONS } from '@/src/data';
@@ -52,7 +52,7 @@ export default function SearchForm({ searchParams, setSearchParams, onSubmit, is
       {/* Quick Start Destinations */}
       <div className="space-y-3">
         <h3 className="text-sm font-semibold uppercase tracking-wider text-slate-500 flex items-center gap-2">
-          <Sparkles className="w-4 h-4 text-amber-500" />
+          <Icon name="sparkles" className="text-base text-amber-500" />
           {t('search.quickTitle')}
         </h3>
         <p className="text-xs text-slate-500">{t('search.quickSubtitle')}</p>
@@ -97,7 +97,7 @@ export default function SearchForm({ searchParams, setSearchParams, onSubmit, is
         className="bg-white rounded-3xl border border-slate-100 shadow-xl shadow-slate-100/40 p-6 md:p-8 space-y-6"
       >
         <h2 className="text-xl font-bold text-slate-800 flex items-center gap-2">
-          <Compass className="w-5 h-5 text-indigo-600" />
+          <Icon name="compass" className="text-lg text-indigo-600" />
           {t('search.formTitle')}
         </h2>
 
@@ -105,7 +105,7 @@ export default function SearchForm({ searchParams, setSearchParams, onSubmit, is
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
           <div className="md:col-span-2 space-y-2">
             <label htmlFor="destination" className="block text-sm font-medium text-slate-700 flex items-center gap-2">
-              <MapPin className="w-4 h-4 text-rose-500" />
+              <Icon name="map-pin" className="text-base text-rose-500" />
               {t('search.destination')}
             </label>
             <div className="relative">
@@ -125,7 +125,7 @@ export default function SearchForm({ searchParams, setSearchParams, onSubmit, is
 
           <div className="space-y-2">
             <label htmlFor="duration" className="block text-sm font-medium text-slate-700 flex items-center gap-2">
-              <CalendarDays className="w-4 h-4 text-emerald-500" />
+              <Icon name="calendar-days" className="text-base text-emerald-500" />
               {t('search.duration', { count: searchParams.duration })}
             </label>
             <div className="flex items-center gap-4 bg-slate-50 p-2.5 rounded-xl border border-slate-200/60">
@@ -207,7 +207,7 @@ export default function SearchForm({ searchParams, setSearchParams, onSubmit, is
           {/* Companion Selection */}
           <div className="space-y-3">
             <label className="block text-sm font-medium text-slate-700 flex items-center gap-2">
-              <Users className="w-4 h-4 text-indigo-500" />
+              <Icon name="users" className="text-base text-indigo-500" />
               {t('search.companion')}
             </label>
             <div className="grid grid-cols-2 gap-2">
@@ -232,7 +232,7 @@ export default function SearchForm({ searchParams, setSearchParams, onSubmit, is
           {/* Season / Climate */}
           <div className="space-y-3">
             <label htmlFor="season" className="block text-sm font-medium text-slate-700 flex items-center gap-2">
-              <Calendar className="w-4 h-4 text-sky-500" />
+              <Icon name="calendar" className="text-base text-sky-500" />
               {t('search.season')}
             </label>
             <input
@@ -251,7 +251,7 @@ export default function SearchForm({ searchParams, setSearchParams, onSubmit, is
         {/* Optional Traveler notes */}
         <div className="space-y-2">
           <label htmlFor="extraNotes" className="block text-sm font-medium text-slate-700 flex items-center gap-2">
-            <PenTool className="w-4 h-4 text-purple-500" />
+            <Icon name="pen-tool" className="text-base text-purple-500" />
             {t('search.notes')}
           </label>
           <textarea
@@ -273,7 +273,7 @@ export default function SearchForm({ searchParams, setSearchParams, onSubmit, is
             disabled={isLoading || !searchParams.destination.trim()}
             className="w-full md:w-auto px-8 py-4 bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl shadow-lg shadow-indigo-600/20 font-bold transition-all flex items-center justify-center gap-2 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
           >
-            <Sparkles className="w-5 h-5 animate-pulse" />
+            <Icon name="sparkles" className="text-lg" pulse />
             {isLoading ? t('search.submitting') : t('search.submit')}
           </motion.button>
         </div>

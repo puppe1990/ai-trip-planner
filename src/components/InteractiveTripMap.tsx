@@ -1,21 +1,10 @@
-import React, { useState, useMemo, useEffect } from 'react';
+import React, { useState, useMemo, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
-import {
-  Compass,
-  Navigation,
-  Sun,
-  CloudSun,
-  Moon,
-  UtensilsCrossed,
-  Layers,
-  Maximize2,
-  Minimize2,
-  Info,
-} from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import type { TFunction } from 'i18next';
-import { buildMapPoints, buildRoutesPath, type MapPoint, type TimeSlot } from '@/src/lib/map-points';
+import { buildMapPoints, drawRoutesOnCanvas, type MapPoint, type TimeSlot } from '@/src/lib/map-points';
 import type { TripPlan } from '@/src/types';
+import { Icon, timeSlotIcon } from './Icon';
 
 interface InteractiveTripMapProps {
   tripPlan: TripPlan;
@@ -39,6 +28,7 @@ function getTimeSlotLabel(timeSlot: TimeSlot, t: TFunction): string {
 
 export default function InteractiveTripMap({ tripPlan, activeDay }: InteractiveTripMapProps) {
   const { t } = useTranslation();
+  const canvasRef = useRef<HTMLCanvasElement>(null);
   const [selectedPoint, setSelectedPoint] = useState<MapPoint | null>(null);
   const [filterDay, setFilterDay] = useState<number | 'all'>(activeDay);
   const [zoom, setZoom] = useState<number>(1);
@@ -57,7 +47,16 @@ export default function InteractiveTripMap({ tripPlan, activeDay }: InteractiveT
     return mapPoints.filter((p) => p.dayNumber === filterDay);
   }, [mapPoints, filterDay]);
 
-  const routesPath = useMemo(() => buildRoutesPath(filteredPoints), [filteredPoints]);
+  useEffect(() => {
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+
+    const ctx = canvas.getContext('2d');
+    if (!ctx) return;
+
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    drawRoutesOnCanvas(ctx, filteredPoints);
+  }, [filteredPoints]);
 
   const handleZoomIn = () => setZoom((z) => Math.min(3, z + 0.2));
   const handleZoomOut = () => setZoom((z) => Math.max(0.8, z - 0.2));
@@ -83,6 +82,12 @@ export default function InteractiveTripMap({ tripPlan, activeDay }: InteractiveT
     setIsDragging(false);
   };
 
+  const mapTransform = {
+    transform: `translate(${pan.x}px, ${pan.y}px) scale(${zoom})`,
+    transformOrigin: 'center-left',
+    transition: isDragging ? 'none' : 'transform 0.15s ease-out',
+  };
+
   return (
     <div
       className="bg-slate-900 border border-slate-800 rounded-3xl overflow-hidden shadow-2xl relative text-white"
@@ -91,7 +96,7 @@ export default function InteractiveTripMap({ tripPlan, activeDay }: InteractiveT
       <div className="p-4 bg-slate-950/60 border-b border-slate-800/80 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3">
         <div className="flex items-center gap-2">
           <div className="w-8 h-8 rounded-lg bg-indigo-500/15 text-indigo-400 flex items-center justify-center">
-            <Compass className="w-4 h-4 animate-spin-slow" />
+            <Icon name="compass" className="text-sm" spin />
           </div>
           <div>
             <h3 className="font-extrabold text-sm text-slate-100 flex items-center gap-2">
@@ -152,7 +157,7 @@ export default function InteractiveTripMap({ tripPlan, activeDay }: InteractiveT
 
           <div className="absolute bottom-4 left-4 bg-slate-900/95 border border-slate-800/80 p-2.5 rounded-xl z-25 text-[10px] text-slate-400 space-y-1 backdrop-blur font-mono pointer-events-none">
             <div className="font-bold text-slate-200 flex items-center gap-1.5">
-              <Navigation className="w-3.5 h-3.5 text-indigo-400" />
+              <Icon name="navigation" className="text-xs" />
               {t('map.cartographicAxis')}
             </div>
             <div>Min Lng: {Math.min(...mapPoints.map((p) => p.lng)).toFixed(4)}°</div>
@@ -165,14 +170,14 @@ export default function InteractiveTripMap({ tripPlan, activeDay }: InteractiveT
               className="w-8 h-8 rounded-lg bg-slate-900 hover:bg-slate-800 border border-slate-800 text-slate-300 flex items-center justify-center cursor-pointer transition-colors shadow"
               title={t('map.zoomIn')}
             >
-              <Maximize2 className="w-3.5 h-3.5" />
+              <Icon name="plus" className="text-xs" />
             </button>
             <button
               onClick={handleZoomOut}
               className="w-8 h-8 rounded-lg bg-slate-900 hover:bg-slate-800 border border-slate-800 text-slate-300 flex items-center justify-center cursor-pointer transition-colors shadow"
               title={t('map.zoomOut')}
             >
-              <Minimize2 className="w-3.5 h-3.5" />
+              <Icon name="minus" className="text-xs" />
             </button>
             <button
               onClick={handleResetZoom}
@@ -182,57 +187,25 @@ export default function InteractiveTripMap({ tripPlan, activeDay }: InteractiveT
             </button>
           </div>
 
-          <svg
+          <canvas
+            ref={canvasRef}
+            width={700}
+            height={450}
             className="w-full h-full absolute inset-0 pointer-events-none"
-            style={{
-              transform: `translate(${pan.x}px, ${pan.y}px) scale(${zoom})`,
-              transformOrigin: 'center-left',
-              transition: isDragging ? 'none' : 'transform 0.15s ease-out',
-            }}
-          >
-            {routesPath && (
-              <path
-                d={routesPath}
-                fill="none"
-                stroke="url(#route-gradient)"
-                strokeWidth="2.5"
-                strokeDasharray="6, 5"
-                className="animate-route-dash"
-              />
-            )}
+            style={mapTransform}
+          />
 
-            <defs>
-              <linearGradient id="route-gradient" x1="0%" y1="0%" x2="100%" y2="100%">
-                <stop offset="0%" stopColor="#4f46e5" stopOpacity="0.8" />
-                <stop offset="50%" stopColor="#06b6d4" stopOpacity="0.8" />
-                <stop offset="100%" stopColor="#10b981" stopOpacity="0.8" />
-              </linearGradient>
-            </defs>
-          </svg>
-
-          <div
-            className="w-full h-full absolute inset-0"
-            style={{
-              transform: `translate(${pan.x}px, ${pan.y}px) scale(${zoom})`,
-              transformOrigin: 'center-left',
-              transition: isDragging ? 'none' : 'transform 0.15s ease-out',
-            }}
-          >
+          <div className="w-full h-full absolute inset-0" style={mapTransform}>
             {filteredPoints.map((point) => {
               const isSelected = selectedPoint?.id === point.id;
 
               let colorClasses = 'bg-indigo-600 border-indigo-400 text-indigo-100 shadow-indigo-600/30';
-              let timeIcon = <Sun className="w-2.5 h-2.5" />;
-
               if (point.timeSlot === 'Tarde') {
                 colorClasses = 'bg-sky-500 border-sky-300 text-sky-100 shadow-sky-500/30';
-                timeIcon = <CloudSun className="w-2.5 h-2.5" />;
               } else if (point.timeSlot === 'Noite') {
                 colorClasses = 'bg-slate-700 border-slate-500 text-slate-100 shadow-slate-700/30';
-                timeIcon = <Moon className="w-2.5 h-2.5" />;
               } else if (point.timeSlot === 'Gastronomia') {
                 colorClasses = 'bg-orange-600 border-orange-400 text-orange-100 shadow-orange-600/30';
-                timeIcon = <UtensilsCrossed className="w-2.5 h-2.5" />;
               }
 
               return (
@@ -251,7 +224,7 @@ export default function InteractiveTripMap({ tripPlan, activeDay }: InteractiveT
                     {point.title}
                   </span>
 
-                  {timeIcon}
+                  <Icon name={timeSlotIcon(point.timeSlot)} className="text-[10px]" />
                 </button>
               );
             })}
@@ -272,8 +245,12 @@ export default function InteractiveTripMap({ tripPlan, activeDay }: InteractiveT
                     </span>
                     <h4 className="font-extrabold text-xs text-slate-100 mt-1">{selectedPoint.title}</h4>
                   </div>
-                  <button onClick={() => setSelectedPoint(null)} className="p-1 text-slate-400 hover:text-slate-100">
-                    <XButton className="w-3 h-3" />
+                  <button
+                    onClick={() => setSelectedPoint(null)}
+                    className="p-1 text-slate-400 hover:text-slate-100"
+                    aria-label={t('common.close', { defaultValue: 'Fechar' })}
+                  >
+                    <Icon name="x" className="text-xs font-bold" />
                   </button>
                 </div>
                 <p className="text-[11px] text-slate-300 leading-relaxed line-clamp-3">{selectedPoint.description}</p>
@@ -292,7 +269,7 @@ export default function InteractiveTripMap({ tripPlan, activeDay }: InteractiveT
         <div className="lg:col-span-1 bg-slate-950/80 border-t lg:border-t-0 lg:border-l border-slate-800 flex flex-col justify-between max-h-[450px]">
           <div className="p-4 border-b border-slate-800 flex justify-between items-center flex-shrink-0">
             <span className="text-xs font-black uppercase text-slate-400 tracking-wider flex items-center gap-1.5">
-              <Layers className="w-3.5 h-3.5 text-indigo-400" />
+              <Icon name="layers" className="text-xs" />
               {t('trip.stopsDirectory')}
             </span>
             <span className="text-[9px] bg-indigo-500/15 py-0.5 px-2 rounded-full font-bold text-indigo-400">
@@ -336,26 +313,11 @@ export default function InteractiveTripMap({ tripPlan, activeDay }: InteractiveT
           </div>
 
           <div className="p-3 border-t border-slate-800 bg-slate-950/90 text-[10px] text-slate-500 flex items-center gap-1.5">
-            <Info className="w-3.5 h-3.5 text-indigo-400 flex-shrink-0" />
+            <Icon name="info" className="text-xs shrink-0" />
             <span className="leading-tight">{t('trip.coordsDisclaimer')}</span>
           </div>
         </div>
       </div>
     </div>
-  );
-}
-
-function XButton({ className }: { className?: string }) {
-  return (
-    <svg
-      xmlns="http://www.w3.org/2000/svg"
-      fill="none"
-      viewBox="0 0 24 24"
-      strokeWidth={2.5}
-      stroke="currentColor"
-      className={className}
-    >
-      <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
-    </svg>
   );
 }

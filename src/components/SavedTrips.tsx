@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { motion } from 'motion/react';
-import { Compass, Trash2, Search, Luggage, Sparkles } from 'lucide-react';
+import { Icon } from '@/src/components/Icon';
 import { useTranslation } from 'react-i18next';
 import { TripPlan } from '../types';
 
@@ -24,7 +24,7 @@ export default function SavedTrips({ savedTrips, onSelectTrip, onDeleteTrip }: S
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
         <div>
           <h2 className="text-xl font-bold text-slate-800 flex items-center gap-2">
-            <Luggage className="w-5 h-5 text-indigo-650" />
+            <Icon name="luggage" className="text-lg text-indigo-650" />
             {t('saved.title', { count: savedTrips.length })}
           </h2>
           <p className="text-xs text-slate-450 mt-1">{t('saved.subtitle')}</p>
@@ -34,7 +34,7 @@ export default function SavedTrips({ savedTrips, onSelectTrip, onDeleteTrip }: S
         {savedTrips.length > 0 && (
           <div className="relative w-full sm:w-64">
             <span className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none text-slate-400">
-              <Search className="w-4 h-4" />
+              <Icon name="search" className="text-base" />
             </span>
             <input
               type="text"
@@ -51,7 +51,7 @@ export default function SavedTrips({ savedTrips, onSelectTrip, onDeleteTrip }: S
       {savedTrips.length === 0 ? (
         <div className="text-center py-12 px-4 rounded-3xl border border-dashed border-slate-200 bg-slate-50/50 flex flex-col items-center justify-center space-y-4">
           <div className="w-14 h-14 rounded-full bg-indigo-50 text-indigo-500 flex items-center justify-center">
-            <Compass className="w-7 h-7" />
+            <Icon name="compass" className="text-2xl" />
           </div>
           <div className="space-y-1">
             <h3 className="font-bold text-slate-800 text-sm">{t('saved.emptyTitle')}</h3>
@@ -100,7 +100,7 @@ export default function SavedTrips({ savedTrips, onSelectTrip, onDeleteTrip }: S
                     onClick={(e) => onDeleteTrip(trip.id, e)}
                     className="p-1.5 rounded-lg bg-black/10 text-white/80 hover:text-white hover:bg-rose-600/80 transition-all cursor-pointer"
                   >
-                    <Trash2 className="w-3.5 h-3.5" />
+                    <Icon name="trash" className="text-sm" />
                   </button>
                 </div>
 
@@ -114,7 +114,7 @@ export default function SavedTrips({ savedTrips, onSelectTrip, onDeleteTrip }: S
 
                   <div className="pt-3 border-t border-slate-50 flex items-center justify-between text-[11px] text-slate-400">
                     <span className="flex items-center gap-1 font-semibold text-indigo-650">
-                      <Sparkles className="w-3 h-3" />
+                      <Icon name="sparkles" className="text-xs" />
                       {trip.stylePreference || t('saved.customPlan')}
                     </span>
                     <span className="flex items-center gap-1 font-medium">

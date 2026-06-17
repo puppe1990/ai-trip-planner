@@ -30,7 +30,6 @@
     "drizzle-orm": "^0.45.2",
     "i18next": "^26.0.3",
     "i18next-browser-languagedetector": "^8.0.4",
-    "lucide-react": "^0.546.0",
     "motion": "^12.23.24",
     "react": "^19.0.1",
     "react-dom": "^19.0.1",

@@ -1,7 +1,7 @@
 import { createFileRoute } from '@tanstack/react-router';
 import { useEffect, useState } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
-import { Compass, Luggage, AlertCircle, X, Plane, Info, LogOut } from 'lucide-react';
+import { Icon } from '@/src/components/Icon';
 import { useTranslation } from 'react-i18next';
 import type { TripPlan, TripSearchParams } from '@/src/types';
 import { DEFAULT_SEARCH } from '@/src/data';
@@ -139,7 +139,7 @@ function HomePage() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
           <div className="flex items-center gap-3">
             <div className="w-10 h-10 rounded-2xl bg-indigo-650 flex items-center justify-center text-white shadow-md shadow-indigo-600/20">
-              <Compass className="w-5.5 h-5.5" />
+              <Icon name="compass" className="text-xl" />
             </div>
             <div>
               <h1 className="font-exbold text-lg md:text-xl text-slate-900 tracking-tight flex items-center gap-1.5 leading-none">
@@ -164,7 +164,7 @@ function HomePage() {
               }}
               className="text-xs font-semibold text-slate-650 hover:text-indigo-650 flex items-center gap-1.5 transition-colors"
             >
-              <Luggage className="w-4 h-4" />
+              <Icon name="luggage" className="text-base" />
               {t('common.saves')}
             </button>
             <button
@@ -173,7 +173,7 @@ function HomePage() {
               className="text-xs font-semibold text-slate-500 hover:text-rose-600 flex items-center gap-1 transition-colors"
               title="Sign out"
             >
-              <LogOut className="w-4 h-4" />
+              <Icon name="logout" className="text-base" />
             </button>
           </div>
         </div>
@@ -182,13 +182,13 @@ function HomePage() {
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-8 space-y-12">
         {errorText && (
           <div className="p-4 bg-rose-50 border border-rose-100 text-rose-800 rounded-2xl flex items-start gap-3 shadow-sm max-w-2xl mx-auto">
-            <AlertCircle className="w-5 h-5 flex-shrink-0 text-rose-500 mt-0.5" />
+            <Icon name="alert-circle" className="text-lg shrink-0 text-rose-500 mt-0.5" />
             <div className="flex-grow space-y-1">
               <h4 className="font-bold text-sm">{t('errors.generationFailed')}</h4>
               <p className="text-xs leading-relaxed text-rose-750">{errorText}</p>
             </div>
             <button onClick={() => setErrorText(null)} className="text-rose-450 hover:text-rose-750 transition-colors">
-              <X className="w-4 h-4" />
+              <Icon name="x" className="text-base font-bold" />
             </button>
           </div>
         )}
@@ -205,7 +205,7 @@ function HomePage() {
               <div className="relative">
                 <div className="w-20 h-20 rounded-full border-4 border-indigo-100 border-t-indigo-600 animate-spin" />
                 <div className="absolute inset-0 flex items-center justify-center">
-                  <Plane className="w-7 h-7 text-indigo-650 animate-pulse" />
+                  <Icon name="plane" className="text-2xl text-indigo-650" pulse />
                 </div>
               </div>
               <div className="space-y-3">
@@ -222,7 +222,7 @@ function HomePage() {
               </div>
               <div className="bg-indigo-50/40 border border-indigo-150 p-4 rounded-2xl space-y-1 text-left w-full">
                 <h4 className="text-xs font-bold text-indigo-850 flex items-center gap-1.5">
-                  <Info className="w-3.5 h-3.5 text-indigo-500" />
+                  <Icon name="info" className="text-sm text-indigo-500" />
                   {t('loading.didYouKnow')}
                 </h4>
                 <p className="text-[11px] text-indigo-900/80 leading-relaxed">{t('loading.tip')}</p>
