@@ -108,10 +108,10 @@ describe('runTripGeneration', () => {
       [dayPlan(1), dayPlan(2)],
       [{ category: 'Transport', text: 'Get a Viva Viagem card' }],
     );
-    expect(onProgress).toHaveBeenCalledWith({ phase: 'outline' });
-    expect(onProgress).toHaveBeenCalledWith({ phase: 'day', dayNumber: 1, totalDays: 2 });
-    expect(onProgress).toHaveBeenCalledWith({ phase: 'day', dayNumber: 2, totalDays: 2 });
-    expect(onProgress).toHaveBeenCalledWith({ phase: 'tips' });
-    expect(onProgress).toHaveBeenCalledWith({ phase: 'saving' });
+    expect(onProgress).toHaveBeenNthCalledWith(1, { phase: 'outline' });
+    expect(onProgress).toHaveBeenNthCalledWith(2, { phase: 'day', dayNumber: 1, totalDays: 2 });
+    expect(onProgress).toHaveBeenNthCalledWith(3, { phase: 'day', dayNumber: 2, totalDays: 2 });
+    expect(onProgress).toHaveBeenNthCalledWith(4, { phase: 'tips' });
+    expect(onProgress).toHaveBeenNthCalledWith(5, { phase: 'saving' });
   });
 });

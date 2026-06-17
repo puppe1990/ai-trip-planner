@@ -15,6 +15,7 @@ import AiGenerationRecoveryModal from '@/src/components/AiGenerationRecoveryModa
 import { parseShareHash } from '@/src/lib/share';
 import { generateTripPlanForUser } from '@/src/lib/trip-generation-client';
 import type { TripGenerationProgress } from '@/src/lib/trip-generation';
+import { getTripPlannerConfigFn } from '@/src/server/planner.functions';
 import { listTripsFn, deleteTripFn } from '@/src/server/trips.functions';
 import { signOutAndRedirect } from '@/src/lib/auth-actions';
 
@@ -32,6 +33,7 @@ function HomePage() {
   const [isLoading, setIsLoading] = useState(false);
   const [loadingStep, setLoadingStep] = useState(0);
   const [generationProgress, setGenerationProgress] = useState<TripGenerationProgress | null>(null);
+  const [multiStepEnabled, setMultiStepEnabled] = useState(true);
   const [generationError, setGenerationError] = useState<string | null>(null);
   const [recoveryModalOpen, setRecoveryModalOpen] = useState(false);
 
@@ -40,13 +42,16 @@ function HomePage() {
   useEffect(() => {
     void loadSavedTrips();
     checkSharedTrip();
+    void getTripPlannerConfigFn()
+      .then((config) => setMultiStepEnabled(config.multiStep))
+      .catch(() => setMultiStepEnabled(true));
     window.addEventListener('hashchange', checkSharedTrip);
     return () => window.removeEventListener('hashchange', checkSharedTrip);
   }, []);
 
   useEffect(() => {
     let interval: ReturnType<typeof setInterval>;
-    if (isLoading) {
+    if (isLoading && !generationProgress) {
       setLoadingStep(0);
       interval = setInterval(() => {
         setLoadingStep((prev) => (prev + 1) % loadingMessages.length);
@@ -55,7 +60,7 @@ function HomePage() {
     return () => {
       if (interval) clearInterval(interval);
     };
-  }, [isLoading, loadingMessages.length]);
+  }, [isLoading, generationProgress, loadingMessages.length]);
 
   const loadSavedTrips = async () => {
     try {
@@ -78,7 +83,7 @@ function HomePage() {
     setIsLoading(true);
     setGenerationError(null);
     setRecoveryModalOpen(false);
-    setGenerationProgress(null);
+    setGenerationProgress(multiStepEnabled ? { phase: 'outline' } : null);
     setActivePlan(null);
     setSearchParams(params);
 
@@ -95,6 +100,7 @@ function HomePage() {
       setRecoveryModalOpen(true);
     } finally {
       setIsLoading(false);
+      setGenerationProgress(null);
     }
   };
 

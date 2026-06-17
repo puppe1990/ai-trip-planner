@@ -43,17 +43,17 @@ export async function runTripGeneration(deps: TripGenerationDeps): Promise<TripP
     return deps.generateSingleShot(params, locale);
   }
 
-  const outline = await deps.generateOutline(params, locale);
   onProgress?.({ phase: 'outline' });
+  const outline = await deps.generateOutline(params, locale);
 
   const days: DayPlan[] = [];
   for (let dayNumber = 1; dayNumber <= params.duration; dayNumber++) {
-    days.push(await deps.generateDay(params, locale, dayNumber, outline));
     onProgress?.({ phase: 'day', dayNumber, totalDays: params.duration });
+    days.push(await deps.generateDay(params, locale, dayNumber, outline));
   }
 
-  const tips = await deps.generateTips(params, locale, outline, days);
   onProgress?.({ phase: 'tips' });
+  const tips = await deps.generateTips(params, locale, outline, days);
 
   onProgress?.({ phase: 'saving' });
   return deps.persistAssembled(params, outline, days, tips);
