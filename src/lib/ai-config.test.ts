@@ -1,5 +1,13 @@
 import { afterEach, describe, expect, it, vi } from 'vitest';
-import { getAiConfig, getProviderId, InvalidAiProviderError, listProviderOptions, resolveAiConfig } from './ai-config';
+import {
+  getAiConfig,
+  getModelsForProvider,
+  getProviderId,
+  InvalidAiProviderError,
+  listProviderOptions,
+  PROVIDER_MODELS,
+  resolveAiConfig,
+} from './ai-config';
 
 describe('getProviderId', () => {
   afterEach(() => {
@@ -92,6 +100,19 @@ describe('resolveAiConfig', () => {
   });
 });
 
+describe('PROVIDER_MODELS', () => {
+  it('exposes multiple nvidia nim model options', () => {
+    expect(PROVIDER_MODELS['nvidia-nim'].length).toBeGreaterThanOrEqual(10);
+    expect(PROVIDER_MODELS['nvidia-nim'].some((model) => model.id === 'mistralai/mistral-large')).toBe(true);
+  });
+
+  it('includes custom saved model when not in catalog', () => {
+    const models = getModelsForProvider('nvidia-nim', 'custom/legacy-model');
+
+    expect(models[0]).toEqual({ id: 'custom/legacy-model', label: 'custom/legacy-model' });
+  });
+});
+
 describe('listProviderOptions', () => {
   afterEach(() => {
     vi.unstubAllEnvs();
@@ -106,5 +127,12 @@ describe('listProviderOptions', () => {
     expect(options).toHaveLength(2);
     expect(options.find((o) => o.id === 'gemini')?.configured).toBe(true);
     expect(options.find((o) => o.id === 'nvidia-nim')?.configured).toBe(false);
+  });
+
+  it('includes model catalogs per provider', () => {
+    const options = listProviderOptions();
+
+    expect(options.find((o) => o.id === 'gemini')?.models.length).toBeGreaterThan(1);
+    expect(options.find((o) => o.id === 'nvidia-nim')?.models.length).toBeGreaterThanOrEqual(10);
   });
 });

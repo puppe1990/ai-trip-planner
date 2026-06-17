@@ -2,9 +2,11 @@ import { useEffect, useMemo, useState } from 'react';
 import { AnimatePresence, motion } from 'motion/react';
 import { Bot, Settings, Sparkles, X } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
+import { getModelsForProvider } from '@/src/lib/ai-config';
 import type { LlmProviderId } from '@/src/lib/llm/types';
 import type { AiConfigResponse } from '@/src/server/ai.functions';
 import { getAiConfigFn, updateAiConfigFn } from '@/src/server/ai.functions';
+import AiModelSelect from './AiModelSelect';
 
 export default function AiSettingsModal() {
   const { t } = useTranslation();
@@ -20,6 +22,14 @@ export default function AiSettingsModal() {
     () => config?.providers.find((provider) => provider.id === providerId),
     [config?.providers, providerId],
   );
+
+  const modelOptions = useMemo(() => {
+    const models = getModelsForProvider(providerId, model);
+    return models.map((option) => ({
+      value: option.id,
+      label: option.label,
+    }));
+  }, [providerId, model]);
 
   useEffect(() => {
     if (!open) return;
@@ -165,20 +175,14 @@ export default function AiSettingsModal() {
                   </div>
 
                   <div className="rounded-2xl border border-slate-100 bg-slate-50/70 p-4">
-                    <label
-                      htmlFor="ai-model"
-                      className="text-[10px] font-bold uppercase tracking-wider text-slate-400 mb-2 block"
-                    >
-                      {t('aiSettings.model')}
-                    </label>
-                    <input
+                    <AiModelSelect
                       id="ai-model"
-                      type="text"
+                      label={t('aiSettings.model')}
+                      options={modelOptions}
                       value={loading ? '' : model}
+                      onChange={setModel}
                       disabled={loading || !config}
-                      onChange={(event) => setModel(event.target.value)}
                       placeholder={loading ? t('aiSettings.loading') : undefined}
-                      className="w-full rounded-xl border border-slate-200 bg-white px-3 py-2 text-sm font-semibold text-slate-800 font-mono focus:outline-none focus:ring-2 focus:ring-indigo-500/30 disabled:opacity-60"
                     />
                   </div>
 

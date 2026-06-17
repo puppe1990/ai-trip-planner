@@ -2,6 +2,7 @@ import { render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import i18n from '@/src/i18n';
+import { PROVIDER_MODELS } from '@/src/lib/ai-config';
 import AiSettingsModal from './AiSettingsModal';
 
 const getAiConfigFnMock = vi.fn();
@@ -10,6 +11,41 @@ const updateAiConfigFnMock = vi.fn();
 vi.mock('@/src/server/ai.functions', () => ({
   getAiConfigFn: () => getAiConfigFnMock(),
   updateAiConfigFn: (input: unknown) => updateAiConfigFnMock(input),
+}));
+
+vi.mock('react-select', () => ({
+  default: ({
+    inputId,
+    'aria-label': ariaLabel,
+    options,
+    value,
+    onChange,
+    isDisabled,
+  }: {
+    inputId?: string;
+    'aria-label'?: string;
+    options: Array<{ value: string; label: string }>;
+    value: { value: string; label: string } | null;
+    onChange: (option: { value: string; label: string } | null) => void;
+    isDisabled?: boolean;
+  }) => (
+    <select
+      id={inputId}
+      aria-label={ariaLabel}
+      value={value?.value ?? ''}
+      disabled={isDisabled}
+      onChange={(event) => {
+        const option = options.find((item) => item.value === event.target.value) ?? null;
+        onChange(option);
+      }}
+    >
+      {options.map((option) => (
+        <option key={option.value} value={option.value}>
+          {option.label}
+        </option>
+      ))}
+    </select>
+  ),
 }));
 
 vi.mock('motion/react', () => ({
@@ -37,6 +73,7 @@ describe('AiSettingsModal', () => {
           id: 'gemini',
           displayName: 'Google Gemini',
           defaultModel: 'gemini-3.5-flash',
+          models: PROVIDER_MODELS.gemini,
           capabilities: { structuredJson: true, webGrounding: true },
           configured: true,
         },
@@ -44,6 +81,7 @@ describe('AiSettingsModal', () => {
           id: 'nvidia-nim',
           displayName: 'NVIDIA NIM',
           defaultModel: 'meta/llama-3.3-70b-instruct',
+          models: PROVIDER_MODELS['nvidia-nim'],
           capabilities: { structuredJson: true, webGrounding: false },
           configured: true,
         },
@@ -75,6 +113,24 @@ describe('AiSettingsModal', () => {
     });
 
     expect(getAiConfigFnMock).toHaveBeenCalledOnce();
+  });
+
+  it('lists multiple nvidia model options in the model select', async () => {
+    const user = userEvent.setup();
+    render(<AiSettingsModal />);
+
+    await user.click(screen.getByRole('button', { name: 'Configurações da IA' }));
+
+    await waitFor(() => {
+      expect(screen.getByLabelText('Provider')).toHaveValue('gemini');
+    });
+
+    await user.selectOptions(screen.getByLabelText('Provider'), 'nvidia-nim');
+
+    const modelSelect = screen.getByLabelText('Modelo');
+    expect(modelSelect).toHaveValue('meta/llama-3.3-70b-instruct');
+    expect(screen.getByRole('option', { name: 'Mistral Large' })).toBeInTheDocument();
+    expect(screen.getByRole('option', { name: 'QwQ 32B' })).toBeInTheDocument();
   });
 
   it('updates capabilities when provider selection changes', async () => {
