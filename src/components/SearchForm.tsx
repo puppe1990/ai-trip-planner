@@ -1,9 +1,16 @@
-import React from 'react';
-import { motion } from 'motion/react';
+import React, { useState } from 'react';
+import { motion, AnimatePresence } from 'motion/react';
 import { MapPin, Calendar, Compass, Users, Sparkles, CalendarDays, PenTool } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import type { TripSearchParams } from '@/src/types';
-import { BUDGET_OPTIONS, STYLE_OPTIONS, COMPANION_OPTIONS, QUICK_DESTINATIONS } from '@/src/data';
+import {
+  BUDGET_OPTIONS,
+  STYLE_OPTIONS,
+  COMPANION_OPTIONS,
+  QUICK_DESTINATION_REGIONS,
+  type QuickDestinationRegion,
+} from '@/src/data';
+import { DEFAULT_QUICK_REGION, getQuickDestinationsForRegion } from '@/src/lib/quick-destinations';
 
 interface SearchFormProps {
   searchParams: TripSearchParams;
@@ -14,6 +21,8 @@ interface SearchFormProps {
 
 export default function SearchForm({ searchParams, setSearchParams, onSubmit, isLoading }: SearchFormProps) {
   const { t } = useTranslation();
+  const [activeRegion, setActiveRegion] = useState<QuickDestinationRegion>(DEFAULT_QUICK_REGION);
+  const activeDestinations = getQuickDestinationsForRegion(activeRegion);
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
@@ -56,37 +65,68 @@ export default function SearchForm({ searchParams, setSearchParams, onSubmit, is
           {t('search.quickTitle')}
         </h3>
         <p className="text-xs text-slate-500">{t('search.quickSubtitle')}</p>
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-          {QUICK_DESTINATIONS.map((dest) => (
-            <motion.button
-              key={dest.key}
-              type="button"
-              onClick={() => selectQuickDestination(dest.params)}
-              disabled={isLoading}
-              className={`text-left p-4 rounded-2xl bg-white border border-slate-100 hover:border-slate-200 shadow-sm hover:shadow-md transition-all duration-300 flex flex-col justify-between h-36 relative overflow-hidden group cursor-pointer disabled:opacity-50`}
-              whileHover={{ y: -4 }}
-              transition={{ duration: 0.2 }}
-            >
-              {/* Corner Accent Gradient overlay */}
-              <div
-                className={`absolute top-0 right-0 w-24 h-24 bg-gradient-to-br ${dest.bgGradient} opacity-5 group-hover:opacity-10 rounded-full blur-xl transition-all duration-500`}
-              />
 
-              <div className="flex justify-between items-start">
-                <span className="text-3xl filter drop-shadow-sm">{dest.emoji}</span>
-                <span className="text-[10px] uppercase tracking-wide font-semibold text-slate-400 bg-slate-50 py-1 px-2 rounded-full">
-                  {dest.params.duration} {t('common.days')}
-                </span>
-              </div>
-              <div>
-                <h4 className="font-bold text-slate-800 group-hover:text-amber-600 transition-colors duration-200">
-                  {t(`quickDest.${dest.key}.name`)}
-                </h4>
-                <p className="text-xs text-slate-400 line-clamp-2 mt-1">{t(`quickDest.${dest.key}.tagline`)}</p>
-              </div>
-            </motion.button>
-          ))}
+        <div className="flex flex-wrap gap-2" data-testid="quick-region-filters">
+          {QUICK_DESTINATION_REGIONS.map((region) => {
+            const isActive = activeRegion === region.id;
+            return (
+              <button
+                key={region.id}
+                type="button"
+                aria-pressed={isActive}
+                onClick={() => setActiveRegion(region.id)}
+                className={`inline-flex items-center gap-1.5 px-3.5 py-2 rounded-full text-sm font-medium transition-all duration-200 cursor-pointer border ${
+                  isActive
+                    ? 'bg-amber-500 text-white border-amber-500 shadow-md shadow-amber-500/25'
+                    : 'bg-white text-slate-600 border-slate-200 hover:border-amber-300 hover:text-amber-700 hover:bg-amber-50/50'
+                }`}
+              >
+                <span className="text-base leading-none">{region.emoji}</span>
+                <span>{t(region.labelKey)}</span>
+              </button>
+            );
+          })}
         </div>
+
+        <AnimatePresence mode="wait">
+          <motion.div
+            key={activeRegion}
+            initial={{ opacity: 0, y: 8 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -8 }}
+            transition={{ duration: 0.2 }}
+            className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4"
+          >
+            {activeDestinations.map((dest) => (
+              <motion.button
+                key={dest.key}
+                type="button"
+                onClick={() => selectQuickDestination(dest.params)}
+                disabled={isLoading}
+                className={`text-left p-4 rounded-2xl bg-white border border-slate-100 hover:border-slate-200 shadow-sm hover:shadow-md transition-all duration-300 flex flex-col justify-between h-36 relative overflow-hidden group cursor-pointer disabled:opacity-50`}
+                whileHover={{ y: -4 }}
+                transition={{ duration: 0.2 }}
+              >
+                <div
+                  className={`absolute top-0 right-0 w-24 h-24 bg-gradient-to-br ${dest.bgGradient} opacity-5 group-hover:opacity-10 rounded-full blur-xl transition-all duration-500`}
+                />
+
+                <div className="flex justify-between items-start">
+                  <span className="text-3xl filter drop-shadow-sm">{dest.emoji}</span>
+                  <span className="text-[10px] uppercase tracking-wide font-semibold text-slate-400 bg-slate-50 py-1 px-2 rounded-full">
+                    {dest.params.duration} {t('common.days')}
+                  </span>
+                </div>
+                <div>
+                  <h4 className="font-bold text-slate-800 group-hover:text-amber-600 transition-colors duration-200">
+                    {t(`quickDest.${dest.key}.name`)}
+                  </h4>
+                  <p className="text-xs text-slate-400 line-clamp-2 mt-1">{t(`quickDest.${dest.key}.tagline`)}</p>
+                </div>
+              </motion.button>
+            ))}
+          </motion.div>
+        </AnimatePresence>
       </div>
 
       <hr className="border-slate-100" />
