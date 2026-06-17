@@ -43,6 +43,15 @@
     "copyright": "© 2026 TripPlanner AI • Plan responsibly and enjoy your vacation.",
     "poweredBy": "Built with Google Gemini 3.5-flash for geographic trip planning."
   },
+  "generationRecovery": {
+    "title": "AI generation failed",
+    "subtitle": "Retry or choose another provider/model",
+    "retry": "Try again",
+    "retrying": "Retrying...",
+    "retryHint": "Your selected settings will be saved before generating.",
+    "highDemand": "The model may be under high demand. Switch models or try again shortly.",
+    "changeSettings": "Adjust provider and model"
+  },
   "errors": {
     "generationFailed": "AI generation failed",
     "invalidShareLink": "The share link provided is invalid or corrupted.",

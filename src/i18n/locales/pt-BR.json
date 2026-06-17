@@ -43,6 +43,15 @@
     "copyright": "© 2026 TripPlanner IA • Planeje com responsabilidade e aproveite as férias.",
     "poweredBy": "Desenvolvido com o modelo Google Gemini 3.5-flash para roteirização geográfica."
   },
+  "generationRecovery": {
+    "title": "Falha na geração com IA",
+    "subtitle": "Tente novamente ou escolha outro provider/modelo",
+    "retry": "Tentar novamente",
+    "retrying": "Tentando...",
+    "retryHint": "As configurações escolhidas serão salvas antes de gerar.",
+    "highDemand": "O modelo pode estar com alta demanda. Troque de modelo ou tente de novo em instantes.",
+    "changeSettings": "Ajustar provider e modelo"
+  },
   "errors": {
     "generationFailed": "Falha na geração com IA",
     "invalidShareLink": "O link de compartilhamento fornecido está inválido ou corrompido.",
