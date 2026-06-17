@@ -19,6 +19,51 @@ export async function listTrips(db: AppDatabase, userId: string): Promise<TripPl
   return rows.map((row) => row.planJson);
 }
 
+export async function upsertTrip(
+  db: AppDatabase,
+  userId: string,
+  plan: TripPlan,
+  searchParams?: TripSearchParams,
+): Promise<TripPlan> {
+  const existing = await db
+    .select({ id: savedTrips.id })
+    .from(savedTrips)
+    .where(
+      and(
+        eq(savedTrips.userId, userId),
+        eq(savedTrips.destination, plan.destination),
+        eq(savedTrips.durationDays, plan.durationDays),
+      ),
+    )
+    .limit(1);
+
+  if (existing[0]) {
+    const persistedPlan = { ...plan, id: existing[0].id };
+    await db
+      .update(savedTrips)
+      .set({
+        tagline: persistedPlan.tagline,
+        planJson: persistedPlan,
+        searchParamsJson: searchParams ?? null,
+        createdAt: new Date(),
+      })
+      .where(eq(savedTrips.id, existing[0].id));
+    return persistedPlan;
+  }
+
+  await db.insert(savedTrips).values({
+    id: plan.id,
+    userId,
+    destination: plan.destination,
+    durationDays: plan.durationDays,
+    tagline: plan.tagline,
+    planJson: plan,
+    searchParamsJson: searchParams ?? null,
+  });
+
+  return plan;
+}
+
 export async function saveTrip(
   db: AppDatabase,
   userId: string,

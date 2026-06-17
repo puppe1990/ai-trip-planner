@@ -53,11 +53,9 @@ import InteractiveTripMap from './InteractiveTripMap';
 interface TripViewProps {
   tripPlan: TripPlan;
   onBack: () => void;
-  onSave: () => void;
-  isSaved: boolean;
 }
 
-export default function TripView({ tripPlan, onBack, onSave, isSaved }: TripViewProps) {
+export default function TripView({ tripPlan, onBack }: TripViewProps) {
   const { t, i18n } = useTranslation();
   const [activeDay, setActiveDay] = useState(1);
   const [checkedPackingItems, setCheckedPackingItems] = useState<Record<string, boolean>>({});
@@ -203,18 +201,10 @@ export default function TripView({ tripPlan, onBack, onSave, isSaved }: TripView
             {t('common.calendar')}
           </button>
 
-          <button
-            onClick={onSave}
-            disabled={isSaved}
-            className={`flex items-center gap-2 text-xs font-bold px-5 py-2.5 rounded-xl border transition-all shadow-sm cursor-pointer ${
-              isSaved
-                ? 'bg-slate-100/80 border-slate-200/50 text-slate-500 cursor-not-allowed'
-                : 'bg-indigo-600 border-indigo-600 text-white hover:bg-indigo-700 shadow-indigo-600/10'
-            }`}
-          >
+          <span className="flex items-center gap-2 text-xs font-bold px-5 py-2.5 rounded-xl border bg-slate-100/80 border-slate-200/50 text-slate-500">
             <Save className="w-3.5 h-3.5" />
-            {isSaved ? t('common.saved') : t('common.save')}
-          </button>
+            {t('common.saved')}
+          </span>
         </div>
       </div>
 

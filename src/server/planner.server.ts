@@ -2,7 +2,9 @@ import { buildPlannerJsonSchemaInstruction } from '../lib/planner-json-instructi
 import { parsePlannerResult } from '../lib/planner-zod-schema';
 import { getGeminiLanguage } from '../i18n/index';
 import type { LlmProvider } from '../lib/llm/types';
-import type { DayPlan, TripSearchParams } from '../types';
+import type { AppDatabase } from '../lib/db/index';
+import { upsertTrip } from './trips.server';
+import type { DayPlan, TripPlan, TripSearchParams } from '../types';
 
 export class ValidationError extends Error {
   constructor(message: string) {
@@ -93,4 +95,31 @@ export async function generateTripPlan(
   }
 
   throw new Error('No content returned by model.');
+}
+
+export function buildTripPlanFromGeneration(
+  generated: PlannerResult,
+  params: TripSearchParams,
+  id = `trip_${Date.now()}`,
+): TripPlan {
+  return {
+    ...generated,
+    id,
+    createdAt: new Date().toISOString(),
+    budgetPreference: params.budget,
+    stylePreference: params.style,
+    companionPreference: params.companion,
+  };
+}
+
+export async function generateAndPersistTripPlan(
+  db: AppDatabase,
+  userId: string,
+  provider: LlmProvider,
+  params: TripSearchParams,
+  locale = 'pt-BR',
+): Promise<TripPlan> {
+  const generated = await generateTripPlan(provider, params, locale);
+  const plan = buildTripPlanFromGeneration(generated, params);
+  return upsertTrip(db, userId, plan, params);
 }

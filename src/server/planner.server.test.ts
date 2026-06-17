@@ -1,6 +1,17 @@
-import { describe, expect, it, vi } from 'vitest';
+import { describe, expect, it, vi, beforeEach, afterEach } from 'vitest';
 import type { LlmProvider } from '../lib/llm/types';
-import { buildPlannerPrompt, generateTripPlan, validateSearchParams, ValidationError } from './planner.server';
+import type { AppDatabase } from '../lib/db/index';
+import { createTestDb, destroyTestDb } from '../test/db';
+import type { Client } from '@libsql/client';
+import { user } from '../lib/db/schema';
+import {
+  buildPlannerPrompt,
+  generateAndPersistTripPlan,
+  generateTripPlan,
+  validateSearchParams,
+  ValidationError,
+} from './planner.server';
+import { listTrips } from './trips.server';
 import type { TripSearchParams } from '../types';
 
 const validParams: TripSearchParams = {
@@ -113,5 +124,48 @@ describe('planner.server', () => {
     const result = await generateTripPlan(provider, validParams, 'en');
     expect(result.destination).toBe('Tokyo, Japan');
     expect(generateJson).toHaveBeenCalledTimes(3);
+  });
+});
+
+describe('generateAndPersistTripPlan', () => {
+  let db: AppDatabase;
+  let client: Client;
+  let dbPath: string;
+  const userId = 'user-generate-save';
+
+  beforeEach(async () => {
+    const testDb = await createTestDb();
+    db = testDb.db;
+    client = testDb.client;
+    dbPath = testDb.dbPath;
+    const now = new Date();
+    await db.insert(user).values({
+      id: userId,
+      name: 'Generate Save User',
+      email: 'generate-save@test.com',
+      emailVerified: true,
+      createdAt: now,
+      updatedAt: now,
+    });
+  });
+
+  afterEach(() => {
+    destroyTestDb(client, dbPath);
+  });
+
+  it('persists the generated itinerary for the authenticated user', async () => {
+    const generateJson = vi.fn().mockResolvedValue(JSON.stringify(validPlannerJson));
+    const provider = createMockProvider(generateJson);
+
+    const plan = await generateAndPersistTripPlan(db, userId, provider, validParams, 'en');
+
+    expect(plan.destination).toBe('Tokyo, Japan');
+    expect(plan.budgetPreference).toBe('Médio');
+    expect(plan.stylePreference).toBe('Cultural');
+
+    const trips = await listTrips(db, userId);
+    expect(trips).toHaveLength(1);
+    expect(trips[0].id).toBe(plan.id);
+    expect(trips[0].summary).toBe('Amazing trip');
   });
 });

@@ -4,7 +4,7 @@ import { z } from 'zod';
 import { getAuth } from '../lib/auth.server';
 import { getDbReady } from '../lib/db/index';
 import type { TripPlan } from '../types';
-import { deleteTrip, DuplicateTripError, listTrips, saveTrip } from './trips.server';
+import { deleteTrip, listTrips, upsertTrip } from './trips.server';
 
 const tripSearchParamsSchema = z.object({
   destination: z.string(),
@@ -39,13 +39,8 @@ export const saveTripFn = createServerFn({ method: 'POST' })
   .handler(async ({ data }) => {
     const userId = await requireUserId();
     const db = await getDbReady();
-    try {
-      await saveTrip(db, userId, data.plan, data.searchParams);
-      return { success: true };
-    } catch (error) {
-      if (error instanceof DuplicateTripError) return { success: false, duplicate: true };
-      throw error;
-    }
+    await upsertTrip(db, userId, data.plan, data.searchParams);
+    return { success: true };
   });
 
 export const deleteTripFn = createServerFn({ method: 'POST' })
