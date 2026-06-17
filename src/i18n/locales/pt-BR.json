@@ -3,7 +3,7 @@
     "appName": "TripPlanner",
     "aiBadge": "IA",
     "tagline": "Seu assistente virtual para roteiros inteligentes",
-    "saves": "Saves",
+    "saves": "Salvos",
     "days": "dias",
     "day": "Dia",
     "daysLabel": "Dias",
@@ -40,8 +40,7 @@
     "hint": "Suas preferências são salvas na conta e usadas nas próximas gerações."
   },
   "footer": {
-    "copyright": "© 2026 TripPlanner IA • Planeje com responsabilidade e aproveite as férias.",
-    "poweredBy": "Desenvolvido com o modelo Google Gemini 3.5-flash para roteirização geográfica."
+    "copyright": "© 2026 TripPlanner IA • Planeje com responsabilidade e aproveite as férias."
   },
   "generationRecovery": {
     "title": "Falha na geração com IA",
@@ -230,7 +229,15 @@
     "packingGuide": "Guia de Vestuário & Mala",
     "packingTip": "Adapte os itens sugeridos na mala ao lado baseado nestas temperaturas médias descritas.",
     "transitTitle": "Aplicativos & Transporte Local",
-    "liveSearch": "Live Search",
+    "liveSearch": "Busca ao Vivo",
+    "transitSections": {
+      "rideApps": "Apps de Corrida e Táxis",
+      "routes": "Rotas e Navegação Local",
+      "metro": "Metrô, Trem e Trens",
+      "buses": "Ônibus e Transporte Local",
+      "fares": "Tarifas e Pagamento",
+      "tips": "Dicas Gerais de Mobilidade"
+    },
     "transitSubtitle": "Consulte aplicativos de corrida ativos, passes de ônibus/metrô e regras de locomoção",
     "transitCtaTitle": "Como se locomover em {{destination}}?",
     "transitCtaDesc": "Pesquise instantaneamente usando o mecanismo do Google Search. Descubra tarifas reais, aplicativos locais de táxi ou caronas e passes integrados mais vantajosos para sua rota.",

@@ -1,5 +1,5 @@
 import { getRequest } from '@tanstack/react-start/server';
-import { resolveAiConfig } from '../lib/ai-config';
+import { resolveAiConfig } from '../lib/ai-config.server';
 import { getAuth } from '../lib/auth.server';
 import { getDbReady } from '../lib/db/index';
 import { getLlmProvider } from '../lib/llm/factory';

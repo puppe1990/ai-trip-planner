@@ -1,13 +1,8 @@
 import { createServerFn } from '@tanstack/react-start';
 import { getRequest } from '@tanstack/react-start/server';
 import { z } from 'zod';
-import {
-  getProviderApiKeyError,
-  listProviderOptions,
-  parseProviderId,
-  resolveAiConfig,
-  type AiConfig,
-} from '../lib/ai-config';
+import { parseProviderId, type AiConfig } from '../lib/ai-config';
+import { getProviderApiKeyError, listProviderOptions, resolveAiConfig } from '../lib/ai-config.server';
 import { getAuth } from '../lib/auth.server';
 import { getDbReady } from '../lib/db/index';
 import { assertNvidiaModelHosted } from '../lib/llm/nvidia-nim-catalog';

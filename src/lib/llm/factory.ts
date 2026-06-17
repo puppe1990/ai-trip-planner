@@ -1,4 +1,5 @@
-import { getAiConfig, type AiConfig } from '../ai-config';
+import type { AiConfig } from '../ai-config';
+import { getAiConfig } from '../ai-config.server';
 import { createGeminiProvider } from './gemini-provider';
 import { createNvidiaNimProvider } from './nvidia-nim-provider';
 import type { LlmProvider } from './types';

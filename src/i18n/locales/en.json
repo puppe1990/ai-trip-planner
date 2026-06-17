@@ -40,8 +40,7 @@
     "hint": "Your preferences are saved to your account and used for future generations."
   },
   "footer": {
-    "copyright": "© 2026 TripPlanner AI • Plan responsibly and enjoy your vacation.",
-    "poweredBy": "Built with Google Gemini 3.5-flash for geographic trip planning."
+    "copyright": "© 2026 TripPlanner AI • Plan responsibly and enjoy your vacation."
   },
   "generationRecovery": {
     "title": "AI generation failed",
@@ -231,6 +230,14 @@
     "packingTip": "Adapt the suggested packing items based on these average temperatures.",
     "transitTitle": "Apps & Local Transport",
     "liveSearch": "Live Search",
+    "transitSections": {
+      "rideApps": "Ride Apps & Taxis",
+      "routes": "Routes & Local Navigation",
+      "metro": "Metro, Train & Rail",
+      "buses": "Buses & Local Transport",
+      "fares": "Fares & Payment",
+      "tips": "General Mobility Tips"
+    },
     "transitSubtitle": "Check active ride apps, bus/metro passes and mobility rules",
     "transitCtaTitle": "How to get around in {{destination}}?",
     "transitCtaDesc": "Search instantly using Google Search. Discover real fares, local taxi or ride apps and the best integrated passes for your route.",

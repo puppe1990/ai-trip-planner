@@ -282,9 +282,8 @@ function HomePage() {
       />
 
       <footer className="mt-24 border-t border-slate-150 text-center py-8 text-slate-400 text-xs">
-        <div className="max-w-7xl mx-auto px-4 space-y-2">
+        <div className="max-w-7xl mx-auto px-4">
           <p>{t('footer.copyright')}</p>
-          <p className="text-[10px] text-slate-450">{t('footer.poweredBy')}</p>
         </div>
       </footer>
     </div>
