@@ -46,14 +46,59 @@ export const plannerResultSchema = z.object({
   ),
 });
 
-export function parsePlannerResult(rawJson: string): PlannerResult {
+export type PlannerParseContext = {
+  destination?: string;
+  durationDays?: number;
+};
+
+export function extractJsonPayload(raw: string): unknown {
+  const trimmed = raw.trim();
+  const fenced = trimmed.match(/^```(?:json)?\s*([\s\S]*?)\s*```$/i);
+  const candidate = fenced?.[1]?.trim() ?? trimmed;
+  return JSON.parse(candidate);
+}
+
+function isRecord(value: unknown): value is Record<string, unknown> {
+  return typeof value === 'object' && value !== null && !Array.isArray(value);
+}
+
+export function normalizePlannerPayload(parsed: unknown, context?: PlannerParseContext): unknown {
+  if (!isRecord(parsed)) return parsed;
+
+  if (!parsed.destination && isRecord(parsed.trip)) {
+    return normalizePlannerPayload(parsed.trip, context);
+  }
+
+  if (!parsed.destination && isRecord(parsed.plan)) {
+    return normalizePlannerPayload(parsed.plan, context);
+  }
+
+  const normalized = { ...parsed };
+
+  if (
+    context?.destination &&
+    (normalized.destination === undefined || normalized.destination === null || normalized.destination === '')
+  ) {
+    normalized.destination = context.destination;
+  }
+
+  if (context?.durationDays && (normalized.durationDays === undefined || normalized.durationDays === null)) {
+    normalized.durationDays = context.durationDays;
+  }
+
+  return normalized;
+}
+
+export function parsePlannerResult(rawJson: string, context?: PlannerParseContext): PlannerResult {
   let parsed: unknown;
 
   try {
-    parsed = JSON.parse(rawJson.trim());
+    parsed = extractJsonPayload(rawJson);
   } catch {
     throw new Error('Planner response is not valid JSON.');
   }
+
+  parsed = normalizePlannerPayload(parsed, context);
 
   const result = plannerResultSchema.safeParse(parsed);
   if (!result.success) {

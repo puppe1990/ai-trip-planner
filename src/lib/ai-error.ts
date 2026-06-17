@@ -29,6 +29,14 @@ function isTransientMessage(message: string, statusCode?: number): boolean {
   return statusCode === 503 || statusCode === 429 || /high demand|try again|unavailable|rate limit/i.test(message);
 }
 
+function isInvalidPlannerJsonMessage(message: string): boolean {
+  return /Invalid planner JSON|Planner response is not valid JSON/i.test(message);
+}
+
+export function isPlannerJsonValidationError(message: string): boolean {
+  return isInvalidPlannerJsonMessage(message);
+}
+
 export function parseAiGenerationError(raw: string): ParsedAiError {
   const statusMatch = raw.match(/\((\d{3})\)/);
   const statusCode = statusMatch ? Number(statusMatch[1]) : undefined;
@@ -49,6 +57,7 @@ export function parseAiGenerationError(raw: string): ParsedAiError {
         isRetryable:
           isModelUnavailableMessage(message, statusCode) ||
           isTransientMessage(message, statusCode) ||
+          isInvalidPlannerJsonMessage(message) ||
           nestedStatus === 'UNAVAILABLE',
       };
     } catch {
@@ -60,6 +69,9 @@ export function parseAiGenerationError(raw: string): ParsedAiError {
   return {
     message,
     statusCode,
-    isRetryable: isModelUnavailableMessage(message, statusCode) || isTransientMessage(message, statusCode),
+    isRetryable:
+      isModelUnavailableMessage(message, statusCode) ||
+      isTransientMessage(message, statusCode) ||
+      isInvalidPlannerJsonMessage(message),
   };
 }

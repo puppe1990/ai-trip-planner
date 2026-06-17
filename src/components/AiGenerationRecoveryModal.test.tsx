@@ -100,6 +100,25 @@ describe('AiGenerationRecoveryModal', () => {
     });
   });
 
+  it('shows invalid-json guidance for planner validation errors', async () => {
+    render(
+      <AiGenerationRecoveryModal
+        open
+        errorText="Invalid planner JSON at destination: Invalid input: expected string, received undefined"
+        onClose={vi.fn()}
+        onRetry={onRetryMock}
+      />,
+    );
+
+    await waitFor(() => {
+      expect(
+        screen.getByText(
+          'A IA retornou um JSON incompleto. Tente novamente ou troque para Google Gemini, que segue o schema com mais precisão.',
+        ),
+      ).toBeInTheDocument();
+    });
+  });
+
   it('shows model-not-found guidance for nvidia 404 errors', async () => {
     render(
       <AiGenerationRecoveryModal

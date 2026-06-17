@@ -1,3 +1,4 @@
+import { buildPlannerJsonSchemaInstruction } from '../lib/planner-json-instructions';
 import { parsePlannerResult } from '../lib/planner-zod-schema';
 import { getGeminiLanguage } from '../i18n/index';
 import type { LlmProvider } from '../lib/llm/types';
@@ -65,25 +66,31 @@ export async function generateTripPlan(
       ? 'You are a professional travel guide. Create logical, detailed itineraries with authentic local experiences. Respond strictly in the provided JSON schema and in English.'
       : 'Você é um guia turístico profissional. Crie itinerários lógicos e detalhados com experiências locais autênticas. Responda estritamente no schema JSON fornecido e em Português (pt-BR).';
 
-  const promptMsg = buildPlannerPrompt(params, locale);
-  let responseText: string | undefined;
+  const schemaInstruction = buildPlannerJsonSchemaInstruction();
+  const promptMsg = `${buildPlannerPrompt(params, locale)}\n\n${schemaInstruction}`;
+  const fullSystemInstruction = `${systemInstruction}\n\n${schemaInstruction}`;
   let delay = 1500;
 
   for (let attempt = 1; attempt <= 3; attempt++) {
     try {
-      responseText = await provider.generateJson({
-        system: systemInstruction,
+      const responseText = await provider.generateJson({
+        system: fullSystemInstruction,
         prompt: promptMsg,
         temperature: 0.8,
       });
-      break;
-    } catch (apiError: unknown) {
-      if (attempt === 3) throw apiError;
+
+      if (!responseText) throw new Error('No content returned by model.');
+
+      return parsePlannerResult(responseText, {
+        destination: params.destination.trim(),
+        durationDays: params.duration,
+      });
+    } catch (error: unknown) {
+      if (attempt === 3) throw error;
       await new Promise((resolve) => setTimeout(resolve, delay));
       delay *= 2;
     }
   }
 
-  if (!responseText) throw new Error('No content returned by model.');
-  return parsePlannerResult(responseText);
+  throw new Error('No content returned by model.');
 }

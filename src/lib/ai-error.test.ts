@@ -22,6 +22,14 @@ describe('parseAiGenerationError', () => {
     });
   });
 
+  it('marks invalid planner JSON errors as retryable', () => {
+    expect(parseAiGenerationError('Invalid planner JSON at destination: expected string')).toEqual({
+      message: 'Invalid planner JSON at destination: expected string',
+      statusCode: undefined,
+      isRetryable: true,
+    });
+  });
+
   it('marks nvidia 404 model errors as retryable', () => {
     expect(parseAiGenerationError('NVIDIA NIM request failed (404): 404 page not found')).toEqual({
       message: 'NVIDIA NIM request failed (404): 404 page not found',

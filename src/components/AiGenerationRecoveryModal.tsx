@@ -3,7 +3,7 @@ import { AnimatePresence, motion } from 'motion/react';
 import { AlertCircle, RefreshCw, Sparkles, X } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { getModelsForProvider } from '@/src/lib/ai-config';
-import { parseAiGenerationError } from '@/src/lib/ai-error';
+import { isPlannerJsonValidationError, parseAiGenerationError } from '@/src/lib/ai-error';
 import type { LlmProviderId } from '@/src/lib/llm/types';
 import type { AiConfigResponse } from '@/src/server/ai.functions';
 import { getAiConfigFn, updateAiConfigFn } from '@/src/server/ai.functions';
@@ -130,9 +130,14 @@ export default function AiGenerationRecoveryModal({
                 {parsedError?.statusCode === 404 && (
                   <p className="mt-2 text-[11px] text-rose-700/80">{t('generationRecovery.modelNotFound')}</p>
                 )}
-                {parsedError?.isRetryable && parsedError.statusCode !== 404 && (
-                  <p className="mt-2 text-[11px] text-rose-700/80">{t('generationRecovery.highDemand')}</p>
+                {errorText && isPlannerJsonValidationError(errorText) && (
+                  <p className="mt-2 text-[11px] text-rose-700/80">{t('generationRecovery.invalidJson')}</p>
                 )}
+                {parsedError?.isRetryable &&
+                  parsedError.statusCode !== 404 &&
+                  !(errorText && isPlannerJsonValidationError(errorText)) && (
+                    <p className="mt-2 text-[11px] text-rose-700/80">{t('generationRecovery.highDemand')}</p>
+                  )}
               </div>
 
               <div className="rounded-2xl border border-indigo-100 bg-indigo-50/40 p-4 mb-5 space-y-3">

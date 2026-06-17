@@ -51,6 +51,7 @@
     "retryHint": "Your selected settings will be saved before generating.",
     "highDemand": "The model may be under high demand. Switch models or try again shortly.",
     "modelNotFound": "This model is not available on the hosted NVIDIA NIM API. Choose another model from the list.",
+    "invalidJson": "The AI returned incomplete JSON. Try again or switch to Google Gemini for stricter schema adherence.",
     "changeSettings": "Adjust provider and model"
   },
   "errors": {
