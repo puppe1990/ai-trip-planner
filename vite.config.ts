@@ -1,4 +1,5 @@
 import tailwindcss from '@tailwindcss/vite';
+import netlify from '@netlify/vite-plugin-tanstack-start';
 import react from '@vitejs/plugin-react';
 import { tanstackStart } from '@tanstack/react-start/plugin/vite';
 import tsConfigPaths from 'vite-tsconfig-paths';
@@ -19,6 +20,7 @@ export default defineConfig({
         routeFileIgnorePattern: '\\.test\\.',
       },
     }),
+    netlify(),
     react(),
     tailwindcss(),
   ],

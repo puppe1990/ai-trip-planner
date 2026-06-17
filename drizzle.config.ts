@@ -1,10 +1,14 @@
 import { defineConfig } from 'drizzle-kit';
 
+const url = process.env.TURSO_DATABASE_URL ?? 'file:./data/trip-planner.sqlite';
+const isTursoRemote = url.startsWith('libsql://');
+
 export default defineConfig({
   schema: './src/lib/db/schema.ts',
   out: './drizzle',
-  dialect: 'sqlite',
+  dialect: isTursoRemote ? 'turso' : 'sqlite',
   dbCredentials: {
-    url: process.env.TURSO_DATABASE_URL ?? 'file:./data/trip-planner.sqlite',
+    url,
+    authToken: process.env.TURSO_AUTH_TOKEN,
   },
 });

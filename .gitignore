@@ -10,3 +10,5 @@ data/*.sqlite
 .env.*
 !.env.example
 .tanstack/
+# Local Netlify folder
+.netlify
