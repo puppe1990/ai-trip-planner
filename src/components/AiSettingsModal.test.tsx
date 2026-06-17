@@ -80,7 +80,7 @@ describe('AiSettingsModal', () => {
         {
           id: 'nvidia-nim',
           displayName: 'NVIDIA NIM',
-          defaultModel: 'meta/llama-3.3-70b-instruct',
+          defaultModel: 'qwen/qwen2.5-72b-instruct',
           models: PROVIDER_MODELS['nvidia-nim'],
           capabilities: { structuredJson: true, webGrounding: false },
           configured: true,
@@ -90,7 +90,7 @@ describe('AiSettingsModal', () => {
     updateAiConfigFnMock.mockResolvedValue({
       providerId: 'nvidia-nim',
       provider: 'NVIDIA NIM',
-      model: 'meta/llama-3.3-70b-instruct',
+      model: 'qwen/qwen2.5-72b-instruct',
       capabilities: { structuredJson: true, webGrounding: false },
     });
   });
@@ -128,7 +128,7 @@ describe('AiSettingsModal', () => {
     await user.selectOptions(screen.getByLabelText('Provider'), 'nvidia-nim');
 
     const modelSelect = screen.getByLabelText('Modelo');
-    expect(modelSelect).toHaveValue('meta/llama-3.3-70b-instruct');
+    expect(modelSelect).toHaveValue('qwen/qwen2.5-72b-instruct');
     expect(screen.getByRole('option', { name: 'Mistral Large' })).toBeInTheDocument();
     expect(screen.getByRole('option', { name: 'QwQ 32B' })).toBeInTheDocument();
   });
@@ -145,7 +145,7 @@ describe('AiSettingsModal', () => {
 
     await user.selectOptions(screen.getByLabelText('Provider'), 'nvidia-nim');
 
-    expect(screen.getByLabelText('Modelo')).toHaveValue('meta/llama-3.3-70b-instruct');
+    expect(screen.getByLabelText('Modelo')).toHaveValue('qwen/qwen2.5-72b-instruct');
     expect(screen.getByText('Busca web indisponível')).toBeInTheDocument();
   });
 
@@ -164,7 +164,7 @@ describe('AiSettingsModal', () => {
 
     await waitFor(() => {
       expect(updateAiConfigFnMock).toHaveBeenCalledWith({
-        data: { providerId: 'nvidia-nim', model: 'meta/llama-3.3-70b-instruct' },
+        data: { providerId: 'nvidia-nim', model: 'qwen/qwen2.5-72b-instruct' },
       });
     });
   });

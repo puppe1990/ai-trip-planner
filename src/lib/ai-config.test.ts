@@ -52,7 +52,7 @@ describe('getAiConfig', () => {
     expect(getAiConfig()).toEqual({
       providerId: 'nvidia-nim',
       provider: 'NVIDIA NIM',
-      model: 'meta/llama-3.3-70b-instruct',
+      model: 'qwen/qwen2.5-72b-instruct',
       capabilities: { structuredJson: true, webGrounding: false },
     });
   });
@@ -76,7 +76,7 @@ describe('resolveAiConfig', () => {
     expect(resolveAiConfig({ providerId: 'nvidia-nim', model: null })).toEqual({
       providerId: 'nvidia-nim',
       provider: 'NVIDIA NIM',
-      model: 'meta/llama-3.3-70b-instruct',
+      model: 'qwen/qwen2.5-72b-instruct',
       capabilities: { structuredJson: true, webGrounding: false },
     });
   });
