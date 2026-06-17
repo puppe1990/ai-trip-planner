@@ -28,11 +28,16 @@
     "provider": "Provider",
     "model": "Model",
     "loading": "Loading...",
+    "saving": "Saving...",
+    "save": "Save",
+    "unavailable": "unavailable",
+    "loadError": "Could not load settings.",
+    "saveError": "Could not save settings.",
     "capabilities": "Capabilities",
     "structuredJson": "Structured JSON",
     "webGrounding": "Web search",
     "webGroundingUnavailable": "Web search unavailable",
-    "hint": "These settings are defined on the application server."
+    "hint": "Your preferences are saved to your account and used for future generations."
   },
   "footer": {
     "copyright": "© 2026 TripPlanner AI • Plan responsibly and enjoy your vacation.",

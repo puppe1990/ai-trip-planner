@@ -1,5 +1,5 @@
 import { afterEach, describe, expect, it, vi } from 'vitest';
-import { getAiConfig, getProviderId, InvalidAiProviderError } from './ai-config';
+import { getAiConfig, getProviderId, InvalidAiProviderError, listProviderOptions, resolveAiConfig } from './ai-config';
 
 describe('getProviderId', () => {
   afterEach(() => {
@@ -54,5 +54,57 @@ describe('getAiConfig', () => {
     vi.stubEnv('AI_MODEL', 'nvidia/nemotron-3-nano-30b-a3b');
 
     expect(getAiConfig().model).toBe('nvidia/nemotron-3-nano-30b-a3b');
+  });
+});
+
+describe('resolveAiConfig', () => {
+  afterEach(() => {
+    vi.unstubAllEnvs();
+  });
+
+  it('uses user provider preference over env default', () => {
+    vi.stubEnv('AI_PROVIDER', 'gemini');
+
+    expect(resolveAiConfig({ providerId: 'nvidia-nim', model: null })).toEqual({
+      providerId: 'nvidia-nim',
+      provider: 'NVIDIA NIM',
+      model: 'meta/llama-3.3-70b-instruct',
+      capabilities: { structuredJson: true, webGrounding: false },
+    });
+  });
+
+  it('uses user model preference when provider is set', () => {
+    vi.stubEnv('AI_PROVIDER', 'gemini');
+
+    expect(resolveAiConfig({ providerId: 'nvidia-nim', model: 'custom-model' }).model).toBe('custom-model');
+  });
+
+  it('falls back to env when user has no preferences', () => {
+    vi.stubEnv('AI_PROVIDER', 'nvidia-nim');
+    vi.stubEnv('AI_MODEL', 'env-model');
+
+    expect(resolveAiConfig(null)).toEqual({
+      providerId: 'nvidia-nim',
+      provider: 'NVIDIA NIM',
+      model: 'env-model',
+      capabilities: { structuredJson: true, webGrounding: false },
+    });
+  });
+});
+
+describe('listProviderOptions', () => {
+  afterEach(() => {
+    vi.unstubAllEnvs();
+  });
+
+  it('marks providers as configured when api keys exist', () => {
+    vi.stubEnv('GEMINI_API_KEY', 'key');
+    vi.stubEnv('NVIDIA_API_KEY', '');
+
+    const options = listProviderOptions();
+
+    expect(options).toHaveLength(2);
+    expect(options.find((o) => o.id === 'gemini')?.configured).toBe(true);
+    expect(options.find((o) => o.id === 'nvidia-nim')?.configured).toBe(false);
   });
 });

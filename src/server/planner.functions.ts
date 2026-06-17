@@ -1,6 +1,6 @@
 import { createServerFn } from '@tanstack/react-start';
 import { z } from 'zod';
-import { getLlmProvider } from '../lib/llm/factory';
+import { getLlmProviderForUser } from './ai-llm.server';
 import { generateTripPlan, ValidationError } from './planner.server';
 
 const tripSearchParamsSchema = z.object({
@@ -17,7 +17,7 @@ export const generateTripPlanFn = createServerFn({ method: 'POST' })
   .validator(z.object({ params: tripSearchParamsSchema, locale: z.string().optional() }))
   .handler(async ({ data }) => {
     try {
-      const provider = getLlmProvider();
+      const provider = await getLlmProviderForUser();
       return await generateTripPlan(provider, data.params, data.locale ?? 'pt-BR');
     } catch (error) {
       if (error instanceof ValidationError) {

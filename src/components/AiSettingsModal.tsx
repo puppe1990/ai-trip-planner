@@ -1,28 +1,45 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { AnimatePresence, motion } from 'motion/react';
 import { Bot, Settings, Sparkles, X } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
-import type { AiConfig } from '@/src/lib/ai-config';
-import { getAiConfigFn } from '@/src/server/ai.functions';
+import type { LlmProviderId } from '@/src/lib/llm/types';
+import type { AiConfigResponse } from '@/src/server/ai.functions';
+import { getAiConfigFn, updateAiConfigFn } from '@/src/server/ai.functions';
 
 export default function AiSettingsModal() {
   const { t } = useTranslation();
   const [open, setOpen] = useState(false);
-  const [config, setConfig] = useState<AiConfig | null>(null);
+  const [config, setConfig] = useState<AiConfigResponse | null>(null);
   const [loading, setLoading] = useState(false);
+  const [saving, setSaving] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  const [providerId, setProviderId] = useState<LlmProviderId>('gemini');
+  const [model, setModel] = useState('');
+
+  const selectedProvider = useMemo(
+    () => config?.providers.find((provider) => provider.id === providerId),
+    [config?.providers, providerId],
+  );
 
   useEffect(() => {
     if (!open) return;
 
     let cancelled = false;
     setLoading(true);
+    setError(null);
 
     void getAiConfigFn()
       .then((data) => {
-        if (!cancelled) setConfig(data);
+        if (cancelled) return;
+        setConfig(data);
+        setProviderId(data.providerId);
+        setModel(data.model);
       })
       .catch(() => {
-        if (!cancelled) setConfig(null);
+        if (!cancelled) {
+          setConfig(null);
+          setError(t('aiSettings.loadError'));
+        }
       })
       .finally(() => {
         if (!cancelled) setLoading(false);
@@ -31,7 +48,36 @@ export default function AiSettingsModal() {
     return () => {
       cancelled = true;
     };
-  }, [open]);
+  }, [open, t]);
+
+  const handleProviderChange = (nextProviderId: LlmProviderId) => {
+    setProviderId(nextProviderId);
+    const nextProvider = config?.providers.find((provider) => provider.id === nextProviderId);
+    if (nextProvider) setModel(nextProvider.defaultModel);
+  };
+
+  const handleSave = async () => {
+    setSaving(true);
+    setError(null);
+
+    try {
+      const updated = await updateAiConfigFn({ data: { providerId, model } });
+      setConfig((current) =>
+        current
+          ? {
+              ...current,
+              ...updated,
+            }
+          : null,
+      );
+      setProviderId(updated.providerId);
+      setModel(updated.model);
+    } catch {
+      setError(t('aiSettings.saveError'));
+    } finally {
+      setSaving(false);
+    }
+  };
 
   return (
     <>
@@ -88,26 +134,52 @@ export default function AiSettingsModal() {
                   </button>
                 </div>
 
+                {error && (
+                  <p className="mb-4 rounded-xl border border-rose-100 bg-rose-50 px-3 py-2 text-xs text-rose-700">
+                    {error}
+                  </p>
+                )}
+
                 <div className="space-y-3">
                   <div className="rounded-2xl border border-slate-100 bg-slate-50/70 p-4">
-                    <p className="text-[10px] font-bold uppercase tracking-wider text-slate-400 mb-1">
+                    <label
+                      htmlFor="ai-provider"
+                      className="text-[10px] font-bold uppercase tracking-wider text-slate-400 mb-2 block"
+                    >
                       {t('aiSettings.provider')}
-                    </p>
-                    <p className="text-sm font-semibold text-slate-800">
-                      {loading ? t('aiSettings.loading') : (config?.provider ?? '—')}
-                    </p>
-                    <p className="text-[11px] text-slate-500 font-mono mt-1">
-                      {loading ? t('aiSettings.loading') : (config?.providerId ?? '—')}
-                    </p>
+                    </label>
+                    <select
+                      id="ai-provider"
+                      value={providerId}
+                      disabled={loading || !config}
+                      onChange={(event) => handleProviderChange(event.target.value as LlmProviderId)}
+                      className="w-full rounded-xl border border-slate-200 bg-white px-3 py-2 text-sm font-semibold text-slate-800 focus:outline-none focus:ring-2 focus:ring-indigo-500/30 disabled:opacity-60"
+                    >
+                      {(config?.providers ?? []).map((provider) => (
+                        <option key={provider.id} value={provider.id} disabled={!provider.configured}>
+                          {provider.displayName}
+                          {!provider.configured ? ` (${t('aiSettings.unavailable')})` : ''}
+                        </option>
+                      ))}
+                    </select>
                   </div>
 
                   <div className="rounded-2xl border border-slate-100 bg-slate-50/70 p-4">
-                    <p className="text-[10px] font-bold uppercase tracking-wider text-slate-400 mb-1">
+                    <label
+                      htmlFor="ai-model"
+                      className="text-[10px] font-bold uppercase tracking-wider text-slate-400 mb-2 block"
+                    >
                       {t('aiSettings.model')}
-                    </p>
-                    <p className="text-sm font-semibold text-slate-800 font-mono">
-                      {loading ? t('aiSettings.loading') : (config?.model ?? '—')}
-                    </p>
+                    </label>
+                    <input
+                      id="ai-model"
+                      type="text"
+                      value={loading ? '' : model}
+                      disabled={loading || !config}
+                      onChange={(event) => setModel(event.target.value)}
+                      placeholder={loading ? t('aiSettings.loading') : undefined}
+                      className="w-full rounded-xl border border-slate-200 bg-white px-3 py-2 text-sm font-semibold text-slate-800 font-mono focus:outline-none focus:ring-2 focus:ring-indigo-500/30 disabled:opacity-60"
+                    />
                   </div>
 
                   <div className="rounded-2xl border border-slate-100 bg-slate-50/70 p-4">
@@ -117,7 +189,7 @@ export default function AiSettingsModal() {
                     <div className="flex flex-wrap gap-2">
                       <span
                         className={`text-[10px] font-bold px-2 py-1 rounded-full border ${
-                          config?.capabilities?.structuredJson
+                          selectedProvider?.capabilities.structuredJson
                             ? 'bg-emerald-50 text-emerald-700 border-emerald-100'
                             : 'bg-slate-100 text-slate-500 border-slate-200'
                         }`}
@@ -126,12 +198,12 @@ export default function AiSettingsModal() {
                       </span>
                       <span
                         className={`text-[10px] font-bold px-2 py-1 rounded-full border ${
-                          config?.capabilities?.webGrounding
+                          selectedProvider?.capabilities.webGrounding
                             ? 'bg-emerald-50 text-emerald-700 border-emerald-100'
                             : 'bg-slate-100 text-slate-500 border-slate-200'
                         }`}
                       >
-                        {config?.capabilities?.webGrounding
+                        {selectedProvider?.capabilities.webGrounding
                           ? t('aiSettings.webGrounding')
                           : t('aiSettings.webGroundingUnavailable')}
                       </span>
@@ -139,9 +211,19 @@ export default function AiSettingsModal() {
                   </div>
                 </div>
 
-                <div className="mt-5 flex items-center gap-2 text-[11px] text-slate-500">
-                  <Bot className="w-3.5 h-3.5 text-indigo-500" />
-                  <span>{t('aiSettings.hint')}</span>
+                <div className="mt-5 flex items-center justify-between gap-3">
+                  <div className="flex items-center gap-2 text-[11px] text-slate-500">
+                    <Bot className="w-3.5 h-3.5 text-indigo-500" />
+                    <span>{t('aiSettings.hint')}</span>
+                  </div>
+                  <button
+                    type="button"
+                    onClick={() => void handleSave()}
+                    disabled={loading || saving || !config}
+                    className="rounded-xl bg-indigo-600 px-4 py-2 text-sm font-semibold text-white shadow-md shadow-indigo-600/20 transition-colors hover:bg-indigo-700 disabled:cursor-not-allowed disabled:opacity-60"
+                  >
+                    {saving ? t('aiSettings.saving') : t('aiSettings.save')}
+                  </button>
                 </div>
               </motion.div>
             </div>

@@ -28,11 +28,16 @@
     "provider": "Provider",
     "model": "Modelo",
     "loading": "Carregando...",
+    "saving": "Salvando...",
+    "save": "Salvar",
+    "unavailable": "indisponível",
+    "loadError": "Não foi possível carregar as configurações.",
+    "saveError": "Não foi possível salvar as configurações.",
     "capabilities": "Capacidades",
     "structuredJson": "JSON estruturado",
     "webGrounding": "Busca web",
     "webGroundingUnavailable": "Busca web indisponível",
-    "hint": "Essas configurações são definidas no servidor da aplicação."
+    "hint": "Suas preferências são salvas na conta e usadas nas próximas gerações."
   },
   "footer": {
     "copyright": "© 2026 TripPlanner IA • Planeje com responsabilidade e aproveite as férias.",

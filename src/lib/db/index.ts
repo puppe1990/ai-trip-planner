@@ -65,10 +65,20 @@ export const MIGRATION_STATEMENTS = [
   `CREATE INDEX IF NOT EXISTS idx_saved_trips_user_created ON saved_trips(user_id, created_at DESC)`,
 ];
 
+async function ensureColumn(libsql: Client, table: string, column: string, type: string): Promise<void> {
+  const result = await libsql.execute(`PRAGMA table_info(${table})`);
+  const exists = result.rows.some((row) => row.name === column);
+  if (!exists) {
+    await libsql.execute(`ALTER TABLE ${table} ADD COLUMN ${column} ${type}`);
+  }
+}
+
 export async function migrateClient(libsql: Client): Promise<void> {
   for (const sql of MIGRATION_STATEMENTS) {
     await libsql.execute(sql);
   }
+  await ensureColumn(libsql, 'user', 'ai_provider_id', 'TEXT');
+  await ensureColumn(libsql, 'user', 'ai_model', 'TEXT');
 }
 
 export function createDbConnection(url: string, authToken?: string): AppDatabase {
