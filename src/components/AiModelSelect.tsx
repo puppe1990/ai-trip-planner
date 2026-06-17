@@ -15,6 +15,8 @@ type AiModelSelectProps = {
   placeholder?: string;
 };
 
+const MENU_PORTAL_Z_INDEX = 9999;
+
 const selectStyles: StylesConfig<AiModelSelectOption, false, GroupBase<AiModelSelectOption>> = {
   control: (base, state) => ({
     ...base,
@@ -44,13 +46,17 @@ const selectStyles: StylesConfig<AiModelSelectOption, false, GroupBase<AiModelSe
     color: '#94a3b8',
     fontWeight: 500,
   }),
+  menuPortal: (base) => ({
+    ...base,
+    zIndex: MENU_PORTAL_Z_INDEX,
+  }),
   menu: (base) => ({
     ...base,
     borderRadius: '0.75rem',
     overflow: 'hidden',
     border: '1px solid #e2e8f0',
     boxShadow: '0 20px 25px -5px rgba(15, 23, 42, 0.1)',
-    zIndex: 60,
+    zIndex: MENU_PORTAL_Z_INDEX,
   }),
   menuList: (base) => ({
     ...base,
