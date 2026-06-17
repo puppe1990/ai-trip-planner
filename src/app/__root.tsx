@@ -4,6 +4,7 @@ import { createRootRoute, HeadContent, Link, Outlet, Scripts } from '@tanstack/r
 import { useTranslation } from 'react-i18next';
 import appCss from '@/src/index.css?url';
 import '@/src/i18n';
+import { getAppFaviconHref } from '@/src/lib/app-favicon';
 
 const queryClient = new QueryClient({
   defaultOptions: { queries: { staleTime: 30_000, retry: 1 } },
@@ -16,7 +17,10 @@ export const Route = createRootRoute({
       { name: 'viewport', content: 'width=device-width, initial-scale=1.0' },
       { title: 'TripPlanner IA' },
     ],
-    links: [{ rel: 'stylesheet', href: appCss }],
+    links: [
+      { rel: 'stylesheet', href: appCss },
+      { rel: 'icon', href: getAppFaviconHref(), type: 'image/svg+xml' },
+    ],
   }),
   component: RootComponent,
   notFoundComponent: NotFoundComponent,

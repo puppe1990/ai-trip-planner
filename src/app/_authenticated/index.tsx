@@ -1,7 +1,8 @@
-import { createFileRoute } from '@tanstack/react-router';
+import { createFileRoute, useNavigate, useRouter } from '@tanstack/react-router';
 import { useEffect, useState } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
-import { Compass, Luggage, AlertCircle, X, Plane, Info, LogOut } from 'lucide-react';
+import { Luggage, AlertCircle, X, Plane, Info, LogOut } from 'lucide-react';
+import { AppLogo } from '@/src/components/AppLogo';
 import { useTranslation } from 'react-i18next';
 import type { TripPlan, TripSearchParams } from '@/src/types';
 import { DEFAULT_SEARCH } from '@/src/data';
@@ -12,7 +13,7 @@ import LanguageSwitcher from '@/src/components/LanguageSwitcher';
 import { parseShareHash } from '@/src/lib/share';
 import { generateTripPlanFn } from '@/src/server/planner.functions';
 import { listTripsFn, saveTripFn, deleteTripFn } from '@/src/server/trips.functions';
-import { signOut } from '@/src/lib/auth-client';
+import { signOutAndRedirect } from '@/src/lib/auth-actions';
 
 export const Route = createFileRoute('/_authenticated/')({
   component: HomePage,
@@ -20,6 +21,8 @@ export const Route = createFileRoute('/_authenticated/')({
 
 function HomePage() {
   const { t, i18n } = useTranslation();
+  const navigate = useNavigate();
+  const router = useRouter();
   const [searchParams, setSearchParams] = useState<TripSearchParams>(DEFAULT_SEARCH);
   const [activePlan, setActivePlan] = useState<TripPlan | null>(null);
   const [savedTrips, setSavedTrips] = useState<TripPlan[]>([]);
@@ -138,9 +141,7 @@ function HomePage() {
       <header className="bg-white border-b border-slate-100 sticky top-0 z-40 backdrop-blur-md/80 bg-white/95">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
           <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-2xl bg-indigo-650 flex items-center justify-center text-white shadow-md shadow-indigo-600/20">
-              <Compass className="w-5.5 h-5.5" />
-            </div>
+            <AppLogo />
             <div>
               <h1 className="font-exbold text-lg md:text-xl text-slate-900 tracking-tight flex items-center gap-1.5 leading-none">
                 {t('common.appName')}{' '}
@@ -169,7 +170,12 @@ function HomePage() {
             </button>
             <button
               type="button"
-              onClick={() => signOut()}
+              onClick={() => {
+                void signOutAndRedirect({
+                  navigate,
+                  invalidate: () => router.invalidate(),
+                });
+              }}
               className="text-xs font-semibold text-slate-500 hover:text-rose-600 flex items-center gap-1 transition-colors"
               title="Sign out"
             >

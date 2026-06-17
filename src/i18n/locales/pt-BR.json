@@ -116,6 +116,8 @@
     "signupSubtitle": "Cadastre-se para gerar roteiros personalizados e salvá-los na nuvem.",
     "email": "E-mail",
     "password": "Senha",
+    "showPassword": "Mostrar senha",
+    "hidePassword": "Ocultar senha",
     "name": "Nome",
     "login": "Entrar",
     "loggingIn": "Entrando...",
@@ -125,8 +127,7 @@
     "hasAccount": "Já tem conta?",
     "loginError": "E-mail ou senha incorretos.",
     "signupError": "Não foi possível criar a conta. Tente novamente.",
-    "serverError": "Não foi possível conectar ao servidor. Tente novamente.",
-    "poweredBy": "Potencializado por Turso"
+    "serverError": "Não foi possível conectar ao servidor. Tente novamente."
   },
   "trip": {
     "itineraryBadge": "itinerário personalizado de {{days}} dias",

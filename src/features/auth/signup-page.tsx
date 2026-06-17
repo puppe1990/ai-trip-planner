@@ -4,6 +4,7 @@ import { Compass } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { signUp, useSession } from '@/src/lib/auth-client';
 import LanguageSwitcher from '@/src/components/LanguageSwitcher';
+import PasswordInput from '@/src/components/PasswordInput';
 
 export function SignupPage() {
   const { t } = useTranslation();
@@ -87,13 +88,12 @@ export function SignupPage() {
               </div>
               <div className="space-y-2">
                 <label className="block text-sm font-medium text-slate-700">{t('auth.password')}</label>
-                <input
-                  type="password"
+                <PasswordInput
+                  value={password}
+                  onChange={setPassword}
                   required
                   minLength={8}
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                  className="w-full px-4 py-3 rounded-xl border border-slate-200 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100"
+                  className="w-full px-4 py-3 pr-11 rounded-xl border border-slate-200 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100"
                 />
               </div>
               <button
