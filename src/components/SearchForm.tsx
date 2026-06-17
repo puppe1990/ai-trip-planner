@@ -1,22 +1,9 @@
 import React from 'react';
 import { motion } from 'motion/react';
-import {
-  MapPin,
-  Calendar,
-  Compass,
-  Users,
-  Sparkles,
-  CalendarDays,
-  PenTool,
-} from 'lucide-react';
+import { MapPin, Calendar, Compass, Users, Sparkles, CalendarDays, PenTool } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import type { TripSearchParams } from '@/src/types';
-import {
-  BUDGET_OPTIONS,
-  STYLE_OPTIONS,
-  COMPANION_OPTIONS,
-  QUICK_DESTINATIONS,
-} from '@/src/data';
+import { BUDGET_OPTIONS, STYLE_OPTIONS, COMPANION_OPTIONS, QUICK_DESTINATIONS } from '@/src/data';
 
 interface SearchFormProps {
   searchParams: TripSearchParams;
@@ -25,17 +12,10 @@ interface SearchFormProps {
   isLoading: boolean;
 }
 
-export default function SearchForm({
-  searchParams,
-  setSearchParams,
-  onSubmit,
-  isLoading,
-}: SearchFormProps) {
+export default function SearchForm({ searchParams, setSearchParams, onSubmit, isLoading }: SearchFormProps) {
   const { t } = useTranslation();
 
-  const handleInputChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
-  ) => {
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
     setSearchParams((prev) => ({
       ...prev,
@@ -75,9 +55,7 @@ export default function SearchForm({
           <Sparkles className="w-4 h-4 text-amber-500" />
           {t('search.quickTitle')}
         </h3>
-        <p className="text-xs text-slate-500">
-          {t('search.quickSubtitle')}
-        </p>
+        <p className="text-xs text-slate-500">{t('search.quickSubtitle')}</p>
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
           {QUICK_DESTINATIONS.map((dest) => (
             <motion.button
@@ -90,7 +68,9 @@ export default function SearchForm({
               transition={{ duration: 0.2 }}
             >
               {/* Corner Accent Gradient overlay */}
-              <div className={`absolute top-0 right-0 w-24 h-24 bg-gradient-to-br ${dest.bgGradient} opacity-5 group-hover:opacity-10 rounded-full blur-xl transition-all duration-500`} />
+              <div
+                className={`absolute top-0 right-0 w-24 h-24 bg-gradient-to-br ${dest.bgGradient} opacity-5 group-hover:opacity-10 rounded-full blur-xl transition-all duration-500`}
+              />
 
               <div className="flex justify-between items-start">
                 <span className="text-3xl filter drop-shadow-sm">{dest.emoji}</span>
@@ -102,9 +82,7 @@ export default function SearchForm({
                 <h4 className="font-bold text-slate-800 group-hover:text-amber-600 transition-colors duration-200">
                   {t(`quickDest.${dest.key}.name`)}
                 </h4>
-                <p className="text-xs text-slate-400 line-clamp-2 mt-1">
-                  {t(`quickDest.${dest.key}.tagline`)}
-                </p>
+                <p className="text-xs text-slate-400 line-clamp-2 mt-1">{t(`quickDest.${dest.key}.tagline`)}</p>
               </div>
             </motion.button>
           ))}
@@ -114,7 +92,10 @@ export default function SearchForm({
       <hr className="border-slate-100" />
 
       {/* Main Search Form */}
-      <form onSubmit={handleFormSubmit} className="bg-white rounded-3xl border border-slate-100 shadow-xl shadow-slate-100/40 p-6 md:p-8 space-y-6">
+      <form
+        onSubmit={handleFormSubmit}
+        className="bg-white rounded-3xl border border-slate-100 shadow-xl shadow-slate-100/40 p-6 md:p-8 space-y-6"
+      >
         <h2 className="text-xl font-bold text-slate-800 flex items-center gap-2">
           <Compass className="w-5 h-5 text-indigo-600" />
           {t('search.formTitle')}
@@ -192,9 +173,7 @@ export default function SearchForm({
                     <span className="w-2.5 h-2.5 rounded-full bg-indigo-600 block" />
                   )}
                 </div>
-                <p className="text-xs text-slate-500 mt-2 line-clamp-2 leading-relaxed">
-                  {t(option.descKey)}
-                </p>
+                <p className="text-xs text-slate-500 mt-2 line-clamp-2 leading-relaxed">{t(option.descKey)}</p>
               </button>
             ))}
           </div>
@@ -244,9 +223,7 @@ export default function SearchForm({
                   }`}
                 >
                   <span>{t(item.labelKey)}</span>
-                  {searchParams.companion === item.value && (
-                    <span className="w-1.5 h-1.5 rounded-full bg-indigo-600" />
-                  )}
+                  {searchParams.companion === item.value && <span className="w-1.5 h-1.5 rounded-full bg-indigo-600" />}
                 </button>
               ))}
             </div>
@@ -267,9 +244,7 @@ export default function SearchForm({
               placeholder={t('search.seasonPlaceholder')}
               className="w-full px-4 py-3 rounded-xl border border-slate-200 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100 transition-all text-slate-800 placeholder-slate-450"
             />
-            <p className="text-[11px] text-slate-400">
-              {t('search.seasonHint')}
-            </p>
+            <p className="text-[11px] text-slate-400">{t('search.seasonHint')}</p>
           </div>
         </div>
 

@@ -32,11 +32,56 @@ export function buildMapPoints(tripPlan: TripPlan): MapPoint[] {
 
   tripPlan.days.forEach((day) => {
     const dNum = day.dayNumber;
-    const slots: Array<{ slot: TimeSlot; title: string; desc: string; cost: string; duration: string; hashSeed: string; latOff: number; lngOff: number }> = [
-      { slot: 'Manhã', title: day.morning.title, desc: day.morning.description, cost: day.morning.cost, duration: day.morning.duration, hashSeed: day.morning.title, latOff: 0, lngOff: 0 },
-      { slot: 'Tarde', title: day.afternoon.title, desc: day.afternoon.description, cost: day.afternoon.cost, duration: day.afternoon.duration, hashSeed: day.afternoon.title, latOff: 0.015, lngOff: -0.012 },
-      { slot: 'Noite', title: day.evening.title, desc: day.evening.description, cost: day.evening.cost, duration: day.evening.duration, hashSeed: day.evening.title, latOff: -0.018, lngOff: 0.022 },
-      { slot: 'Gastronomia', title: day.diningSpot.name, desc: `${day.diningSpot.type} - ${day.diningSpot.description}`, cost: day.diningSpot.priceLevel, duration: '1-2 horas', hashSeed: day.diningSpot.name, latOff: 0.005, lngOff: 0.005 },
+    const slots: Array<{
+      slot: TimeSlot;
+      title: string;
+      desc: string;
+      cost: string;
+      duration: string;
+      hashSeed: string;
+      latOff: number;
+      lngOff: number;
+    }> = [
+      {
+        slot: 'Manhã',
+        title: day.morning.title,
+        desc: day.morning.description,
+        cost: day.morning.cost,
+        duration: day.morning.duration,
+        hashSeed: day.morning.title,
+        latOff: 0,
+        lngOff: 0,
+      },
+      {
+        slot: 'Tarde',
+        title: day.afternoon.title,
+        desc: day.afternoon.description,
+        cost: day.afternoon.cost,
+        duration: day.afternoon.duration,
+        hashSeed: day.afternoon.title,
+        latOff: 0.015,
+        lngOff: -0.012,
+      },
+      {
+        slot: 'Noite',
+        title: day.evening.title,
+        desc: day.evening.description,
+        cost: day.evening.cost,
+        duration: day.evening.duration,
+        hashSeed: day.evening.title,
+        latOff: -0.018,
+        lngOff: 0.022,
+      },
+      {
+        slot: 'Gastronomia',
+        title: day.diningSpot.name,
+        desc: `${day.diningSpot.type} - ${day.diningSpot.description}`,
+        cost: day.diningSpot.priceLevel,
+        duration: '1-2 horas',
+        hashSeed: day.diningSpot.name,
+        latOff: 0.005,
+        lngOff: 0.005,
+      },
     ];
 
     for (const s of slots) {
@@ -62,8 +107,14 @@ export function buildMapPoints(tripPlan: TripPlan): MapPoint[] {
   let minLng = Math.min(...points.map((p) => p.lng));
   let maxLng = Math.max(...points.map((p) => p.lng));
 
-  if (minLat === maxLat) { minLat -= 0.01; maxLat += 0.01; }
-  if (minLng === maxLng) { minLng -= 0.01; maxLng += 0.01; }
+  if (minLat === maxLat) {
+    minLat -= 0.01;
+    maxLat += 0.01;
+  }
+  if (minLng === maxLng) {
+    minLng -= 0.01;
+    maxLng += 0.01;
+  }
 
   const width = 700;
   const height = 450;
@@ -81,10 +132,10 @@ export function buildMapPoints(tripPlan: TripPlan): MapPoint[] {
 }
 
 const SLOT_ORDER: Record<TimeSlot, number> = {
-  'Manhã': 1,
-  'Tarde': 2,
-  'Gastronomia': 3,
-  'Noite': 4,
+  Manhã: 1,
+  Tarde: 2,
+  Gastronomia: 3,
+  Noite: 4,
 };
 
 export function sortPointsChronologically(points: MapPoint[]): MapPoint[] {

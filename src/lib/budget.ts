@@ -14,10 +14,7 @@ export interface GroupBudgetEstimate {
   doubleRooms: number;
 }
 
-export function calculateGroupBudget(
-  tripPlan: TripPlan,
-  travelersCount: number,
-): GroupBudgetEstimate {
+export function calculateGroupBudget(tripPlan: TripPlan, travelersCount: number): GroupBudgetEstimate {
   const hotelBase = parseCost(tripPlan.budgetEstimate.hotelAverageNight);
   const foodBase = parseCost(tripPlan.budgetEstimate.foodAverageDay);
   const transportBase = parseCost(tripPlan.budgetEstimate.transportAverageDay);

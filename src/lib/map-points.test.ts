@@ -8,7 +8,12 @@ const plan: TripPlan = {
   durationDays: 2,
   tagline: 'Templos',
   summary: 'Cultura',
-  budgetEstimate: { totalCostEstimate: 'R$ 4000', hotelAverageNight: 'R$ 200', foodAverageDay: 'R$ 100', transportAverageDay: 'R$ 30' },
+  budgetEstimate: {
+    totalCostEstimate: 'R$ 4000',
+    hotelAverageNight: 'R$ 200',
+    foodAverageDay: 'R$ 100',
+    transportAverageDay: 'R$ 30',
+  },
   packingEssentials: [],
   weatherExpected: 'Ameno',
   days: [

@@ -67,7 +67,9 @@ describe('trips.server', () => {
 
   it('prevents duplicate destination+duration for same user', async () => {
     await saveTrip(db, userA, samplePlan('trip_1', 'Roma, Itália', 4));
-    await expect(saveTrip(db, userA, samplePlan('trip_2', 'Roma, Itália', 4))).rejects.toBeInstanceOf(DuplicateTripError);
+    await expect(saveTrip(db, userA, samplePlan('trip_2', 'Roma, Itália', 4))).rejects.toBeInstanceOf(
+      DuplicateTripError,
+    );
   });
 
   it('isolates trips between users', async () => {

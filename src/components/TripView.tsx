@@ -50,7 +50,6 @@ import { parseTransitSections } from '@/src/lib/transit-parse';
 import { searchTransitFn } from '@/src/server/transit.functions';
 import InteractiveTripMap from './InteractiveTripMap';
 
-
 interface TripViewProps {
   tripPlan: TripPlan;
   onBack: () => void;
@@ -58,12 +57,7 @@ interface TripViewProps {
   isSaved: boolean;
 }
 
-export default function TripView({
-  tripPlan,
-  onBack,
-  onSave,
-  isSaved,
-}: TripViewProps) {
+export default function TripView({ tripPlan, onBack, onSave, isSaved }: TripViewProps) {
   const { t, i18n } = useTranslation();
   const [activeDay, setActiveDay] = useState(1);
   const [checkedPackingItems, setCheckedPackingItems] = useState<Record<string, boolean>>({});
@@ -156,19 +150,16 @@ export default function TripView({
 
   // Toggle checks in packing checklist
   const togglePackingItem = (item: string) => {
-    setCheckedPackingItems(prev => ({
+    setCheckedPackingItems((prev) => ({
       ...prev,
-      [item]: !prev[item]
+      [item]: !prev[item],
     }));
   };
 
-  const budget = useMemo(
-    () => calculateGroupBudget(tripPlan, travelersCount),
-    [tripPlan, travelersCount],
-  );
+  const budget = useMemo(() => calculateGroupBudget(tripPlan, travelersCount), [tripPlan, travelersCount]);
   const localeStr = i18n.language?.startsWith('en') ? 'en-US' : 'pt-BR';
 
-  const activeDayPlan = tripPlan.days.find(d => d.dayNumber === activeDay) || tripPlan.days[0];
+  const activeDayPlan = tripPlan.days.find((d) => d.dayNumber === activeDay) || tripPlan.days[0];
 
   return (
     <div className="space-y-8" id="trip-view-container">
@@ -211,9 +202,9 @@ export default function TripView({
             onClick={onSave}
             disabled={isSaved}
             className={`flex items-center gap-2 text-xs font-bold px-5 py-2.5 rounded-xl border transition-all shadow-sm cursor-pointer ${
-              isSaved 
-                ? "bg-slate-100/80 border-slate-200/50 text-slate-500 cursor-not-allowed" 
-                : "bg-indigo-600 border-indigo-600 text-white hover:bg-indigo-700 shadow-indigo-600/10"
+              isSaved
+                ? 'bg-slate-100/80 border-slate-200/50 text-slate-500 cursor-not-allowed'
+                : 'bg-indigo-600 border-indigo-600 text-white hover:bg-indigo-700 shadow-indigo-600/10'
             }`}
           >
             <Save className="w-3.5 h-3.5" />
@@ -247,9 +238,7 @@ export default function TripView({
             "{tripPlan.tagline}"
           </p>
 
-          <p className="text-sm md:text-base text-slate-300 font-normal leading-relaxed">
-            {tripPlan.summary}
-          </p>
+          <p className="text-sm md:text-base text-slate-300 font-normal leading-relaxed">{tripPlan.summary}</p>
         </div>
       </div>
 
@@ -268,7 +257,8 @@ export default function TripView({
               </span>
             </div>
             <p className="text-xs text-slate-500">
-              Ajuste o número de pessoas para termos uma estimativa atualizada de custo total do grupo durante os {tripPlan.durationDays} dias:
+              Ajuste o número de pessoas para termos uma estimativa atualizada de custo total do grupo durante os{' '}
+              {tripPlan.durationDays} dias:
             </p>
 
             {/* Travelers counter */}
@@ -281,17 +271,15 @@ export default function TripView({
                 <button
                   type="button"
                   disabled={travelersCount <= 1}
-                  onClick={() => setTravelersCount(prev => Math.max(1, prev - 1))}
+                  onClick={() => setTravelersCount((prev) => Math.max(1, prev - 1))}
                   className="w-8 h-8 rounded-lg bg-white border border-slate-200 hover:border-slate-300 shadow-sm font-black flex items-center justify-center text-slate-700 cursor-pointer disabled:opacity-40"
                 >
                   -
                 </button>
-                <span className="text-sm font-extrabold text-slate-800 min-w-4 text-center">
-                  {travelersCount}
-                </span>
+                <span className="text-sm font-extrabold text-slate-800 min-w-4 text-center">{travelersCount}</span>
                 <button
                   type="button"
-                  onClick={() => setTravelersCount(prev => prev + 1)}
+                  onClick={() => setTravelersCount((prev) => prev + 1)}
                   className="w-8 h-8 rounded-lg bg-white border border-slate-200 hover:border-slate-300 shadow-sm font-black flex items-center justify-center text-slate-700 cursor-pointer"
                 >
                   +
@@ -310,15 +298,21 @@ export default function TripView({
               </div>
               <div className="flex justify-between text-xs text-slate-500">
                 <span>Transporte Local ({travelersCount} pessoas):</span>
-                <span className="font-semibold text-slate-700">~R$ {budget.transportGroup.toLocaleString(localeStr)}</span>
+                <span className="font-semibold text-slate-700">
+                  ~R$ {budget.transportGroup.toLocaleString(localeStr)}
+                </span>
               </div>
             </div>
           </div>
 
           <div className="pt-4 mt-4 border-t border-indigo-100/50 bg-indigo-50/20 p-4 rounded-2xl">
-            <span className="text-[10px] uppercase font-bold text-indigo-500 block tracking-wider">Custo Total de Referência</span>
+            <span className="text-[10px] uppercase font-bold text-indigo-500 block tracking-wider">
+              Custo Total de Referência
+            </span>
             <div className="flex items-baseline gap-1 mt-0.5">
-              <span className="text-indigo-600 font-extrabold text-2xl">R$ {budget.total.toLocaleString(localeStr)}</span>
+              <span className="text-indigo-600 font-extrabold text-2xl">
+                R$ {budget.total.toLocaleString(localeStr)}
+              </span>
               <span className="text-[10px] text-slate-500 font-medium">médio total local</span>
             </div>
           </div>
@@ -370,7 +364,9 @@ export default function TripView({
               <div className="w-8 h-8 rounded-lg bg-amber-500/25 flex items-center justify-center text-amber-600 mb-2">
                 <Award className="w-4 h-4" />
               </div>
-              <h4 className="text-xs font-bold text-amber-950 uppercase tracking-wider">Orçamento de Referência Total</h4>
+              <h4 className="text-xs font-bold text-amber-950 uppercase tracking-wider">
+                Orçamento de Referência Total
+              </h4>
               <p className="text-lg font-black text-amber-900">{tripPlan.budgetEstimate.totalCostEstimate}</p>
             </div>
             <p className="text-xs text-amber-950/80 mt-2 leading-relaxed">
@@ -385,7 +381,7 @@ export default function TripView({
         <InteractiveTripMap tripPlan={tripPlan} activeDay={activeDay} />
       </div>
 
-       {/* Main section: Days Tabs & Detailed Plan */}
+      {/* Main section: Days Tabs & Detailed Plan */}
       <h2 className="text-2xl font-black text-slate-855 flex items-center gap-2 pt-4 print:hidden">
         <Calendar className="w-6 h-6 text-indigo-650" />
         Cronograma Dia a Dia da Viagem
@@ -396,7 +392,9 @@ export default function TripView({
         <div className="lg:col-span-1 space-y-1 bg-slate-50 p-2.5 rounded-2xl border border-slate-150 h-fit">
           <div className="p-2 mb-2 text-center bg-white border border-slate-100 rounded-xl">
             <span className="text-xs font-bold text-slate-450 uppercase tracking-widest block">Duração Total</span>
-            <span className="text-xl font-extrabold text-slate-800">{tripPlan.durationDays} {tripPlan.durationDays === 1 ? 'Dia' : 'Dias'}</span>
+            <span className="text-xl font-extrabold text-slate-800">
+              {tripPlan.durationDays} {tripPlan.durationDays === 1 ? 'Dia' : 'Dias'}
+            </span>
           </div>
 
           <div className="flex lg:flex-col overflow-x-auto lg:overflow-x-visible gap-2 pb-2 lg:pb-0 scrollbar-none">
@@ -407,15 +405,17 @@ export default function TripView({
                 onClick={() => setActiveDay(day.dayNumber)}
                 className={`flex-shrink-0 lg:w-full text-left p-3.5 rounded-xl border transition-all duration-250 cursor-pointer ${
                   activeDay === day.dayNumber
-                    ? "bg-indigo-600 border-indigo-600 shadow-md shadow-indigo-600/15 text-white font-bold"
-                    : "bg-white border-slate-100 text-slate-650 hover:bg-slate-50 font-semibold"
+                    ? 'bg-indigo-600 border-indigo-600 shadow-md shadow-indigo-600/15 text-white font-bold'
+                    : 'bg-white border-slate-100 text-slate-650 hover:bg-slate-50 font-semibold'
                 }`}
               >
                 <div className="flex items-center justify-between text-xs">
                   <span>Dia {day.dayNumber}</span>
                   {activeDay !== day.dayNumber && <span className="w-2 h-2 rounded-full bg-slate-200" />}
                 </div>
-                <div className={`text-xs truncate ${activeDay === day.dayNumber ? 'text-indigo-200 font-medium' : 'text-slate-450'} mt-1`}>
+                <div
+                  className={`text-xs truncate ${activeDay === day.dayNumber ? 'text-indigo-200 font-medium' : 'text-slate-450'} mt-1`}
+                >
                   {day.theme}
                 </div>
               </button>
@@ -437,10 +437,10 @@ export default function TripView({
               {/* Day Header */}
               <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 border-b border-slate-100 pb-5">
                 <div>
-                  <span className="text-xs font-black uppercase text-indigo-600 tracking-wider">DIA {activeDayPlan.dayNumber} :</span>
-                  <h3 className="text-xl md:text-2xl font-black text-slate-800 mt-1">
-                    {activeDayPlan.theme}
-                  </h3>
+                  <span className="text-xs font-black uppercase text-indigo-600 tracking-wider">
+                    DIA {activeDayPlan.dayNumber} :
+                  </span>
+                  <h3 className="text-xl md:text-2xl font-black text-slate-800 mt-1">{activeDayPlan.theme}</h3>
                 </div>
                 <span className="text-xs font-bold text-slate-500 bg-slate-50 border border-slate-100 px-3.5 py-1.5 rounded-full">
                   Foco do Dia
@@ -457,7 +457,9 @@ export default function TripView({
                   </span>
                   <div className="space-y-1">
                     <div className="flex flex-wrap items-center gap-2 text-xs">
-                      <span className="font-extrabold text-indigo-600 bg-indigo-50 border border-indigo-100 py-0.5 px-2 rounded-md">Manhã</span>
+                      <span className="font-extrabold text-indigo-600 bg-indigo-50 border border-indigo-100 py-0.5 px-2 rounded-md">
+                        Manhã
+                      </span>
                       <span className="text-slate-450 font-medium flex items-center gap-1">
                         <Clock className="w-3 h-3" /> {activeDayPlan.morning.duration}
                       </span>
@@ -476,7 +478,9 @@ export default function TripView({
                   </span>
                   <div className="space-y-1">
                     <div className="flex flex-wrap items-center gap-2 text-xs">
-                      <span className="font-extrabold text-sky-600 bg-sky-50 border border-sky-100 py-0.5 px-2 rounded-md">Tarde</span>
+                      <span className="font-extrabold text-sky-600 bg-sky-50 border border-sky-100 py-0.5 px-2 rounded-md">
+                        Tarde
+                      </span>
                       <span className="text-slate-450 font-medium flex items-center gap-1">
                         <Clock className="w-3 h-3" /> {activeDayPlan.afternoon.duration}
                       </span>
@@ -495,7 +499,9 @@ export default function TripView({
                   </span>
                   <div className="space-y-1">
                     <div className="flex flex-wrap items-center gap-2 text-xs">
-                      <span className="font-extrabold text-slate-700 bg-slate-100 border border-slate-200 py-0.5 px-2 rounded-md">Noite</span>
+                      <span className="font-extrabold text-slate-700 bg-slate-100 border border-slate-200 py-0.5 px-2 rounded-md">
+                        Noite
+                      </span>
                       <span className="text-slate-450 font-medium flex items-center gap-1">
                         <Clock className="w-3 h-3" /> {activeDayPlan.evening.duration}
                       </span>
@@ -541,9 +547,12 @@ export default function TripView({
           <Calendar className="w-5 h-5 text-indigo-700" />
           Roteiro Completo Detalhado ({tripPlan.durationDays} {tripPlan.durationDays === 1 ? 'Dia' : 'Dias'})
         </h2>
-        
+
         {tripPlan.days.map((day) => (
-          <div key={day.dayNumber} className="border border-slate-200 rounded-2xl p-6 bg-white space-y-4 page-break-inside-avoid">
+          <div
+            key={day.dayNumber}
+            className="border border-slate-200 rounded-2xl p-6 bg-white space-y-4 page-break-inside-avoid"
+          >
             <div className="border-b border-slate-100 pb-2.5">
               <span className="text-xs font-black text-indigo-700 tracking-wide uppercase">DIA {day.dayNumber}</span>
               <h3 className="text-lg font-bold text-slate-900 mt-0.5">{day.theme}</h3>
@@ -551,36 +560,50 @@ export default function TripView({
 
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
               <div className="space-y-1">
-                <span className="inline-block text-[9px] font-black tracking-wide text-indigo-700 bg-indigo-50 border border-indigo-100 px-1.5 py-0.5 rounded uppercase">Manhã</span>
+                <span className="inline-block text-[9px] font-black tracking-wide text-indigo-700 bg-indigo-50 border border-indigo-100 px-1.5 py-0.5 rounded uppercase">
+                  Manhã
+                </span>
                 <h4 className="font-bold text-slate-800 text-xs mt-1">{day.morning.title}</h4>
                 <p className="text-xs text-slate-600 leading-relaxed">{day.morning.description}</p>
-                <div className="text-[10px] text-slate-450 font-mono mt-1">Duração: {day.morning.duration} | Custo estimado: {day.morning.cost}</div>
+                <div className="text-[10px] text-slate-450 font-mono mt-1">
+                  Duração: {day.morning.duration} | Custo estimado: {day.morning.cost}
+                </div>
               </div>
 
               <div className="space-y-1">
-                <span className="inline-block text-[9px] font-black tracking-wide text-sky-700 bg-sky-50 border border-sky-100 px-1.5 py-0.5 rounded uppercase font-sans">Tarde</span>
+                <span className="inline-block text-[9px] font-black tracking-wide text-sky-700 bg-sky-50 border border-sky-100 px-1.5 py-0.5 rounded uppercase font-sans">
+                  Tarde
+                </span>
                 <h4 className="font-bold text-slate-800 text-xs mt-1">{day.afternoon.title}</h4>
                 <p className="text-xs text-slate-600 leading-relaxed">{day.afternoon.description}</p>
-                <div className="text-[10px] text-slate-450 font-mono mt-1">Duração: {day.afternoon.duration} | Custo estimado: {day.afternoon.cost}</div>
+                <div className="text-[10px] text-slate-450 font-mono mt-1">
+                  Duração: {day.afternoon.duration} | Custo estimado: {day.afternoon.cost}
+                </div>
               </div>
 
               <div className="space-y-1">
-                <span className="inline-block text-[9px] font-black tracking-wide text-slate-700 bg-slate-100 border border-slate-200 px-1.5 py-0.5 rounded uppercase">Noite</span>
+                <span className="inline-block text-[9px] font-black tracking-wide text-slate-700 bg-slate-100 border border-slate-200 px-1.5 py-0.5 rounded uppercase">
+                  Noite
+                </span>
                 <h4 className="font-bold text-slate-800 text-xs mt-1">{day.evening.title}</h4>
                 <p className="text-xs text-slate-600 leading-relaxed">{day.evening.description}</p>
-                <div className="text-[10px] text-slate-450 font-mono mt-1">Duração: {day.evening.duration} | Custo estimado: {day.evening.cost}</div>
+                <div className="text-[10px] text-slate-450 font-mono mt-1">
+                  Duração: {day.evening.duration} | Custo estimado: {day.evening.cost}
+                </div>
               </div>
             </div>
 
             <div className="bg-slate-50 border border-slate-100 p-4 rounded-xl">
-              <span className="text-[9px] font-black uppercase text-orange-600 block tracking-wider mb-1">Recomendação Gastronômica</span>
+              <span className="text-[9px] font-black uppercase text-orange-600 block tracking-wider mb-1">
+                Recomendação Gastronômica
+              </span>
               <div className="flex justify-between items-baseline flex-wrap">
                 <span className="font-bold text-slate-800 text-xs">{day.diningSpot.name}</span>
-                <span className="text-[11px] text-slate-500">{day.diningSpot.type} ({day.diningSpot.priceLevel})</span>
+                <span className="text-[11px] text-slate-500">
+                  {day.diningSpot.type} ({day.diningSpot.priceLevel})
+                </span>
               </div>
-              <p className="text-xs text-slate-600 italic mt-1 leading-relaxed">
-                {day.diningSpot.description}
-              </p>
+              <p className="text-xs text-slate-600 italic mt-1 leading-relaxed">{day.diningSpot.description}</p>
             </div>
           </div>
         ))}
@@ -588,7 +611,6 @@ export default function TripView({
 
       {/* Bottom section: Packing lists, weather forecast and general travel tips */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-        
         {/* Checklist of suggested items */}
         <div className="md:col-span-1 bg-white p-6 rounded-3xl border border-slate-100 shadow-xl shadow-slate-100/40 flex flex-col justify-between space-y-4">
           <div className="space-y-4">
@@ -596,7 +618,7 @@ export default function TripView({
               <Luggage className="w-5 h-5 text-indigo-600" />
               Checklist de Bagagem
             </h3>
-            
+
             <p className="text-xs text-slate-500">
               Itens essenciais sugeridos pela nossa IA baseados na época e clima esperado:
             </p>
@@ -618,7 +640,9 @@ export default function TripView({
                         <div className="w-5 h-5 rounded-md border-2 border-slate-200 bg-white" />
                       )}
                     </div>
-                    <span className={`text-xs ${isChecked ? "line-through text-slate-400" : "text-slate-700 font-medium"}`}>
+                    <span
+                      className={`text-xs ${isChecked ? 'line-through text-slate-400' : 'text-slate-700 font-medium'}`}
+                    >
                       {item}
                     </span>
                   </button>
@@ -645,9 +669,7 @@ export default function TripView({
                   <Sun className="w-6 h-6 text-sky-500 animate-[spin_8s_linear_infinite]" />
                 </div>
                 <div className="space-y-0.5">
-                  <h3 className="font-bold text-slate-800 text-base">
-                    Previsão Climática Sazonal
-                  </h3>
+                  <h3 className="font-bold text-slate-800 text-base">Previsão Climática Sazonal</h3>
                   <p className="text-xs text-slate-500">
                     Clima médio e histórico mensal para planejar sua mala com precisão
                   </p>
@@ -695,13 +717,16 @@ export default function TripView({
                       onClick={() => setSelectedMonthIndex(idx)}
                       className={`relative py-2 px-1 rounded-lg text-xs font-bold transition-all cursor-pointer text-center flex flex-col items-center justify-center ${
                         isSelected
-                          ? "bg-white text-indigo-700 shadow-sm border border-slate-100/80"
-                          : "text-slate-500 hover:bg-slate-100 hover:text-slate-800"
+                          ? 'bg-white text-indigo-700 shadow-sm border border-slate-100/80'
+                          : 'text-slate-500 hover:bg-slate-100 hover:text-slate-800'
                       }`}
                     >
                       <span>{m.month}</span>
                       {isTripMonth && (
-                        <span className="absolute bottom-1 w-1.5 h-1.5 rounded-full bg-indigo-600" title="Mês da viagem" />
+                        <span
+                          className="absolute bottom-1 w-1.5 h-1.5 rounded-full bg-indigo-600"
+                          title="Mês da viagem"
+                        />
                       )}
                     </button>
                   );
@@ -741,7 +766,32 @@ export default function TripView({
                     <div className="flex items-center gap-2">
                       <span className="text-base">📅</span>
                       <h4 className="font-bold text-slate-800 text-sm">
-                        Médias de <span className="text-indigo-600 font-extrabold">{activeMonth.month === "Jan" ? "Janeiro" : activeMonth.month === "Fev" ? "Fevereiro" : activeMonth.month === "Mar" ? "Março" : activeMonth.month === "Abr" ? "Abril" : activeMonth.month === "Mai" ? "Maio" : activeMonth.month === "Jun" ? "Junho" : activeMonth.month === "Jul" ? "Julho" : activeMonth.month === "Ago" ? "Agosto" : activeMonth.month === "Set" ? "Setembro" : activeMonth.month === "Out" ? "Outubro" : activeMonth.month === "Nov" ? "Novembro" : "Dezembro"}</span>
+                        Médias de{' '}
+                        <span className="text-indigo-600 font-extrabold">
+                          {activeMonth.month === 'Jan'
+                            ? 'Janeiro'
+                            : activeMonth.month === 'Fev'
+                              ? 'Fevereiro'
+                              : activeMonth.month === 'Mar'
+                                ? 'Março'
+                                : activeMonth.month === 'Abr'
+                                  ? 'Abril'
+                                  : activeMonth.month === 'Mai'
+                                    ? 'Maio'
+                                    : activeMonth.month === 'Jun'
+                                      ? 'Junho'
+                                      : activeMonth.month === 'Jul'
+                                        ? 'Julho'
+                                        : activeMonth.month === 'Ago'
+                                          ? 'Agosto'
+                                          : activeMonth.month === 'Set'
+                                            ? 'Setembro'
+                                            : activeMonth.month === 'Out'
+                                              ? 'Outubro'
+                                              : activeMonth.month === 'Nov'
+                                                ? 'Novembro'
+                                                : 'Dezembro'}
+                        </span>
                       </h4>
                       {isTripMonth && (
                         <span className="text-[9px] font-black text-indigo-700 bg-indigo-50 border border-indigo-100 px-2.5 py-0.5 rounded-full uppercase tracking-wider">
@@ -749,18 +799,24 @@ export default function TripView({
                         </span>
                       )}
                     </div>
-                    <span className="text-[10px] text-slate-400 font-semibold font-mono uppercase tracking-wide">Padrão Histórico</span>
+                    <span className="text-[10px] text-slate-400 font-semibold font-mono uppercase tracking-wide">
+                      Padrão Histórico
+                    </span>
                   </div>
 
                   <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
                     {/* Temperature Column */}
                     <div className="space-y-3.5 col-span-1 md:border-r md:border-slate-100 md:pr-4">
                       <div className="flex items-center gap-2 text-slate-500">
-                        <TempIcon className={`w-4 h-4 ${isVeryHot ? "text-orange-500" : isCold ? "text-sky-500" : "text-amber-500"}`} />
+                        <TempIcon
+                          className={`w-4 h-4 ${isVeryHot ? 'text-orange-500' : isCold ? 'text-sky-500' : 'text-amber-500'}`}
+                        />
                         <span className="text-xs font-bold uppercase tracking-wider">Metas de Temperatura</span>
                       </div>
                       <div className="flex items-baseline gap-1.5">
-                        <span className="text-3xl font-black text-slate-800 tracking-tight">{activeMonth.tempMax}°C</span>
+                        <span className="text-3xl font-black text-slate-800 tracking-tight">
+                          {activeMonth.tempMax}°C
+                        </span>
                         <span className="text-slate-400 font-medium">/</span>
                         <span className="text-sm font-semibold text-slate-500">{activeMonth.tempMin}°C</span>
                       </div>
@@ -768,14 +824,14 @@ export default function TripView({
                       {/* Visual temperature range slider */}
                       <div className="space-y-1">
                         <div className="h-2 w-full bg-slate-200 rounded-full relative overflow-hidden">
-                          <div 
+                          <div
                             style={{ left: `${minPercent}%`, width: `${widthPercent}%` }}
                             className={`absolute top-0 h-full rounded-full bg-gradient-to-r ${
-                              isVeryHot 
-                                ? "from-orange-400 to-rose-500" 
-                                : isCold 
-                                ? "from-sky-400 to-blue-500" 
-                                : "from-sky-400 via-amber-405 to-orange-400"
+                              isVeryHot
+                                ? 'from-orange-400 to-rose-500'
+                                : isCold
+                                  ? 'from-sky-400 to-blue-500'
+                                  : 'from-sky-400 via-amber-405 to-orange-400'
                             }`}
                           />
                         </div>
@@ -812,7 +868,10 @@ export default function TripView({
                         </div>
                         {/* Custom sun progress */}
                         <div className="h-1.5 w-full bg-slate-150 rounded-full overflow-hidden">
-                          <div style={{ width: `${(activeMonth.sunHours / 12) * 100}%` }} className="h-full bg-amber-400 rounded-full" />
+                          <div
+                            style={{ width: `${(activeMonth.sunHours / 12) * 100}%` }}
+                            className="h-full bg-amber-400 rounded-full"
+                          />
                         </div>
                       </div>
                     </div>
@@ -828,9 +887,10 @@ export default function TripView({
                           {activeMonth.recommendation}
                         </p>
                       </div>
-                      
+
                       <div className="text-[10px] bg-indigo-50/50 border border-indigo-100/40 rounded-xl p-2.5 text-indigo-800 leading-snug">
-                        💡 <span className="font-bold">Dica de Viagem:</span> Adapte os itens sugeridos na mala ao lado baseado nestas temperaturas médias descritas.
+                        💡 <span className="font-bold">Dica de Viagem:</span> Adapte os itens sugeridos na mala ao lado
+                        baseado nestas temperaturas médias descritas.
                       </div>
                     </div>
                   </div>
@@ -848,7 +908,10 @@ export default function TripView({
                 </div>
                 <div className="space-y-0.5">
                   <h3 className="font-bold text-slate-800 text-sm sm:text-base flex items-center gap-1.5">
-                    Aplicativos & Transporte Local <span className="text-[10px] font-black tracking-widest text-indigo-650 bg-indigo-50 px-2 py-0.5 rounded uppercase border border-indigo-100">Live Search</span>
+                    Aplicativos & Transporte Local{' '}
+                    <span className="text-[10px] font-black tracking-widest text-indigo-650 bg-indigo-50 px-2 py-0.5 rounded uppercase border border-indigo-100">
+                      Live Search
+                    </span>
                   </h3>
                   <p className="text-xs text-slate-500">
                     Consulte aplicativos de corrida ativos, passes de ônibus/metrô e regras de locomoção
@@ -863,7 +926,8 @@ export default function TripView({
                   <span className="text-2xl">🚕</span>
                   <h4 className="font-bold text-sm text-slate-800">Como se locomover em {tripPlan.destination}?</h4>
                   <p className="text-xs text-slate-500 leading-relaxed">
-                    Pesquise instantaneamente usando o mecanismo do <strong>Google Search</strong>. Descubra tarifas reais, aplicativos locais de táxi ou caronas e passes integrados mais vantajosos para sua rota.
+                    Pesquise instantaneamente usando o mecanismo do <strong>Google Search</strong>. Descubra tarifas
+                    reais, aplicativos locais de táxi ou caronas e passes integrados mais vantajosos para sua rota.
                   </p>
                 </div>
                 <button
@@ -883,7 +947,8 @@ export default function TripView({
                 <div className="space-y-1">
                   <p className="text-xs font-bold text-slate-755">Utilizando o Google Search...</p>
                   <p className="text-[11px] text-slate-500 max-w-sm leading-relaxed">
-                    Buscando aplicativos de corrida, sistemas de metrô e tarifas vigentes no destino de forma fundamentada e atualizada.
+                    Buscando aplicativos de corrida, sistemas de metrô e tarifas vigentes no destino de forma
+                    fundamentada e atualizada.
                   </p>
                 </div>
               </div>
@@ -910,17 +975,17 @@ export default function TripView({
                     const isSelected = idx === activeTransitTabIndex;
                     const getIconComponent = (iconName: string) => {
                       switch (iconName) {
-                        case "Car":
+                        case 'Car':
                           return <Car className="w-4 h-4" />;
-                        case "Smartphone":
+                        case 'Smartphone':
                           return <Smartphone className="w-4 h-4" />;
-                        case "Train":
+                        case 'Train':
                           return <Train className="w-4 h-4 text-emerald-650" />;
-                        case "Bus":
+                        case 'Bus':
                           return <Bus className="w-4 h-4" />;
-                        case "CreditCard":
+                        case 'CreditCard':
                           return <CreditCard className="w-4 h-4 text-violet-650" />;
-                        case "Lightbulb":
+                        case 'Lightbulb':
                           return <Lightbulb className="w-4 h-4 text-amber-500" />;
                         default:
                           return <Navigation className="w-4 h-4" />;
@@ -933,8 +998,8 @@ export default function TripView({
                         onClick={() => setActiveTransitTabIndex(idx)}
                         className={`flex items-center gap-1.5 py-2 px-3.5 rounded-xl text-xs font-bold transition-all duration-200 cursor-pointer ${
                           isSelected
-                            ? "bg-indigo-600 text-white shadow-md shadow-indigo-150"
-                            : "text-slate-500 hover:bg-slate-50 hover:text-slate-800"
+                            ? 'bg-indigo-600 text-white shadow-md shadow-indigo-150'
+                            : 'text-slate-500 hover:bg-slate-50 hover:text-slate-800'
                         }`}
                       >
                         {getIconComponent(sect.icon)}
@@ -950,47 +1015,46 @@ export default function TripView({
                     {(() => {
                       const activeSect = transitSections[activeTransitTabIndex];
                       if (!activeSect) return null;
-                      
+
                       const lines = activeSect.content.split('\n').filter((l) => l.trim().length > 0);
                       const getIconComponent = (iconName: string) => {
                         switch (iconName) {
-                          case "Car":
+                          case 'Car':
                             return <Car className="w-4.5 h-4.5" />;
-                          case "Smartphone":
+                          case 'Smartphone':
                             return <Smartphone className="w-4.5 h-4.5" />;
-                          case "Train":
+                          case 'Train':
                             return <Train className="w-4.5 h-4.5 text-emerald-650" />;
-                          case "Bus":
+                          case 'Bus':
                             return <Bus className="w-4.5 h-4.5" />;
-                          case "CreditCard":
+                          case 'CreditCard':
                             return <CreditCard className="w-4.5 h-4.5 text-violet-650" />;
-                          case "Lightbulb":
+                          case 'Lightbulb':
                             return <Lightbulb className="w-4.5 h-4.5 text-amber-500" />;
                           default:
                             return <Navigation className="w-4.5 h-4.5" />;
                         }
                       };
-                      
+
                       return (
                         <div className="space-y-3">
                           <h4 className="font-bold text-slate-850 text-sm flex items-center gap-2">
                             {getIconComponent(activeSect.icon)}
                             {activeSect.title}
                           </h4>
-                          
+
                           <div className="space-y-2.5">
                             {lines.map((ln, lIdx) => {
                               const cleanLine = ln.trim();
                               // Check if line looks like a list item or note
-                              const isBullet = cleanLine.startsWith("-") || cleanLine.startsWith("*") || /^\d+\./.test(cleanLine);
-                              const text = isBullet ? cleanLine.replace(/^[-*\d.]\s*/, "") : cleanLine;
-                              
+                              const isBullet =
+                                cleanLine.startsWith('-') || cleanLine.startsWith('*') || /^\d+\./.test(cleanLine);
+                              const text = isBullet ? cleanLine.replace(/^[-*\d.]\s*/, '') : cleanLine;
+
                               return (
                                 <div key={lIdx} className="flex items-start gap-2.5">
                                   <span className="text-[10px] text-indigo-500 mt-1">✦</span>
-                                  <p className="text-xs text-slate-650 leading-relaxed font-semibold">
-                                    {text}
-                                  </p>
+                                  <p className="text-xs text-slate-650 leading-relaxed font-semibold">{text}</p>
                                 </div>
                               );
                             })}
@@ -1008,9 +1072,10 @@ export default function TripView({
                         Fontes Fundamentadas
                       </div>
                       <p className="text-[11px] text-slate-500 leading-normal">
-                        Esta pesquisa foi fundamentada em resultados reais do Google Search para garantir segurança e dados atualizados.
+                        Esta pesquisa foi fundamentada em resultados reais do Google Search para garantir segurança e
+                        dados atualizados.
                       </p>
-                      
+
                       {transitData.sources && transitData.sources.length > 0 ? (
                         <div className="space-y-1.5 max-h-[160px] overflow-y-auto pr-1">
                           {transitData.sources.slice(0, 4).map((src, sIdx) => (
@@ -1071,15 +1136,12 @@ export default function TripView({
                   <span className="inline-block text-[10px] tracking-wider uppercase font-extrabold text-indigo-600 bg-indigo-50 border border-indigo-100 py-0.5 px-2.5 rounded-full">
                     {tip.category}
                   </span>
-                  <p className="text-xs text-slate-650 leading-relaxed font-medium">
-                    {tip.text}
-                  </p>
+                  <p className="text-xs text-slate-650 leading-relaxed font-medium">{tip.text}</p>
                 </div>
               ))}
             </div>
           </div>
         </div>
-
       </div>
 
       {/* Share Modal Backdrop */}
@@ -1110,7 +1172,9 @@ export default function TripView({
                       Compartilhar Viagem
                     </span>
                     <h3 className="text-lg font-black text-slate-100 mt-1">Conectar Acompanhantes</h3>
-                    <p className="text-xs text-slate-400">Envie o itinerário completo e o mapa interativo para seus parceiros de jornada</p>
+                    <p className="text-xs text-slate-400">
+                      Envie o itinerário completo e o mapa interativo para seus parceiros de jornada
+                    </p>
                   </div>
                   <button
                     onClick={() => setIsShareOpen(false)}
@@ -1144,7 +1208,8 @@ export default function TripView({
                         Código QR Dinâmico
                       </h4>
                       <p className="text-[11px] text-slate-450 leading-relaxed">
-                        Aponte a câmera do celular de seus acompanhantes para que eles importem instantaneamente este roteiro em suas telas.
+                        Aponte a câmera do celular de seus acompanhantes para que eles importem instantaneamente este
+                        roteiro em suas telas.
                       </p>
                     </div>
 
@@ -1154,7 +1219,8 @@ export default function TripView({
                         Acesso Sem Internet
                       </h4>
                       <p className="text-[11px] text-slate-450 leading-relaxed">
-                        Este link contém todo o planejamento compactado de forma offline-safe pelo Service Worker da nossa plataforma.
+                        Este link contém todo o planejamento compactado de forma offline-safe pelo Service Worker da
+                        nossa plataforma.
                       </p>
                     </div>
                   </div>
@@ -1165,7 +1231,7 @@ export default function TripView({
                   <span className="text-[10px] font-black uppercase text-slate-450 tracking-wider block">
                     Link de Compartilhamento Direto
                   </span>
-                  
+
                   <div className="flex gap-2">
                     <input
                       type="text"
@@ -1176,7 +1242,7 @@ export default function TripView({
                       }}
                       className="bg-slate-950 border border-slate-800/80 rounded-xl px-3 py-2 text-xs font-mono text-slate-300 flex-grow focus:outline-none focus:border-indigo-500 w-10 truncate"
                     />
-                    
+
                     <button
                       onClick={() => {
                         navigator.clipboard.writeText(shareUrl);
@@ -1184,9 +1250,7 @@ export default function TripView({
                         setTimeout(() => setCopied(false), 2500);
                       }}
                       className={`px-4 py-2 rounded-xl text-xs font-bold transition-all flex items-center gap-1.5 flex-shrink-0 cursor-pointer ${
-                        copied
-                          ? "bg-emerald-600 text-white"
-                          : "bg-indigo-650 hover:bg-indigo-600 text-white"
+                        copied ? 'bg-emerald-600 text-white' : 'bg-indigo-650 hover:bg-indigo-600 text-white'
                       }`}
                     >
                       {copied ? (
@@ -1195,7 +1259,7 @@ export default function TripView({
                           Copiado!
                         </>
                       ) : (
-                        "Copiar"
+                        'Copiar'
                       )}
                     </button>
                   </div>
@@ -1205,15 +1269,16 @@ export default function TripView({
                 <div className="grid grid-cols-2 gap-3 pt-2 border-t border-slate-850">
                   <a
                     href={`https://api.whatsapp.com/send?text=${encodeURIComponent(
-                      `Olha só o nosso roteiro de viagem completo para ${tripPlan.destination} (${tripPlan.durationDays} dias). Acesse por este link para ver os detalhes, horários, restaurantes e o mapa interativo: ` + shareUrl
+                      `Olha só o nosso roteiro de viagem completo para ${tripPlan.destination} (${tripPlan.durationDays} dias). Acesse por este link para ver os detalhes, horários, restaurantes e o mapa interativo: ` +
+                        shareUrl,
                     )}`}
                     target="_blank"
                     rel="noopener noreferrer"
                     className="flex items-center justify-center gap-2 bg-[#25D366]/10 hover:bg-[#25D366]/20 border border-[#25D366]/30 text-[#25D366] py-2.5 rounded-xl text-xs font-bold transition-all text-center cursor-pointer"
                   >
                     <svg className="w-4 h-4 fill-current" viewBox="0 0 24 24">
-                      <path d="M17.472 14.382c-.022-.008-1.243-.614-1.437-.682-.194-.069-.336-.102-.477.1-.14.2-.543.682-.665.821-.122.14-.243.156-.463.047-.223-.11-1.07-.394-2.03-1.25-.747-.665-1.247-1.488-1.39-1.73-.14-.243-.015-.373.107-.493.11-.11.243-.284.365-.426.12-.14.16-.24.24-.4.08-.162.04-.303-.02-.423-.06-.12-.478-1.153-.654-1.577-.17-.411-.341-.354-.478-.361-.123-.006-.264-.006-.405-.006-.14 0-.366.052-.558.26-.192.208-.734.717-.734 1.748 0 1.03.75 2.023.855 2.164.104.14 1.472 2.25 3.566 3.155.498.215.887.343 1.196.44.5.16 1.062.137 1.465.077.45-.067 1.383-.564 1.58-.108.197-.457.197-.85 0-.918-.02-.008-.108-.046-.242-.113"/>
-                      <path d="M12.003 21c-1.623 0-3.213-.42-4.62-1.214L3.5 21l1.248-3.921A8.96 8.96 0 0 1 3 12c0-4.963 4.04-9 9.003-9 4.961 0 8.997 4.037 8.997 9 0 4.963-4.036 9-8.997 9m0-16.71c-4.245 0-7.7 3.456-7.7 7.7 0 1.396.375 2.76 1.085 3.953l-.756 2.378 2.434-.638A7.665 7.665 0 0 0 12.003 18.7c4.245 0 7.7-3.457 7.7-7.7 0-4.244-3.455-7.7-7.7-7.7"/>
+                      <path d="M17.472 14.382c-.022-.008-1.243-.614-1.437-.682-.194-.069-.336-.102-.477.1-.14.2-.543.682-.665.821-.122.14-.243.156-.463.047-.223-.11-1.07-.394-2.03-1.25-.747-.665-1.247-1.488-1.39-1.73-.14-.243-.015-.373.107-.493.11-.11.243-.284.365-.426.12-.14.16-.24.24-.4.08-.162.04-.303-.02-.423-.06-.12-.478-1.153-.654-1.577-.17-.411-.341-.354-.478-.361-.123-.006-.264-.006-.405-.006-.14 0-.366.052-.558.26-.192.208-.734.717-.734 1.748 0 1.03.75 2.023.855 2.164.104.14 1.472 2.25 3.566 3.155.498.215.887.343 1.196.44.5.16 1.062.137 1.465.077.45-.067 1.383-.564 1.58-.108.197-.457.197-.85 0-.918-.02-.008-.108-.046-.242-.113" />
+                      <path d="M12.003 21c-1.623 0-3.213-.42-4.62-1.214L3.5 21l1.248-3.921A8.96 8.96 0 0 1 3 12c0-4.963 4.04-9 9.003-9 4.961 0 8.997 4.037 8.997 9 0 4.963-4.036 9-8.997 9m0-16.71c-4.245 0-7.7 3.456-7.7 7.7 0 1.396.375 2.76 1.085 3.953l-.756 2.378 2.434-.638A7.665 7.665 0 0 0 12.003 18.7c4.245 0 7.7-3.457 7.7-7.7 0-4.244-3.455-7.7-7.7-7.7" />
                     </svg>
                     WhatsApp
                   </a>
@@ -1223,12 +1288,15 @@ export default function TripView({
                     className="flex items-center justify-center gap-2 bg-slate-800 hover:bg-slate-750 border border-slate-700 text-slate-200 py-2.5 rounded-xl text-xs font-bold transition-all text-center cursor-pointer"
                   >
                     <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
-                      <path strokeLinecap="round" strokeLinejoin="round" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"
+                      />
                     </svg>
                     E-mail
                   </a>
                 </div>
-
               </motion.div>
             </div>
           </div>
@@ -1263,7 +1331,9 @@ export default function TripView({
                       Calendário iCal
                     </span>
                     <h3 className="text-lg font-black text-slate-100 mt-1">Exportar para Agenda</h3>
-                    <p className="text-xs text-slate-400">Gere um arquivo universal e adicione as paradas e horários em sua agenda.</p>
+                    <p className="text-xs text-slate-400">
+                      Gere um arquivo universal e adicione as paradas e horários em sua agenda.
+                    </p>
                   </div>
                   <button
                     onClick={() => setIsCalendarOpen(false)}
@@ -1301,11 +1371,19 @@ export default function TripView({
                       {tripPlan.days.map((day, ix) => {
                         const d = new Date(startDate);
                         d.setDate(d.getDate() + ix);
-                        const formatted = isNaN(d.getTime()) 
+                        const formatted = isNaN(d.getTime())
                           ? `Dia ${day.dayNumber}`
-                          : d.toLocaleDateString("pt-BR", { day: '2-digit', month: 'long', year: 'numeric', weekday: 'short' });
+                          : d.toLocaleDateString('pt-BR', {
+                              day: '2-digit',
+                              month: 'long',
+                              year: 'numeric',
+                              weekday: 'short',
+                            });
                         return (
-                          <div key={day.dayNumber} className="flex justify-between items-center text-xs border-b border-slate-850 pb-2 last:border-none last:pb-0">
+                          <div
+                            key={day.dayNumber}
+                            className="flex justify-between items-center text-xs border-b border-slate-850 pb-2 last:border-none last:pb-0"
+                          >
                             <span className="font-bold text-slate-300">Dia {day.dayNumber}</span>
                             <span className="text-slate-400 text-[11px] font-mono">{formatted}</span>
                           </div>
@@ -1333,16 +1411,18 @@ export default function TripView({
                     <div className="grid grid-cols-1 gap-2 text-[11px] text-slate-400 leading-relaxed">
                       <div className="bg-slate-950/30 p-2.5 rounded-lg border border-slate-850/60">
                         <strong className="text-slate-350 block mb-0.5">📅 Google Agenda</strong>
-                        No computador, acesse <span className="text-indigo-400 font-medium">calendar.google.com</span>. Clique em <strong>Configurações (engrenagem) &gt; Importar e Exportar</strong>, envie esse arquivo .ics e selecione sua agenda.
+                        No computador, acesse <span className="text-indigo-400 font-medium">calendar.google.com</span>.
+                        Clique em <strong>Configurações (engrenagem) &gt; Importar e Exportar</strong>, envie esse
+                        arquivo .ics e selecione sua agenda.
                       </div>
                       <div className="bg-slate-950/30 p-2.5 rounded-lg border border-slate-850/60">
                         <strong className="text-slate-350 block mb-0.5">🍎 Apple Calendar / Outlook</strong>
-                        Dê dois cliques no arquivo no Mac ou abra-o direto pelas opções de compartilhamento do seu iPhone/PC para adicionar instantaneamente.
+                        Dê dois cliques no arquivo no Mac ou abra-o direto pelas opções de compartilhamento do seu
+                        iPhone/PC para adicionar instantaneamente.
                       </div>
                     </div>
                   </div>
                 </div>
-
               </motion.div>
             </div>
           </div>

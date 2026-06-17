@@ -78,7 +78,10 @@ function HomePage() {
       });
 
       const parsedPlan: TripPlan = {
-        ...(data as Omit<TripPlan, 'id' | 'createdAt' | 'budgetPreference' | 'stylePreference' | 'companionPreference'>),
+        ...(data as Omit<
+          TripPlan,
+          'id' | 'createdAt' | 'budgetPreference' | 'stylePreference' | 'companionPreference'
+        >),
         id: `trip_${Date.now()}`,
         createdAt: new Date().toISOString(),
         budgetPreference: params.budget,
@@ -97,7 +100,11 @@ function HomePage() {
 
   const handleSaveTrip = async () => {
     if (!activePlan) return;
-    if (savedTrips.some((trip) => trip.destination === activePlan.destination && trip.durationDays === activePlan.durationDays)) {
+    if (
+      savedTrips.some(
+        (trip) => trip.destination === activePlan.destination && trip.durationDays === activePlan.durationDays,
+      )
+    ) {
       return;
     }
     const result = await saveTripFn({ data: { plan: activePlan, searchParams } });
@@ -119,7 +126,11 @@ function HomePage() {
   };
 
   const isActivePlanSaved = activePlan
-    ? savedTrips.some((trip) => trip.id === activePlan.id || (trip.destination === activePlan.destination && trip.durationDays === activePlan.durationDays))
+    ? savedTrips.some(
+        (trip) =>
+          trip.id === activePlan.id ||
+          (trip.destination === activePlan.destination && trip.durationDays === activePlan.durationDays),
+      )
     : false;
 
   return (
@@ -200,7 +211,9 @@ function HomePage() {
               <div className="space-y-3">
                 <div className="flex items-center justify-center gap-1">
                   <span className="w-2 h-2 rounded-full bg-amber-500 animate-bounce" />
-                  <span className="text-xs font-black uppercase text-amber-600 tracking-wider">{t('loading.title')}</span>
+                  <span className="text-xs font-black uppercase text-amber-600 tracking-wider">
+                    {t('loading.title')}
+                  </span>
                 </div>
                 <h3 className="text-xl font-bold text-slate-800 transition-all duration-300">
                   {loadingMessages[loadingStep]}
@@ -216,12 +229,34 @@ function HomePage() {
               </div>
             </motion.div>
           ) : activePlan ? (
-            <motion.div key="details-view" initial={{ opacity: 0, y: 15 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }} transition={{ duration: 0.3 }}>
-              <TripView tripPlan={activePlan} onBack={() => setActivePlan(null)} onSave={handleSaveTrip} isSaved={isActivePlanSaved} />
+            <motion.div
+              key="details-view"
+              initial={{ opacity: 0, y: 15 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.3 }}
+            >
+              <TripView
+                tripPlan={activePlan}
+                onBack={() => setActivePlan(null)}
+                onSave={handleSaveTrip}
+                isSaved={isActivePlanSaved}
+              />
             </motion.div>
           ) : (
-            <motion.div key="search-view" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="space-y-12">
-              <SearchForm searchParams={searchParams} setSearchParams={setSearchParams} onSubmit={handleTripSubmission} isLoading={isLoading} />
+            <motion.div
+              key="search-view"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              className="space-y-12"
+            >
+              <SearchForm
+                searchParams={searchParams}
+                setSearchParams={setSearchParams}
+                onSubmit={handleTripSubmission}
+                isLoading={isLoading}
+              />
               <div id="saved-trips" className="scroll-mt-24">
                 <hr className="border-slate-100" />
                 <div className="pt-8">

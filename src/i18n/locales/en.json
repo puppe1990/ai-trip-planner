@@ -237,8 +237,17 @@
     "reset": "Reset"
   },
   "months": {
-    "Jan": "January", "Fev": "February", "Mar": "March", "Abr": "April",
-    "Mai": "May", "Jun": "June", "Jul": "July", "Ago": "August",
-    "Set": "September", "Out": "October", "Nov": "November", "Dez": "December"
+    "Jan": "January",
+    "Fev": "February",
+    "Mar": "March",
+    "Abr": "April",
+    "Mai": "May",
+    "Jun": "June",
+    "Jul": "July",
+    "Ago": "August",
+    "Set": "September",
+    "Out": "October",
+    "Nov": "November",
+    "Dez": "December"
   }
 }
